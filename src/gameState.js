@@ -1,5 +1,5 @@
 import { createGlobalState } from '@vueuse/core'
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 
 export const useGlobalGameState = createGlobalState(() => {
   // State
@@ -80,6 +80,27 @@ export const useGlobalGameState = createGlobalState(() => {
     recordRound(hIsGood && sIsGood && vIsGood)
   }
 
+  const winRate = computed(() => {
+    if (history.value.length === 0) {
+      return '0%' // or return '--%' or 'No Games Yet' or any similar text indicating there's no history
+    }
+
+    const winPercentage = (history.value.filter((round) => round.wasSuccess).length / history.value.length) * 100
+    return `${parseInt(winPercentage, 10)}%` // Keep two decimal points
+  })
+
+  const winningStreak = computed(() => {
+    let streak = 0
+    for (let i = history.value.length - 1; i >= 0; i--) {
+      if (history.value[i].wasSuccess) {
+        streak++
+      } else {
+        break // End the loop as the streak is interrupted
+      }
+    }
+    return streak
+  })
+
   return {
     currentRound,
     maxLife,
@@ -96,5 +117,7 @@ export const useGlobalGameState = createGlobalState(() => {
     updateMode,
     updatePrecision,
     checkGuess,
+    winRate,
+    winningStreak,
   }
 })

@@ -5,7 +5,7 @@
         <div class="bg-pink-600 rounded-lg px-2 py-2 flex items-center button-3d text-white">
           <ph-hand-fist :size="20" />
           <i class="fas fa-fist-raised text-white"></i>
-          <span class="ml-2 text-white">0</span>
+          <span class="ml-2 text-white">{{ state.winningStreak }}</span>
         </div>
         <span class="tooltiptext">連擊數</span>
       </div>
@@ -13,7 +13,7 @@
         <div class="bg-pink-600 rounded-lg px-2 py-2 flex items-center button-3d text-white">
           <ph-chart-line :size="20" />
           <i class="fas fa-chart-line"></i>
-          <span class="ml-2 text-white">0%</span>
+          <span class="ml-2 text-white">{{ state.winRate.value }}</span>
         </div>
         <span class="tooltiptext">勝率</span>
       </div>
