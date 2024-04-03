@@ -1,9 +1,4 @@
 <script setup>
-import { ref } from 'vue'
-import Toolbar from './components/Toolbar.vue'
-import HealthBar from './components/HealthBar.vue'
-import ColorBlock from './components/ColorBlock.vue'
-
 import { useGlobalGameState } from './gameState'
 
 const state = useGlobalGameState()
@@ -24,13 +19,13 @@ const submit = () => {
 <template>
   <div class="w-full h-full py-2 px-2 flex flex-col justify-between">
     <div class="flex flex-col gap-2">
-      <toolbar />
-      <health-bar />
+      <Toolbar />
+      <HealthBar />
     </div>
 
     <div class="flex gap-2">
-      <color-block :color="randomColor" />
-      <color-block :color="userColor" />
+      <ColorBlock :color="randomColor" />
+      <ColorBlock :color="userColor" />
     </div>
 
 

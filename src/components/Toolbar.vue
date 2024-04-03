@@ -35,7 +35,7 @@
 
 <script setup>
 import { useGlobalGameState } from '../gameState'
-import { PhClockCounterClockwise, PhArrowsClockwise, PhChartLine, PhHandFist } from "@phosphor-icons/vue";
+import { PhClockCounterClockwise, PhArrowsClockwise, PhChartLine, PhHandFist } from '@phosphor-icons/vue'
 
 const state = useGlobalGameState()
 </script>
