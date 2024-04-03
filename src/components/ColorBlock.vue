@@ -13,7 +13,9 @@ const props = defineProps({
   }
 })
 
-const { h, s, v } = props.color
-const rgbColor = hsvToRgb(h, s, v)
-const colorStr = `rgb(${rgbColor.r}, ${rgbColor.g}, ${rgbColor.b})`
+const colorStr = computed(() => {
+  const { h, s, v } = props.color
+  const rgbColor = hsvToRgb(h, s, v)
+  return  `rgb(${rgbColor.r}, ${rgbColor.g}, ${rgbColor.b})`
+})
 </script>
