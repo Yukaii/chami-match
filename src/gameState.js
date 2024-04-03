@@ -26,7 +26,6 @@ export const useGlobalGameState = createGlobalState(
       // Increment the round, reset the lives and userColor
       currentRound.value++
       lives.value = maxLife.value
-      userColor.value = { h: 0, s: 0, v: 0 }
 
       // Generate new randomColor
       randomColor.value = {
