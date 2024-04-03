@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, computed } from 'vue'
+import { ref } from 'vue'
 import Toolbar from './components/Toolbar.vue'
 import HealthBar from './components/HealthBar.vue'
 import ColorBlock from './components/ColorBlock.vue'
@@ -60,7 +60,3 @@ const submit = () => {
     </div>
   </div>
 </template>
-
-<style scoped>
-
-</style>
