@@ -1,6 +1,3 @@
-import { createGlobalState } from '@vueuse/core'
-import { ref, reactive, computed } from 'vue'
-
 export const useGlobalGameState = createGlobalState(() => {
   // State
   const currentRound = ref(1)

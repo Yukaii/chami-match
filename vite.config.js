@@ -8,7 +8,15 @@ export default defineConfig({
   plugins: [
     vue(),
     AutoImport({
-      imports: ['vue'],
+      imports: [
+        'vue',
+        {
+          '@vueuse/core': [
+            // named imports
+            'createGlobalState',
+          ],
+        },
+      ],
     }),
     ,
     Components(),
