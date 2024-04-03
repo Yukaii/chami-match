@@ -21,9 +21,11 @@ const submit = () => {
 </script>
 
 <template>
-  <div class="w-full h-full py-2 px-2">
-    <toolbar />
-    <health-bar />
+  <div class="w-full h-full py-2 px-2 flex flex-col justify-between">
+    <div class="flex flex-col gap-2">
+      <toolbar />
+      <health-bar />
+    </div>
 
     <div class="flex gap-2">
       <color-block :color="randomColor" />

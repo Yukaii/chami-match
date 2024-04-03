@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 #app {
-  @apply max-w-full;
+  @apply max-w-full h-full;
 }
 
 html, body {
