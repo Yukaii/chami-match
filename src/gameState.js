@@ -5,7 +5,8 @@ export const useGlobalGameState = createGlobalState(
   () => {
     // State
     const currentRound = ref(1)
-    const lives = ref(5)
+    const maxLife = ref(5)
+    const lives = ref(maxLife.value)
     const precision = ref(10)
     const mode = ref("Color") // default to "Color", can also be "B/W"
     const randomColor = ref({
@@ -24,7 +25,7 @@ export const useGlobalGameState = createGlobalState(
     function startNewRound() {
       // Increment the round, reset the lives and userColor
       currentRound.value++
-      lives.value = 5
+      lives.value = maxLife.value
       userColor.value = { h: 0, s: 0, v: 0 }
 
       // Generate new randomColor
@@ -85,6 +86,7 @@ export const useGlobalGameState = createGlobalState(
 
     return {
       currentRound,
+      maxLife,
       lives,
       precision,
       mode,
@@ -100,5 +102,4 @@ export const useGlobalGameState = createGlobalState(
       checkGuess,
     }
 })
-
 

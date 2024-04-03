@@ -1,5 +1,6 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
+import Toolbar from './components/Toolbar.vue'
+import HealthBar from './components/HealthBar.vue'
 import { useGlobalGameState } from './gameState'
 
 const state = useGlobalGameState()
@@ -7,12 +8,9 @@ const stateString = JSON.stringify(state, null, 2)
 </script>
 
 <template>
-  <div>
-    <pre class="max-w-full">
-      <code class="whitespace-pre-wrap">
-        {{ stateString }}
-      </code>
-    </pre>
+  <div class="w-full h-full py-2 px-2">
+    <toolbar />
+    <health-bar />
   </div>
 </template>
 
