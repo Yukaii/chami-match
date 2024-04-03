@@ -1,5 +1,5 @@
 import { createGlobalState } from '@vueuse/core'
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 
 export const useGlobalGameState = createGlobalState(
   () => {
@@ -9,12 +9,12 @@ export const useGlobalGameState = createGlobalState(
     const lives = ref(maxLife.value)
     const precision = ref(10)
     const mode = ref("Color") // default to "Color", can also be "B/W"
-    const randomColor = ref({
+    const randomColor = reactive({
       h: Math.floor(Math.random() * 360),
       s: Math.floor(Math.random() * 100),
       v: Math.floor(Math.random() * 100),
     })
-    const userColor = ref({ h: 0, s: 0, v: 0 }) // default to zero, user has to change
+    const userColor = reactive({ h: 0, s: 0, v: 0 }) // default to zero, user has to change
     const score = ref(0)
     const history = ref([])
 
@@ -28,19 +28,17 @@ export const useGlobalGameState = createGlobalState(
       lives.value = maxLife.value
 
       // Generate new randomColor
-      randomColor.value = {
-        h: Math.floor(Math.random() * 360),
-        s: Math.floor(Math.random() * 100),
-        v: Math.floor(Math.random() * 100),
-      }
+      randomColor.h = Math.floor(Math.random() * 360)
+      randomColor.s = Math.floor(Math.random() * 100)
+      randomColor.v = Math.floor(Math.random() * 100)
     }
 
     function recordRound(wasSuccess) {
       // Record the round history
       history.value.push({
         round: currentRound.value,
-        guessedColor: userColor.value,
-        actualColor: randomColor.value,
+        guessedColor: userColor,
+        actualColor: randomColor,
         wasSuccess: wasSuccess,
       })
 
@@ -59,9 +57,9 @@ export const useGlobalGameState = createGlobalState(
 
     // Action to update user's chosen color
      function updateUserColor(h, s, v) {
-        userColor.value.h = h
-        userColor.value.s = s
-        userColor.value.v = v
+        userColor.h = h
+        userColor.s = s
+        userColor.v = v
      }
 
      // Action to change game mode
@@ -76,9 +74,9 @@ export const useGlobalGameState = createGlobalState(
 
      // Action to check if user's guess is correct or not
      function checkGuess() {
-        const hIsGood = Math.abs(randomColor.value.h - userColor.value.h) <= precision.value;
-        const sIsGood = Math.abs(randomColor.value.s - userColor.value.s) <= precision.value;
-        const vIsGood = Math.abs(randomColor.value.v - userColor.value.v) <= precision.value;
+        const hIsGood = Math.abs(randomColor.h - userColor.h) <= precision.value;
+        const sIsGood = Math.abs(randomColor.s - userColor.s) <= precision.value;
+        const vIsGood = Math.abs(randomColor.v - userColor.v) <= precision.value;
 
         recordRound(hIsGood && sIsGood && vIsGood);
      }

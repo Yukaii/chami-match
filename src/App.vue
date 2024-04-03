@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch, computed } from 'vue'
 import Toolbar from './components/Toolbar.vue'
 import HealthBar from './components/HealthBar.vue'
 import ColorBlock from './components/ColorBlock.vue'
@@ -10,12 +10,13 @@ const state = useGlobalGameState()
 const randomColor = state.randomColor
 const userColor = state.userColor
 
-const userH = ref(userColor.value.h)
-const userS = ref(userColor.value.s)
-const userV = ref(userColor.value.v)
+const userH = ref(userColor.h)
+const userS = ref(userColor.s)
+const userV = ref(userColor.v)
 
 const submit = () => {
-  state.updateUserColor(userH.value, userS.value, userV.value)
+  console.log(parseInt(userH.value, 10), parseInt(userS.value, 10), parseInt(userV.value, 10))
+  state.updateUserColor(parseInt(userH.value, 10), parseInt(userS.value, 10), parseInt(userV.value, 10))
   state.checkGuess()
 }
 </script>
