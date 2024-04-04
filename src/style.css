@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 #app {
-  @apply max-w-full h-full;
+  @apply h-full mx-auto max-w-[576px];
 }
 
 html,
 body {
-  @apply w-full h-full bg-slate-800 text-white;
+  @apply w-full h-full bg-slate-800 text-white overflow-hidden;
 }
 
 .tooltip {
