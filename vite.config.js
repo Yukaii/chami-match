@@ -23,6 +23,9 @@ export default defineConfig({
     Components(),
     VitePWA({
       registerType: 'autoUpdate',
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+      },
       manifest: {
         name: 'HSV Hunter',
         short_name: 'HSV Hunter',
