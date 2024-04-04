@@ -1,5 +1,8 @@
 <template>
-  <div class="w-full aspect-square max-w-[50%] rounded-lg" :style="{ backgroundColor: colorStr }" />
+  <div
+    class="w-full aspect-square max-w-[50%] rounded-lg"
+    :style="{ backgroundColor: colorStr }"
+  />
 </template>
 
 <script setup>

@@ -34,24 +34,47 @@ const submit = () => {
       <!-- Hue Slider -->
       <div class="flex items-center">
         <span class="text-orange-300 mr-2">H:</span>
-        <input type="range" min="0" max="360" v-model="userH" class="slider hue-slider">
+        <input
+          v-model="userH"
+          type="range"
+          min="0"
+          max="360"
+          class="slider hue-slider"
+        >
         <span class="bg-gray-700 text-white px-4 py-2 rounded-lg ml-2">{{ userH }}</span>
       </div>
       <!-- Saturation Slider -->
       <div class="flex items-center">
         <span class="text-orange-300 mr-2">S:</span>
-        <input type="range" min="0" max="100" v-model="userS" class="slider">
+        <input
+          v-model="userS"
+          type="range"
+          min="0"
+          max="100"
+          class="slider"
+        >
         <span class="bg-gray-700 text-white px-4 py-2 rounded-lg ml-2">{{ userS }}</span>
       </div>
       <!-- Value Slider -->
       <div class="flex items-center">
         <span class="text-orange-300 mr-2">V:</span>
-        <input type="range" min="0" max="100" v-model="userV" class="slider">
+        <input
+          v-model="userV"
+          type="range"
+          min="0"
+          max="100"
+          class="slider"
+        >
         <span class="bg-gray-700 text-white px-4 py-2 rounded-lg ml-2">{{ userV }}</span>
       </div>
 
       <!-- Confirm Button -->
-      <button class="bg-pink-600 px-4 py-2 rounded-lg text-white w-full button-3d" @click="submit">確定</button>
+      <button
+        class="bg-pink-600 px-4 py-2 rounded-lg text-white w-full button-3d"
+        @click="submit"
+      >
+        確定
+      </button>
     </div>
   </div>
 </template>

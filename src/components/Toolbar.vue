@@ -4,7 +4,7 @@
       <div class="tooltip">
         <div class="bg-pink-600 rounded-lg px-2 py-2 flex items-center button-3d text-white">
           <ph-hand-fist :size="20" />
-          <i class="fas fa-fist-raised text-white"></i>
+          <i class="fas fa-fist-raised text-white" />
           <span class="ml-2 text-white">{{ state.winningStreak }}</span>
         </div>
         <span class="tooltiptext">連擊數</span>
@@ -12,7 +12,7 @@
       <div class="tooltip">
         <div class="bg-pink-600 rounded-lg px-2 py-2 flex items-center button-3d text-white">
           <ph-chart-line :size="20" />
-          <i class="fas fa-chart-line"></i>
+          <i class="fas fa-chart-line" />
           <span class="ml-2 text-white">{{ state.winRate.value }}</span>
         </div>
         <span class="tooltiptext">勝率</span>
@@ -26,7 +26,10 @@
       </div>
     </div>
 
-    <button @click="$emit('toggleRecord')" class="bg-pink-600 p-2 rounded-lg text-white button-3d">
+    <button
+      class="bg-pink-600 p-2 rounded-lg text-white button-3d"
+      @click="$emit('toggleRecord')"
+    >
       <ph-clock-counter-clockwise :size="20" />
     </button>
   </div>
@@ -38,4 +41,5 @@ import { useGlobalGameState } from '../gameState'
 import { PhClockCounterClockwise, PhArrowsClockwise, PhChartLine, PhHandFist } from '@phosphor-icons/vue'
 
 const state = useGlobalGameState()
+const emit = defineEmits(['toggleRecord'])
 </script>
