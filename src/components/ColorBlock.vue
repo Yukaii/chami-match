@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full aspect-square max-w-[50%] rounded-lg"
+    class="aspect-square w-full max-w-[50%] rounded-lg"
     :style="{ backgroundColor: colorStr }"
   />
 </template>

@@ -17,7 +17,7 @@ const submit = () => {
 </script>
 
 <template>
-  <div class="w-full h-full py-2 px-2 flex flex-col justify-between">
+  <div class="flex size-full flex-col justify-between p-2">
     <div class="flex flex-col gap-2">
       <Toolbar />
       <HealthBar />
@@ -33,7 +33,7 @@ const submit = () => {
     <div class="flex flex-col space-y-4">
       <!-- Hue Slider -->
       <div class="flex items-center">
-        <span class="text-orange-300 mr-2">H:</span>
+        <span class="mr-2 text-orange-300">H:</span>
         <input
           v-model="userH"
           type="range"
@@ -41,11 +41,11 @@ const submit = () => {
           max="360"
           class="slider hue-slider"
         >
-        <span class="bg-gray-700 text-white px-4 py-2 rounded-lg ml-2">{{ userH }}</span>
+        <span class="ml-2 rounded-lg bg-gray-700 px-4 py-2 text-white">{{ userH }}</span>
       </div>
       <!-- Saturation Slider -->
       <div class="flex items-center">
-        <span class="text-orange-300 mr-2">S:</span>
+        <span class="mr-2 text-orange-300">S:</span>
         <input
           v-model="userS"
           type="range"
@@ -53,11 +53,11 @@ const submit = () => {
           max="100"
           class="slider"
         >
-        <span class="bg-gray-700 text-white px-4 py-2 rounded-lg ml-2">{{ userS }}</span>
+        <span class="ml-2 rounded-lg bg-gray-700 px-4 py-2 text-white">{{ userS }}</span>
       </div>
       <!-- Value Slider -->
       <div class="flex items-center">
-        <span class="text-orange-300 mr-2">V:</span>
+        <span class="mr-2 text-orange-300">V:</span>
         <input
           v-model="userV"
           type="range"
@@ -65,12 +65,12 @@ const submit = () => {
           max="100"
           class="slider"
         >
-        <span class="bg-gray-700 text-white px-4 py-2 rounded-lg ml-2">{{ userV }}</span>
+        <span class="ml-2 rounded-lg bg-gray-700 px-4 py-2 text-white">{{ userV }}</span>
       </div>
 
       <!-- Confirm Button -->
       <button
-        class="bg-pink-600 px-4 py-2 rounded-lg text-white w-full button-3d"
+        class="button-3d w-full rounded-lg bg-pink-600 px-4 py-2 text-white"
         @click="submit"
       >
         確定
