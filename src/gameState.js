@@ -78,25 +78,37 @@ export const useGlobalGameState = createGlobalState(() => {
   }
 
   const winRate = computed(() => {
-    if (history.value.length === 0) {
-      return '0%' // or return '--%' or 'No Games Yet' or any similar text indicating there's no history
+    if (currentRound.value === 1) {
+      return '0%'; // or return '--%' or 'No Games Yet' or any similar text indicating there's no history
     }
 
-    const winPercentage = (history.value.filter((round) => round.wasSuccess).length / history.value.length) * 100
-    return `${parseInt(winPercentage, 10)}%` // Keep two decimal points
-  })
+    let successfulRounds = history.value.filter((item, i, arr) => {
+      // is this the last try of the round or last item in history?
+      return item.wasSuccess && (i === arr.length - 1 || arr[i + 1].round !== item.round);
+    }).length;
+
+    const winPercentage = (successfulRounds / (currentRound.value - 1)) * 100;
+    return `${parseInt(winPercentage, 10)}%`;
+  });
 
   const winningStreak = computed(() => {
-    let streak = 0
-    for (let i = history.value.length - 1; i >= 0; i--) {
-      if (history.value[i].wasSuccess) {
-        streak++
+    let streak = 0;
+    let roundToCheck = currentRound.value - 1;  // Start checking from the last completed round
+
+    while (roundToCheck > 0) {
+      // Find the last try of the round
+      const lastTryOfRound = history.value.slice().reverse().find(item => item.round === roundToCheck);
+
+      if (lastTryOfRound && lastTryOfRound.wasSuccess) {
+        streak++;
+        roundToCheck--;
       } else {
-        break // End the loop as the streak is interrupted
+        break;  // Exit loop if the last try was not successful or round not found in history
       }
     }
-    return streak
-  })
+
+    return streak;
+  });
 
   return {
     currentRound,
