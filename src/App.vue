@@ -28,53 +28,29 @@ const submit = () => {
       <ColorBlock :color="userColor" />
     </div>
 
-
     <!-- Sliders and Confirm Button -->
     <div class="flex flex-col space-y-4">
       <!-- Hue Slider -->
       <div class="flex items-center">
         <span class="mr-2 text-orange-300">H:</span>
-        <input
-          v-model="userH"
-          type="range"
-          min="0"
-          max="360"
-          class="slider hue-slider"
-        >
+        <input v-model="userH" type="range" min="0" max="360" class="slider hue-slider" />
         <span class="ml-2 rounded-lg bg-gray-700 px-4 py-2 text-white">{{ userH }}</span>
       </div>
       <!-- Saturation Slider -->
       <div class="flex items-center">
         <span class="mr-2 text-orange-300">S:</span>
-        <input
-          v-model="userS"
-          type="range"
-          min="0"
-          max="100"
-          class="slider"
-        >
+        <input v-model="userS" type="range" min="0" max="100" class="slider" />
         <span class="ml-2 rounded-lg bg-gray-700 px-4 py-2 text-white">{{ userS }}</span>
       </div>
       <!-- Value Slider -->
       <div class="flex items-center">
         <span class="mr-2 text-orange-300">V:</span>
-        <input
-          v-model="userV"
-          type="range"
-          min="0"
-          max="100"
-          class="slider"
-        >
+        <input v-model="userV" type="range" min="0" max="100" class="slider" />
         <span class="ml-2 rounded-lg bg-gray-700 px-4 py-2 text-white">{{ userV }}</span>
       </div>
 
       <!-- Confirm Button -->
-      <button
-        class="button-3d w-full rounded-lg bg-pink-600 px-4 py-2 text-white"
-        @click="submit"
-      >
-        確定
-      </button>
+      <button class="button-3d w-full rounded-lg bg-pink-600 px-4 py-2 text-white" @click="submit">確定</button>
     </div>
   </div>
 </template>

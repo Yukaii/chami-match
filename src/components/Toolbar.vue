@@ -26,15 +26,11 @@
       </div>
     </div>
 
-    <button
-      class="button-3d rounded-lg bg-pink-600 p-2 text-white"
-      @click="$emit('toggleRecord')"
-    >
+    <button class="button-3d rounded-lg bg-pink-600 p-2 text-white" @click="$emit('toggleRecord')">
       <ph-clock-counter-clockwise :size="20" />
     </button>
   </div>
 </template>
-
 
 <script setup>
 import { useGlobalGameState } from '../gameState'

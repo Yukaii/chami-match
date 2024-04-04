@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="aspect-square w-full max-w-[50%] rounded-lg"
-    :style="{ backgroundColor: colorStr }"
-  />
+  <div class="aspect-square w-full max-w-[50%] rounded-lg" :style="{ backgroundColor: colorStr }" />
 </template>
 
 <script setup>
@@ -11,8 +8,8 @@ import { hsvToRgb } from '../utils'
 const props = defineProps({
   color: {
     type: Object,
-    required: true
-  }
+    required: true,
+  },
 })
 
 const colorStr = computed(() => {
