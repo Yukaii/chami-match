@@ -26,15 +26,21 @@
       </div>
     </div>
 
-    <button class="button-3d rounded-lg bg-pink-600 p-2 text-white" @click="state.toggleRecordPopup(true)">
-      <ph-clock-counter-clockwise :size="20" />
-    </button>
+    <div class="flex gap-2">
+      <button class="button-3d rounded-lg bg-pink-600 p-2 text-white">
+        <ph-gear-six :size="20" />
+      </button>
+
+      <button class="button-3d rounded-lg bg-pink-600 p-2 text-white" @click="state.toggleRecordPopup(true)">
+        <ph-clock-counter-clockwise :size="20" />
+      </button>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { useGlobalGameState } from '../gameState'
-import { PhClockCounterClockwise, PhArrowsClockwise, PhChartLine, PhHandFist } from '@phosphor-icons/vue'
+import { PhClockCounterClockwise, PhArrowsClockwise, PhChartLine, PhHandFist, PhGearSix } from '@phosphor-icons/vue'
 
 const state = useGlobalGameState()
 </script>
