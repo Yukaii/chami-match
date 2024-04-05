@@ -29,9 +29,10 @@ import { useGlobalGameState } from '../gameState'
 
 const state = useGlobalGameState()
 const recordPopupOpen = state.recordPopupOpen
-const recentRecords = state.lastTriesOfEachRound
 
 const onClose = () => {
   state.toggleRecordPopup(false)
 }
+
+const recentRecords = computed(() => state.lastTriesOfEachRound.value.slice(0, 5))
 </script>
