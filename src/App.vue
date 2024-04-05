@@ -16,7 +16,7 @@ const submit = () => {
 </script>
 
 <template>
-  <div class="flex size-full flex-col justify-between p-2">
+  <div class="flex size-full flex-col justify-between p-2 pb-4">
     <div class="flex flex-col gap-2">
       <Toolbar />
       <HealthBar />
