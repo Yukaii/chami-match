@@ -78,3 +78,12 @@ body {
   background: linear-gradient(to right, #000000, #ffffff);
 }
 
+.button-3d {
+  box-shadow: 0 4px #93164d;
+}
+.button-3d:hover {
+  background-color: #e6007e;
+  box-shadow: 0 2px #666;
+  transform: translateY(2px);
+}
+
