@@ -1,6 +1,19 @@
 # HSV Hunter
 
-Take this awesome color guess game and try remake with web technology
+## TODOs
 
-https://dream7fragment.itch.io/color-test
+- [ ] Settings
+- [ ] About
+- [ ] persistent history
+- [ ] Design overhaul
+
+## Gameplay
+
+<img src="./docs/images/1.png" width="400">
+
+<img src="./docs/images/2.png" width="400">
+
+## Credits
+
+This game takes the original idea from [color-test](https://dream7fragment.itch.io/color-test). Thanks [Fragment](https://www.facebook.com/Dream7Fragment) for his awesome idea!
 
