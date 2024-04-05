@@ -2,6 +2,7 @@ import { createI18n } from 'vue-i18n'
 
 import en from './languages/en.json'
 import zhTW from './languages/zh-TW.json'
+import ja from './languages/ja.json'
 
 const i18n = createI18n({
   locale: localStorage.getItem('lang') || 'zh-TW',
@@ -11,6 +12,7 @@ const i18n = createI18n({
   messages: {
     'zh-TW': zhTW,
     en,
+    ja,
   },
 })
 

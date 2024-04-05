@@ -25,6 +25,7 @@ const handleChangeLanguage = (value) => {
         <div class="flex flex-col rounded bg-pink-600 py-1">
           <MenuItem><button class="hover:bg-pink-500" @click="handleChangeLanguage('zh-TW')">繁體中文</button></MenuItem>
           <MenuItem><button class="hover:bg-pink-500" @click="handleChangeLanguage('en')">English</button></MenuItem>
+          <MenuItem><button class="hover:bg-pink-500" @click="handleChangeLanguage('ja')">日本語</button></MenuItem>
         </div>
       </MenuItems>
     </transition>
