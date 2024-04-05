@@ -9,9 +9,10 @@
 
 ## Gameplay
 
-<img src="./docs/images/1.png" width="400">
-
-<img src="./docs/images/2.png" width="400">
+| Screen | Screenshots |
+| -- |--|
+| Gameplay | <img src="./docs/images/1.png" width="400"> |
+| Recent guesses |  <img src="./docs/images/2.png" width="400"> |
 
 ## Credits
 
