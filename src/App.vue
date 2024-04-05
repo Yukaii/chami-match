@@ -27,7 +27,7 @@ const submit = () => {
       <ColorBlock :color="userColor" />
     </div>
 
-    <!-- Sliders and Confirm Button -->
+    <!-- Sliders and Submit Button -->
     <div class="flex flex-col space-y-4">
       <!-- Hue Slider -->
       <div class="flex items-center">
@@ -48,8 +48,9 @@ const submit = () => {
         <span class="ml-2 min-w-[65px] rounded-lg bg-gray-700 px-4 py-2 text-center text-white">{{ userV }}</span>
       </div>
 
-      <!-- Confirm Button -->
-      <button class="button-3d w-full rounded-lg bg-pink-600 px-4 py-2 text-white" @click="submit">確定</button>
+      <!-- Submit Button -->
+      <button class="button-3d w-full rounded-lg bg-pink-600 px-4 py-2 text-white" @click="submit">
+        {{ $t('submit') }}</button>
     </div>
 
     <RecordPopup />

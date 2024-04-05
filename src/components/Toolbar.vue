@@ -7,7 +7,7 @@
           <i class="fas fa-fist-raised text-white" />
           <span class="ml-2 text-white">{{ state.winningStreak }}</span>
         </div>
-        <span class="tooltiptext">連擊數</span>
+        <span class="tooltiptext">{{ $t('comboCount') }}</span>
       </div>
       <div class="tooltip">
         <div class="button-3d flex items-center rounded-lg bg-pink-600 p-2 text-white">
@@ -15,18 +15,20 @@
           <i class="fas fa-chart-line" />
           <span class="ml-2 text-white">{{ state.winRate.value }}</span>
         </div>
-        <span class="tooltiptext">勝率</span>
+        <span class="tooltiptext">{{ $t('winningRate') }}</span>
       </div>
       <div class="tooltip">
         <div class="button-3d flex items-center rounded-lg bg-pink-600 p-2 text-white">
           <ph-arrows-clockwise :size="20" />
           <span class="ml-2">{{ state.currentRound }}</span>
         </div>
-        <span class="tooltiptext">回合數</span>
+        <span class="tooltiptext">{{ $t('roundCount') }}</span>
       </div>
     </div>
 
     <div class="flex gap-2">
+      <locale-changer />
+
       <button class="button-3d rounded-lg bg-pink-600 p-2 text-white">
         <ph-gear-six :size="20" />
       </button>

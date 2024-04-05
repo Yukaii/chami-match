@@ -10,5 +10,6 @@ module.exports = {
   rules: {
     'tailwindcss/no-custom-classname': 'off',
     'vue/multi-word-component-names': 'off',
+    'vue/first-attribute-linebreak': 'off',
   },
 }
