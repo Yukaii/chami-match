@@ -29,7 +29,7 @@ export default defineConfig({
       manifest: {
         name: 'HSV Hunter',
         short_name: 'HSV Hunter',
-        description: 'Use sliders, guess the color, and improve your color regconition skill!',
+        description: 'Use sliders to guess the color and improve your color recognition skills.',
         theme_color: '#222222',
         // icons: [
         //   {
