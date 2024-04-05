@@ -10,7 +10,6 @@ const userS = ref(userColor.s)
 const userV = ref(userColor.v)
 
 const submit = () => {
-  console.log(parseInt(userH.value, 10), parseInt(userS.value, 10), parseInt(userV.value, 10))
   state.updateUserColor(parseInt(userH.value, 10), parseInt(userS.value, 10), parseInt(userV.value, 10))
   state.checkGuess()
 }
@@ -34,19 +33,19 @@ const submit = () => {
       <div class="flex items-center">
         <span class="mr-2 text-orange-300">H:</span>
         <input v-model="userH" type="range" min="0" max="360" class="slider hue-slider" />
-        <span class="ml-2 rounded-lg bg-gray-700 px-4 py-2 text-white">{{ userH }}</span>
+        <span class="ml-2 rounded-lg bg-gray-700 px-4 py-2 text-white min-w-[65px] text-center">{{ userH }}</span>
       </div>
       <!-- Saturation Slider -->
       <div class="flex items-center">
         <span class="mr-2 text-orange-300">S:</span>
         <input v-model="userS" type="range" min="0" max="100" class="slider" />
-        <span class="ml-2 rounded-lg bg-gray-700 px-4 py-2 text-white">{{ userS }}</span>
+        <span class="ml-2 rounded-lg bg-gray-700 px-4 py-2 text-white min-w-[65px] text-center">{{ userS }}</span>
       </div>
       <!-- Value Slider -->
       <div class="flex items-center">
         <span class="mr-2 text-orange-300">V:</span>
         <input v-model="userV" type="range" min="0" max="100" class="slider" />
-        <span class="ml-2 rounded-lg bg-gray-700 px-4 py-2 text-white">{{ userV }}</span>
+        <span class="ml-2 rounded-lg bg-gray-700 px-4 py-2 text-white min-w-[65px] text-center">{{ userV }}</span>
       </div>
 
       <!-- Confirm Button -->
