@@ -69,3 +69,12 @@ body {
     #ff0000 100%
   );
 }
+
+.saturation-slider {
+  background: linear-gradient(to right, #808080, #0000ff);
+}
+
+.value-slider {
+  background: linear-gradient(to right, #000000, #ffffff);
+}
+

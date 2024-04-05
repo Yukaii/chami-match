@@ -38,13 +38,13 @@ const submit = () => {
       <!-- Saturation Slider -->
       <div class="flex items-center">
         <span class="mr-2 text-orange-300">S:</span>
-        <input v-model="userS" type="range" min="0" max="100" class="slider" />
+        <input v-model="userS" type="range" min="0" max="100" class="slider saturation-slider" />
         <span class="ml-2 rounded-lg bg-gray-700 px-4 py-2 text-white min-w-[65px] text-center">{{ userS }}</span>
       </div>
       <!-- Value Slider -->
       <div class="flex items-center">
         <span class="mr-2 text-orange-300">V:</span>
-        <input v-model="userV" type="range" min="0" max="100" class="slider" />
+        <input v-model="userV" type="range" min="0" max="100" class="slider value-slider" />
         <span class="ml-2 rounded-lg bg-gray-700 px-4 py-2 text-white min-w-[65px] text-center">{{ userV }}</span>
       </div>
 
