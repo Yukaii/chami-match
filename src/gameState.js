@@ -36,8 +36,8 @@ export const useGlobalGameState = createGlobalState(() => {
     // Record the round history
     history.value.push({
       round: currentRound.value,
-      guessedColor: userColor,
-      actualColor: randomColor,
+      guessedColor: Object.assign({}, userColor),
+      actualColor: Object.assign({}, randomColor),
       wasSuccess: wasSuccess,
     })
 
@@ -116,6 +116,27 @@ export const useGlobalGameState = createGlobalState(() => {
     return streak
   })
 
+  const lastTriesOfEachRound = computed(() => {
+    let roundToCheck = currentRound.value - 1
+    const tries = []
+
+    while (roundToCheck > 0) {
+      const lastTryOfRound = history.value
+        .slice()
+        .reverse()
+        .find((item) => item.round === roundToCheck)
+
+      if (lastTryOfRound) {
+        tries.push(lastTryOfRound)
+        roundToCheck--
+      } else {
+        break
+      }
+    }
+
+    return tries
+  })
+
   return {
     currentRound,
     maxLife,
@@ -136,5 +157,6 @@ export const useGlobalGameState = createGlobalState(() => {
     winningStreak,
     recordPopupOpen,
     toggleRecordPopup,
+    lastTriesOfEachRound,
   }
 })
