@@ -83,6 +83,6 @@ body {
 }
 .button-3d:hover {
   background-color: #e6007e;
-  box-shadow: 0 2px #666;
+  box-shadow: 0 2px #93164d;
   transform: translateY(2px);
 }
