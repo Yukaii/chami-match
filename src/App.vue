@@ -52,5 +52,7 @@ const submit = () => {
       <!-- Confirm Button -->
       <button class="button-3d w-full rounded-lg bg-pink-600 px-4 py-2 text-white" @click="submit">確定</button>
     </div>
+
+    <RecordPopup />
   </div>
 </template>

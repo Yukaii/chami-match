@@ -1,3 +1,5 @@
+import { useToggle } from '@vueuse/core'
+
 export const useGlobalGameState = createGlobalState(() => {
   // State
   const currentRound = ref(1)
@@ -13,6 +15,7 @@ export const useGlobalGameState = createGlobalState(() => {
   const userColor = reactive({ h: 0, s: 0, v: 0 }) // default to zero, user has to change
   const score = ref(0)
   const history = ref([])
+  const [recordPopupOpen, toggleRecordPopup] = useToggle(false)
 
   // Getters
   // Add any computed property getters here if required
@@ -131,5 +134,7 @@ export const useGlobalGameState = createGlobalState(() => {
     checkGuess,
     winRate,
     winningStreak,
+    recordPopupOpen,
+    toggleRecordPopup,
   }
 })

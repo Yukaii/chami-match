@@ -11,8 +11,9 @@
     "lint:prettier": "prettier --write \"src/**/*.{js,json,tsx,css,less,scss,vue,html,md}\""
   },
   "dependencies": {
-    "@vueuse/core": "^10.9.0",
     "@phosphor-icons/vue": "^2.1.6",
+    "@vueuse/core": "^10.9.0",
+    "tailwind-merge": "^2.2.2",
     "vue": "^3.4.21"
   },
   "devDependencies": {
