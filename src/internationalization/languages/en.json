@@ -4,5 +4,18 @@
   "gameRecord": "Game Record",
   "comboCount": "Combo Count",
   "winningRate": "Winning Rate",
-  "roundCount": "Round Count"
+  "roundCount": "Round Count",
+  "settings": {
+    "title": "Settings",
+    "precision": {
+      "label": "Precision"
+    },
+    "colorMode": {
+      "label": "Color Mode"
+    },
+    "maxTries": {
+      "label": "Max Tries"
+    },
+    "cta": "Apply"
+  }
 }

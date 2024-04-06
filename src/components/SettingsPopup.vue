@@ -1,10 +1,10 @@
 <template>
   <Modal :is-open="settingsPopupOpen" @on-close="onClose">
-    <div class="mb-4 text-center text-lg font-bold text-white">Settings</div>
+    <div class="mb-4 text-center text-lg font-bold text-white">{{ $t('settings.title') }}</div>
 
     <!-- Precision -->
     <div class="mb-4">
-      <label class="mb-2 block font-bold text-white">Precision</label>
+      <label class="mb-2 block font-bold text-white">{{ $t('settings.precision.label') }}</label>
       <div class="flex space-x-2">
         <button
           v-for="value in [3, 5, 10, 20, 30]"
@@ -20,7 +20,7 @@
 
     <!-- Color Mode -->
     <div class="mb-4">
-      <label class="mb-2 block font-bold text-white">Color Mode</label>
+      <label class="mb-2 block font-bold text-white">{{ $t('settings.colorMode.label') }}</label>
       <div class="flex space-x-2">
         <button
           v-for="value in ['Color', 'B/W']"
@@ -36,7 +36,7 @@
 
     <!-- Max Tries -->
     <div class="mb-4">
-      <label class="mb-2 block font-bold text-white">Max Tries</label>
+      <label class="mb-2 block font-bold text-white">{{ $t('settings.maxTries.label') }}</label>
       <div class="flex space-x-2">
         <button
           v-for="value in [3, 5, 10]"
@@ -50,7 +50,9 @@
       </div>
     </div>
 
-    <button class="button-3d mt-4 w-full rounded-lg bg-pink-600 px-4 py-2 text-white" @click="onApply">Apply</button>
+    <button class="button-3d mt-4 w-full rounded-lg bg-pink-600 px-4 py-2 text-white" @click="onApply">
+      {{ $t('settings.cta') }}
+    </button>
   </Modal>
 </template>
 

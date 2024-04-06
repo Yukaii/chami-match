@@ -4,5 +4,18 @@
   "gameRecord": "ゲーム記録",
   "comboCount": "コンボ数",
   "winningRate": "勝率",
-  "roundCount": "ラウンド数"
+  "roundCount": "ラウンド数",
+  "settings": {
+    "title": "設定",
+    "precision": {
+      "label": "精度"
+    },
+    "colorMode": {
+      "label": "色彩モード"
+    },
+    "maxTries": {
+      "label": "試行回数"
+    },
+    "cta": "適用"
+  }
 }
