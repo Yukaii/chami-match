@@ -23,7 +23,7 @@ watch(locale, () => {
     description: t('description'),
     ogDescription: t('description'),
     ogTitle: t('title'),
-    ogImage: 'https://hsv-hunter.yukai.dev/og.jpg',
+    ogImage: `${import.meta.env.BASE_URL}/og.png`,
     twitterCard: 'summary_large_image',
   })
 }, { immediate: true })
