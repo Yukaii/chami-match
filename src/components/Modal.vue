@@ -11,10 +11,6 @@ import { twMerge } from 'tailwind-merge'
 
 const props = defineProps({
   isOpen: Boolean,
-  onClose: {
-    type: Function,
-    default: () => {},
-  },
   modalClass: {
     type: String,
     default: '',
@@ -28,4 +24,9 @@ const className = computed(() => {
     !props.isOpen && 'hidden'
   )
 })
+
+const emit = defineEmits(['onClose'])
+const onClose = () => {
+  emit('onClose')
+}
 </script>
