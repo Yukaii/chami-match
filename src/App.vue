@@ -2,6 +2,7 @@
 import { useI18n } from 'vue-i18n'
 
 import { useGlobalGameState } from './gameState'
+
 const { t, locale } = useI18n()
 
 watch(locale, () => {
