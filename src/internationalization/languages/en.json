@@ -9,6 +9,9 @@
   "roundCount": "Round Count",
   "settings": {
     "title": "Settings",
+    "language": {
+      "label": "Language"
+    },
     "precision": {
       "label": "Precision"
     },

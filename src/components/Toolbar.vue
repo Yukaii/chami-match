@@ -27,8 +27,6 @@
     </div>
 
     <div class="flex gap-2">
-      <locale-changer />
-
       <button class="button-3d rounded-lg bg-pink-600 p-2 text-white" @click="state.toggleRecordPopup(true)">
         <ph-clock-counter-clockwise :size="20" />
       </button>
