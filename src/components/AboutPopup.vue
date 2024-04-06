@@ -4,7 +4,7 @@
 
     <p class="mb-2">
       <i18n-t keypath="about.text1">
-        <template v-slot:colorTest>
+        <template #colorTest>
           <a
             class="text-blue-500 underline"
             href="https://dream7fragment.itch.io/color-test"
@@ -13,7 +13,7 @@
             >color-test</a
           >
         </template>
-        <template v-slot:fragment>
+        <template #fragment>
           <a
             class="text-blue-500 underline"
             href="https://www.facebook.com/Dream7Fragment"
@@ -26,7 +26,7 @@
     </p>
     <p>
       <i18n-t keypath="about.text2">
-        <template v-slot:githubRepo>
+        <template #githubRepo>
           <a
             class="text-blue-500 underline"
             href="https://github.com/Yukaii/chami-match"
@@ -38,7 +38,7 @@
       </i18n-t>
     </p>
 
-    <div class="w-full flex justify-center">
+    <div class="flex w-full justify-center">
       <button class="button-3d mt-4 rounded-lg bg-pink-600 px-4 py-2 text-white" @click="onClose">
         {{ $t('about.close') }}
       </button>

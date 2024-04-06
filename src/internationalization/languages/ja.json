@@ -9,18 +9,19 @@
   "roundCount": "ラウンド数",
   "settings": {
     "title": "設定",
-    "language": {
-      "label": "言語"
-    },
+    "UIOptions": "ユーザーインターフェースオプション",
+    "gameOptions": "ゲームオプション",
+    "language": "言語",
     "precision": {
       "label": "精度"
     },
     "colorMode": {
-      "label": "色彩モード"
+      "label": "カラーモード"
     },
     "maxTries": {
       "label": "試行回数"
     },
+    "notice": "ゲームオプションを適用すると、新しいラウンドが始まります。",
     "cta": "適用"
   },
   "about": {

@@ -1,58 +1,90 @@
 <template>
   <Modal :is-open="settingsPopupOpen" @on-close="onClose">
-    <div class="text-center text-lg font-bold text-white">{{ $t('settings.title') }}</div>
+    <div class="mb-4 text-center text-lg font-bold text-white">{{ $t('settings.title') }}</div>
 
-    <!--Language-->
-    <div>
-      <label class="mb-2 block font-bold text-white">{{ $t('settings.language.label') }}</label>
-      <div class="flex space-x-2">
-        <button v-for="lang in languages" :key="lang.code" class="button-3d"
-          :class="`px-2 py-1 rounded-lg ${settings.language === lang.code ? 'bg-pink-600' : 'bg-slate-600'}`"
-          @click="handleChangeLanguage(lang.code)">{{ lang.label }}</button>
+    <!-- UI Options -->
+    <div class="mb-4">
+      <div class="mb-2 text-xl font-bold text-white">{{ $t('settings.UIOptions') }}</div>
+      <hr class="mb-4 border-gray-400" />
+
+      <!-- Language -->
+      <div class="mb-4">
+        <label class="mb-2 block font-bold text-white">{{ $t('settings.language') }}</label>
+        <div class="flex space-x-2">
+          <button
+            v-for="lang in languages"
+            :key="lang.code"
+            class="button-3d"
+            :class="`px-2 py-1 rounded-lg ${settings.language === lang.code ? 'bg-pink-600' : 'bg-slate-600'}`"
+            @click="handleChangeLanguage(lang.code)"
+          >
+            {{ lang.label }}
+          </button>
+        </div>
       </div>
     </div>
 
-    <!-- Precision -->
+    <!-- Game Options -->
     <div>
-      <label class="mb-2 block font-bold text-white">{{ $t('settings.precision.label') }}</label>
-      <div class="flex space-x-2">
-        <button v-for="value in [3, 5, 10, 20, 30]" :key="value" class="button-3d"
-          :class="`px-2 py-1 rounded-lg ${settings.precision === value ? 'bg-pink-600' : 'bg-slate-600'}`"
-          @click="settings.precision = value">
-          {{ value }}
-        </button>
-      </div>
-    </div>
+      <div class="mb-2 text-xl font-bold text-white">{{ $t('settings.gameOptions') }}</div>
+      <hr class="mb-4 border-gray-400" />
 
-    <!-- Color Mode -->
-    <div>
-      <label class="mb-2 block font-bold text-white">{{ $t('settings.colorMode.label') }}</label>
-      <div class="flex space-x-2">
-        <button v-for="value in ['Color', 'B/W']" :key="value" class="button-3d"
-          :class="`px-2 py-1 rounded-lg ${settings.mode === value ? 'bg-pink-600' : 'bg-slate-600'}`"
-          @click="settings.mode = value">
-          {{ value }}
-        </button>
+      <!-- Precision -->
+      <div class="mb-4">
+        <label class="mb-2 block font-bold text-white">{{ $t('settings.precision.label') }}</label>
+        <div class="flex space-x-2">
+          <button
+            v-for="value in [3, 5, 10, 20, 30]"
+            :key="value"
+            class="button-3d"
+            :class="`px-2 py-1 rounded-lg ${settings.precision === value ? 'bg-pink-600' : 'bg-slate-600'}`"
+            @click="settings.precision = value"
+          >
+            {{ value }}
+          </button>
+        </div>
       </div>
-    </div>
 
-    <!-- Max Tries -->
-    <div>
-      <label class="mb-2 block font-bold text-white">{{ $t('settings.maxTries.label') }}</label>
-      <div class="flex space-x-2">
-        <button v-for="value in [3, 5, 10]" :key="value" class="button-3d"
-          :class="`px-2 py-1 rounded-lg ${settings.maxTries === value ? 'bg-pink-600' : 'bg-slate-600'}`"
-          @click="settings.maxTries = value">
-          {{ value }}
-        </button>
+      <!-- Color Mode -->
+      <div class="mb-4">
+        <label class="mb-2 block font-bold text-white">{{ $t('settings.colorMode.label') }}</label>
+        <div class="flex space-x-2">
+          <button
+            v-for="value in ['Color', 'B/W']"
+            :key="value"
+            class="button-3d"
+            :class="`px-2 py-1 rounded-lg ${settings.mode === value ? 'bg-pink-600' : 'bg-slate-600'}`"
+            @click="settings.mode = value"
+          >
+            {{ value }}
+          </button>
+        </div>
       </div>
-    </div>
 
-    <button class="button-3d !mt-8 w-full rounded-lg bg-pink-600 px-4 py-2 text-white" @click="onApply">
-      {{ $t('settings.cta') }}
-    </button>
+      <!-- Max Tries -->
+      <div class="mb-4">
+        <label class="mb-2 block font-bold text-white">{{ $t('settings.maxTries.label') }}</label>
+        <div class="flex space-x-2">
+          <button
+            v-for="value in [3, 5, 10]"
+            :key="value"
+            class="button-3d"
+            :class="`px-2 py-1 rounded-lg ${settings.maxTries === value ? 'bg-pink-600' : 'bg-slate-600'}`"
+            @click="settings.maxTries = value"
+          >
+            {{ value }}
+          </button>
+        </div>
+      </div>
+
+      <div class="mb-2 rounded-lg bg-gray-800 px-4 py-2 text-sm">{{ $t('settings.notice') }}</div>
+      <button class="button-3d w-full rounded-lg bg-pink-600 px-4 py-2 text-white" @click="onApply">
+        {{ $t('settings.cta') }}
+      </button>
+    </div>
   </Modal>
 </template>
+/template>
 
 <script setup>
 import { useI18n } from 'vue-i18n'

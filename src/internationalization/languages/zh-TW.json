@@ -9,9 +9,9 @@
   "roundCount": "回合數",
   "settings": {
     "title": "設定",
-    "language": {
-      "label": "語言"
-    },
+    "UIOptions": "介面選項",
+    "gameOptions": "遊戲選項",
+    "language": "語言",
     "precision": {
       "label": "精度"
     },
@@ -19,8 +19,9 @@
       "label": "色彩模式"
     },
     "maxTries": {
-      "label": "嘗試次數"
+      "label": "最大嘗試次數"
     },
+    "notice": "套用遊戲選項將開始新一輪的遊戲。",
     "cta": "套用"
   },
   "about": {

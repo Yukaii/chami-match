@@ -9,9 +9,9 @@
   "roundCount": "Round Count",
   "settings": {
     "title": "Settings",
-    "language": {
-      "label": "Language"
-    },
+    "UIOptions": "UI Options",
+    "gameOptions": "Game Options",
+    "language": "Language",
     "precision": {
       "label": "Precision"
     },
@@ -21,6 +21,7 @@
     "maxTries": {
       "label": "Max Tries"
     },
+    "notice": "Applying game options will start a new round.",
     "cta": "Apply"
   },
   "about": {
