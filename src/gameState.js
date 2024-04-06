@@ -13,12 +13,12 @@ function createSession({ maxLife, precision, mode }) {
 }
 
 function generateRandomColor(mode) {
-  switch(mode) {
+  switch (mode) {
     case 'B/W': {
       return {
         h: 0,
         s: 0,
-        v: Math.floor(Math.random() * 100)
+        v: Math.floor(Math.random() * 100),
       }
     }
     case 'Color':
