@@ -8,7 +8,7 @@
       <div class="flex space-x-2">
         <button v-for="lang in languages" :key="lang.code" class="button-3d"
           :class="`px-2 py-1 rounded-lg ${settings.language === lang.code ? 'bg-pink-600' : 'bg-slate-600'}`"
-          @click="settings.language = lang.code">{{ lang.label }}</button>
+          @click="handleChangeLanguage(lang.code)">{{ lang.label }}</button>
       </div>
     </div>
 
@@ -75,7 +75,6 @@ const settings = reactive({
 })
 
 const onClose = () => {
-  settings.language = localStorage.getItem('lang') || navigator.language || 'zh-TW'
   state.toggleSettingsPopup(false)
 }
 
@@ -92,8 +91,12 @@ const onApply = () => {
   state.updateMode(settings.mode)
   state.updateMaxLife(settings.maxTries)
   state.startOver()
-  localStorage.setItem('lang', settings.language)
-  locale.value = settings.language
   onClose()
+}
+
+const handleChangeLanguage = (lang) => {
+  settings.language = lang
+  locale.value = lang
+  localStorage.setItem('lang', lang)
 }
 </script>
