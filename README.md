@@ -2,9 +2,9 @@
 
 ## TODOs
 
-- [ ] Settings
-- [ ] About
-- [ ] persistent history
+- [x] Settings
+- [x] About
+- [x] persistent history
 - [ ] Design overhaul
 
 ## Gameplay
