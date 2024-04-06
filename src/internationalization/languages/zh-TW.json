@@ -9,6 +9,9 @@
   "roundCount": "回合數",
   "settings": {
     "title": "設定",
+    "language": {
+      "label": "語言"
+    },
     "precision": {
       "label": "精度"
     },

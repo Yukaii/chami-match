@@ -9,6 +9,9 @@
   "roundCount": "ラウンド数",
   "settings": {
     "title": "設定",
+    "language": {
+      "label": "言語"
+    },
     "precision": {
       "label": "精度"
     },
