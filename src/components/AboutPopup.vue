@@ -38,6 +38,29 @@
       </i18n-t>
     </p>
 
+    <!-- Developer Credits -->
+    <div class="mb-4">
+      <div class="mb-2 text-xl font-bold text-white">{{ $t('about.developerCredits') }}</div>
+      <hr class="mb-4 border-gray-400" />
+      <p>{{ $t('about.developerText') }}</p>
+      <ul class="list-inside list-disc text-white">
+        <li>
+          <a class="text-blue-500 underline" href="https://github.com/Yukaii" target="_blank" rel="noopener noreferrer"
+            >Yukai</a
+          >
+        </li>
+        <li>
+          <a
+            class="text-blue-500 underline"
+            href="https://github.com/alan10332000"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Alan</a
+          >
+        </li>
+      </ul>
+    </div>
+
     <div class="flex w-full justify-center">
       <button class="button-3d mt-4 rounded-lg bg-pink-600 px-4 py-2 text-white" @click="onClose">
         {{ $t('about.close') }}
