@@ -6,22 +6,33 @@
       <div
         v-for="(record, index) in recentRecords"
         :key="index"
-        class="flex items-center justify-between rounded-lg bg-gray-800 p-2"
+        class="grid grid-cols-5 items-center gap-2 rounded-lg bg-gray-800 p-2"
       >
-        <div class="flex w-full max-w-20 space-x-2">
+        <!-- Success Indicator -->
+        <div class="flex justify-center">
+          <span v-if="record.wasSuccess">
+            <ph-check-circle :size="16" class="text-green-500" />
+          </span>
+          <span v-else>
+            <ph-x-circle :size="16" class="text-red-500" />
+          </span>
+        </div>
+
+        <div class="col-span-2 flex space-x-2">
           <ColorBlock :color="record.actualColor" />
           <ColorBlock :color="record.guessedColor" />
         </div>
-        <div class="flex flex-1 flex-col text-right">
-          <span class="text-orange-300"
-            >H: {{ record.actualColor.h }} ({{ record.guessedColor.h - record.actualColor.h }})</span
-          >
-          <span class="text-orange-300"
-            >S: {{ record.actualColor.s }} ({{ record.guessedColor.s - record.actualColor.s }})</span
-          >
-          <span class="text-orange-300"
-            >V: {{ record.actualColor.v }} ({{ record.guessedColor.v - record.actualColor.v }})</span
-          >
+
+        <div class="col-span-2 flex flex-col text-right">
+          <span class="text-orange-300">
+            H: {{ record.actualColor.h }} ({{ record.guessedColor.h - record.actualColor.h }})
+          </span>
+          <span class="text-orange-300">
+            S: {{ record.actualColor.s }} ({{ record.guessedColor.s - record.actualColor.s }})
+          </span>
+          <span class="text-orange-300">
+            V: {{ record.actualColor.v }} ({{ record.guessedColor.v - record.actualColor.v }})
+          </span>
         </div>
       </div>
     </div>
@@ -32,6 +43,7 @@
 </template>
 
 <script setup>
+import { PhCheckCircle, PhXCircle } from '@phosphor-icons/vue'
 import { useGlobalGameState } from '../gameState'
 
 const state = useGlobalGameState()
