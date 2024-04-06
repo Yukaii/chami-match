@@ -13,6 +13,7 @@
   "dependencies": {
     "@headlessui/vue": "^1.7.19",
     "@phosphor-icons/vue": "^2.1.6",
+    "@unhead/vue": "^1.9.4",
     "@vueuse/core": "^10.9.0",
     "nanoid": "^5.0.6",
     "tailwind-merge": "^2.2.2",
