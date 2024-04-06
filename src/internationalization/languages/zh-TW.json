@@ -22,5 +22,12 @@
       "label": "嘗試次數"
     },
     "cta": "套用"
+  },
+  "about": {
+    "title": "關於",
+    "text1": "此遊戲的靈感來自原始的 {colorTest}，感謝 {fragment} 提供了這麼棒的想法!",
+    "text2": "如需更多資訊，貢獻或回報問題，請參訪 {githubRepo}。",
+    "repository": "GitHub 資料庫",
+    "close": "關閉"
   }
 }
