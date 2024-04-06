@@ -16,7 +16,7 @@ export default defineConfig({
             // named imports
             'createGlobalState',
           ],
-        },
+        }
       ],
     }),
     ,
@@ -27,8 +27,8 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg}']
       },
       manifest: {
-        name: 'HSV Hunter',
-        short_name: 'HSV Hunter',
+        name: 'Chami Match',
+        short_name: 'Chami Match',
         description: 'Use sliders to guess the color and improve your color recognition skills.',
         theme_color: '#222222',
         // icons: [
