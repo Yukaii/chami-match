@@ -12,7 +12,7 @@ const userV = ref(userColor.v)
 
 const submit = () => {
   const hsv = [parseInt(userH.value, 10), parseInt(userS.value, 10), parseInt(userV.value, 10)]
-  if (mode === 'B/W') {
+  if (mode.value === 'B/W') {
     hsv[0] = 0
     hsv[1] = 0
   }
