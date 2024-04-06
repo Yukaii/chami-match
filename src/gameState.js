@@ -1,12 +1,30 @@
-import { useToggle } from '@vueuse/core'
+import { onMounted } from 'vue'
+import { useToggle, useStorage } from '@vueuse/core'
+import { nanoid } from 'nanoid'
+
+function createSession({ maxLife, precision, mode }) {
+  return {
+    id: nanoid(),
+    startedAt: Math.floor(Date.now() / 1000), // UNIX timestamp
+    maxLife,
+    precision,
+    mode,
+  }
+}
 
 export const useGlobalGameState = createGlobalState(() => {
+  const sessions = useStorage('sessions', [])
+  const preferences = useStorage('preferences', { maxLife: 5, precision: 10, mode: 'Color' })
+  const history = useStorage('history', [])
+
+  const currentSession = ref(null)
+
   // State
-  const currentRound = ref(1)
-  const maxLife = ref(5)
-  const lives = ref(maxLife.value)
-  const precision = ref(10)
-  const mode = ref('Color') // default to "Color", can also be "B/W"
+  const currentRound = ref(0)
+  const maxLife = preferences.value.maxLife
+  const lives = ref(maxLife)
+  const precision = ref(preferences.value.precision)
+  const mode = ref(preferences.value.mode) // default to "Color", can also be "B/W"
   const randomColor = reactive({
     h: Math.floor(Math.random() * 360),
     s: Math.floor(Math.random() * 100),
@@ -14,17 +32,26 @@ export const useGlobalGameState = createGlobalState(() => {
   })
   const userColor = reactive({ h: 0, s: 0, v: 0 }) // default to zero, user has to change
   const score = ref(0)
-  const history = ref([])
   const [recordPopupOpen, toggleRecordPopup] = useToggle(false)
 
   // Getters
   // Add any computed property getters here if required
 
   // Actions
+  function startOver() {
+    // add a new session
+    const session = createSession(preferences.value)
+    currentSession.value = session
+    sessions.value.push(session)
+    // reset the round
+    currentRound.value = 0
+    startNewRound()
+  }
+
   function startNewRound() {
     // Increment the round, reset the lives and userColor
     currentRound.value++
-    lives.value = maxLife.value
+    lives.value = maxLife
 
     // Generate new randomColor
     randomColor.h = Math.floor(Math.random() * 360)
@@ -35,6 +62,7 @@ export const useGlobalGameState = createGlobalState(() => {
   function recordRound(wasSuccess) {
     // Record the round history
     history.value.push({
+      sessionId: currentSession.value.id,
       round: currentRound.value,
       guessedColor: Object.assign({}, userColor),
       actualColor: Object.assign({}, randomColor),
@@ -116,28 +144,38 @@ export const useGlobalGameState = createGlobalState(() => {
     return streak
   })
 
+  const MAX_RECORDS = 50
+
   const lastTriesOfEachRound = computed(() => {
-    let roundToCheck = currentRound.value - 1
+    let lastRecords = history.value.slice(-MAX_RECORDS) // Fetch last MAX_RECORDS records
     const tries = []
+    let lastRoundId = -1
 
-    while (roundToCheck > 0) {
-      const lastTryOfRound = history.value
-        .slice()
-        .reverse()
-        .find((item) => item.round === roundToCheck)
+    for (let i = lastRecords.length - 1; i >= 0; i--) {
+      let record = lastRecords[i]
+      if (record.round !== lastRoundId) {
+        tries.push(record)
+        lastRoundId = record.round
+      }
 
-      if (lastTryOfRound) {
-        tries.push(lastTryOfRound)
-        roundToCheck--
-      } else {
+      if (tries.length === MAX_RECORDS) {
         break
       }
     }
 
-    return tries
+    return tries.map((tryRecord) => {
+      const session = sessions.value.find((s) => s.id === tryRecord.sessionId)
+      return {
+        ...tryRecord,
+        session: Object.assign({}, session),
+      }
+    })
   })
 
+  startOver()
+
   return {
+    currentSession,
     currentRound,
     maxLife,
     lives,
@@ -158,5 +196,6 @@ export const useGlobalGameState = createGlobalState(() => {
     recordPopupOpen,
     toggleRecordPopup,
     lastTriesOfEachRound,
+    startOver,
   }
 })
