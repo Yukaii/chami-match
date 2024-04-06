@@ -49,6 +49,7 @@ export const useGlobalGameState = createGlobalState(() => {
   const score = ref(0)
   const [recordPopupOpen, toggleRecordPopup] = useToggle(false)
   const [settingsPopupOpen, toggleSettingsPopup] = useToggle(false)
+  const [aboutPopupOpen, toggleAboutPopup] = useToggle(false)
 
   // Getters
   // Add any computed property getters here if required
@@ -222,6 +223,8 @@ export const useGlobalGameState = createGlobalState(() => {
     toggleRecordPopup,
     settingsPopupOpen,
     toggleSettingsPopup,
+    aboutPopupOpen,
+    toggleAboutPopup,
     lastTriesOfEachRound,
     startOver,
   }

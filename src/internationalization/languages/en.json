@@ -19,5 +19,12 @@
       "label": "Max Tries"
     },
     "cta": "Apply"
+  },
+  "about": {
+    "title": "About",
+    "text1": "This game is inspired by the original idea from {colorTest}. Special thanks to {fragment} for his amazing idea!",
+    "text2": "For more information, contributions, or to report issues, please visit the {githubRepo}.",
+    "repository": "GitHub repository",
+    "close": "Close"
   }
 }
