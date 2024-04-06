@@ -41,14 +41,15 @@ export const useGlobalGameState = createGlobalState(() => {
 
   // State
   const currentRound = ref(0)
-  const maxLife = preferences.value.maxLife
-  const lives = ref(maxLife)
-  const precision = ref(preferences.value.precision)
-  const mode = ref(preferences.value.mode) // default to "Color", can also be "B/W"
-  const randomColor = reactive(generateRandomColor(mode))
+  const maxLife = computed(() => preferences.value.maxLife)
+  const lives = ref(maxLife.value)
+  const precision = computed(() => preferences.value.precision)
+  const mode = computed(() => preferences.value.mode) // default to "Color", can also be "B/W"
+  const randomColor = reactive(generateRandomColor(mode.value))
   const userColor = reactive({ h: 0, s: 0, v: 0 }) // default to zero, user has to change
   const score = ref(0)
   const [recordPopupOpen, toggleRecordPopup] = useToggle(false)
+  const [settingsPopupOpen, toggleSettingsPopup] = useToggle(false)
 
   // Getters
   // Add any computed property getters here if required
@@ -67,10 +68,10 @@ export const useGlobalGameState = createGlobalState(() => {
   function startNewRound() {
     // Increment the round, reset the lives and userColor
     currentRound.value++
-    lives.value = maxLife
+    lives.value = maxLife.value
 
     // Generate new randomColor
-    const random = generateRandomColor(mode)
+    const random = generateRandomColor(mode.value)
     randomColor.h = random.h
     randomColor.s = random.s
     randomColor.v = random.v
@@ -108,12 +109,16 @@ export const useGlobalGameState = createGlobalState(() => {
 
   // Action to change game mode
   function updateMode(newMode) {
-    mode.value = newMode
+    preferences.value.mode = newMode
   }
 
   // Action to change precision value
   function updatePrecision(newPrecision) {
-    precision.value = newPrecision
+    preferences.value.precision = newPrecision
+  }
+
+  function updateMaxLife(newMaxLife) {
+    preferences.value.maxLife = newMaxLife
   }
 
   // Action to check if user's guess is correct or not
@@ -204,16 +209,20 @@ export const useGlobalGameState = createGlobalState(() => {
     userColor,
     score,
     history,
+    preferences,
     startNewRound,
     recordRound,
     updateUserColor,
     updateMode,
     updatePrecision,
+    updateMaxLife,
     checkGuess,
     winRate,
     winningStreak,
     recordPopupOpen,
     toggleRecordPopup,
+    settingsPopupOpen,
+    toggleSettingsPopup,
     lastTriesOfEachRound,
     startOver,
   }

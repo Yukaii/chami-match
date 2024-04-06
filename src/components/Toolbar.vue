@@ -29,7 +29,7 @@
     <div class="flex gap-2">
       <locale-changer />
 
-      <button class="button-3d rounded-lg bg-pink-600 p-2 text-white">
+      <button class="button-3d rounded-lg bg-pink-600 p-2 text-white" @click="state.toggleSettingsPopup(true)">
         <ph-gear-six :size="20" />
       </button>
 

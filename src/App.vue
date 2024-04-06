@@ -62,5 +62,6 @@ const submit = () => {
     </div>
 
     <RecordPopup />
+    <SettingsPopup />
   </div>
 </template>
