@@ -22,7 +22,10 @@
       "label": "Max Tries"
     },
     "notice": "Applying game options will start a new round.",
-    "cta": "Apply"
+    "cta": "Apply",
+    "danger": "Danger Zone",
+    "confirmReset": "Reset will remove all your game data and settings. You can't undo this action.",
+    "resetGameData": "Reset Game Data"
   },
   "about": {
     "title": "About",
@@ -32,5 +35,11 @@
     "developerCredits": "Developer Credits",
     "developerText": "A big thanks to all the developers who contributed to this project. Your hard work and dedication make this game better for everyone.",
     "close": "Close"
+  },
+  "reset": {
+    "title": "Reset Game Data",
+    "message": "Are you sure you want to reset the game data? All your current progress will be lost.",
+    "confirm": "Yes, Reset",
+    "cancel": "No, Cancel"
   }
 }

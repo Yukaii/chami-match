@@ -95,5 +95,6 @@ const submit = () => {
     <RecordPopup />
     <SettingsPopup />
     <AboutPopup />
+    <ResetGameDataConfirmPopup />
   </div>
 </template>

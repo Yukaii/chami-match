@@ -81,6 +81,20 @@
       <button class="button-3d w-full rounded-lg bg-pink-600 px-4 py-2 text-white" @click="onApply">
         {{ $t('settings.cta') }}
       </button>
+
+      <div class="mb-4 mt-6">
+        <div class="mb-2 text-xl font-bold text-white">{{ $t('settings.danger') }}</div>
+        <hr class="mb-4 border-gray-400" />
+
+        <p class="mb-2 text-white">{{ $t('settings.confirmReset') }}</p>
+
+        <button
+          class="button-3d w-full rounded-lg bg-red-600 px-4 py-2 text-white"
+          @click="state.toggleResetPopup(true)"
+        >
+          {{ $t('settings.resetGameData') }}
+        </button>
+      </div>
     </div>
   </Modal>
 </template>

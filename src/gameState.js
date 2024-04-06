@@ -31,6 +31,13 @@ function generateRandomColor(mode) {
   }
 }
 
+export function resetGameData() {
+  localStorage.removeItem('sessions')
+  localStorage.removeItem('preferences')
+  localStorage.removeItem('history')
+  window.location.reload()
+}
+
 export const useGlobalGameState = createGlobalState(() => {
   const sessions = useStorage('sessions', [])
   const preferences = useStorage('preferences', { maxLife: 5, precision: 10, mode: 'Color' })
@@ -50,6 +57,7 @@ export const useGlobalGameState = createGlobalState(() => {
   const [recordPopupOpen, toggleRecordPopup] = useToggle(false)
   const [settingsPopupOpen, toggleSettingsPopup] = useToggle(false)
   const [aboutPopupOpen, toggleAboutPopup] = useToggle(false)
+  const [resetPopupOpen, toggleResetPopup] = useToggle(false)
 
   // Getters
   // Add any computed property getters here if required
@@ -225,6 +233,8 @@ export const useGlobalGameState = createGlobalState(() => {
     toggleSettingsPopup,
     aboutPopupOpen,
     toggleAboutPopup,
+    resetPopupOpen,
+    toggleResetPopup,
     lastTriesOfEachRound,
     startOver,
   }
