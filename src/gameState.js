@@ -1,4 +1,3 @@
-import { onMounted } from 'vue'
 import { useToggle, useStorage } from '@vueuse/core'
 import { nanoid } from 'nanoid'
 
