@@ -1,5 +1,32 @@
 <script setup>
+import { useI18n } from 'vue-i18n'
+
 import { useGlobalGameState } from './gameState'
+
+const { t, locale } = useI18n()
+
+watch(locale, () => {
+  console.log('locale', locale.value)
+
+  useHead({
+    title: t('title'),
+    meta: [
+      {
+        name: 'description',
+        content: t('description'),
+      },
+    ],
+  })
+
+  useSeoMeta({
+    title: t('title'),
+    description: t('description'),
+    ogDescription: t('description'),
+    ogTitle: t('title'),
+    ogImage: `${import.meta.env.BASE_URL}/og.png`,
+    twitterCard: 'summary_large_image',
+  })
+}, { immediate: true })
 
 const state = useGlobalGameState()
 const randomColor = state.randomColor
