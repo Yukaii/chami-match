@@ -130,10 +130,12 @@ export const useGlobalGameState = createGlobalState(() => {
       return '0%' // or return '--%' or 'No Games Yet' or any similar text indicating there's no history
     }
 
-    let successfulRounds = history.value.filter((item, i, arr) => {
-      // is this the last try of the round or last item in history?
-      return item.wasSuccess && (i === arr.length - 1 || arr[i + 1].round !== item.round)
-    }).length
+    let successfulRounds = history.value
+      .filter((item) => item.sessionId === currentSession.value.id)
+      .filter((item, i, arr) => {
+        // is this the last try of the round or last item in history?
+        return item.wasSuccess && (i === arr.length - 1 || arr[i + 1].round !== item.round)
+      }).length
 
     const winPercentage = (successfulRounds / (currentRound.value - 1)) * 100
     return `${parseInt(winPercentage, 10)}%`
