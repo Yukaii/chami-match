@@ -4,13 +4,20 @@ import { useGlobalGameState } from './gameState'
 const state = useGlobalGameState()
 const randomColor = state.randomColor
 const userColor = state.userColor
+const mode = state.mode
 
 const userH = ref(userColor.h)
 const userS = ref(userColor.s)
 const userV = ref(userColor.v)
 
 const submit = () => {
-  state.updateUserColor(parseInt(userH.value, 10), parseInt(userS.value, 10), parseInt(userV.value, 10))
+  const hsv = [parseInt(userH.value, 10), parseInt(userS.value, 10), parseInt(userV.value, 10)]
+  if (mode === 'B/W') {
+    hsv[0] = 0
+    hsv[1] = 0
+  }
+
+  state.updateUserColor(...hsv)
   state.checkGuess()
 }
 </script>

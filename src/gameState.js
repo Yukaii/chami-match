@@ -12,6 +12,26 @@ function createSession({ maxLife, precision, mode }) {
   }
 }
 
+function generateRandomColor(mode) {
+  switch(mode) {
+    case 'B/W': {
+      return {
+        h: 0,
+        s: 0,
+        v: Math.floor(Math.random() * 100)
+      }
+    }
+    case 'Color':
+    default: {
+      return {
+        h: Math.floor(Math.random() * 360),
+        s: Math.floor(Math.random() * 100),
+        v: Math.floor(Math.random() * 100),
+      }
+    }
+  }
+}
+
 export const useGlobalGameState = createGlobalState(() => {
   const sessions = useStorage('sessions', [])
   const preferences = useStorage('preferences', { maxLife: 5, precision: 10, mode: 'Color' })
@@ -25,11 +45,7 @@ export const useGlobalGameState = createGlobalState(() => {
   const lives = ref(maxLife)
   const precision = ref(preferences.value.precision)
   const mode = ref(preferences.value.mode) // default to "Color", can also be "B/W"
-  const randomColor = reactive({
-    h: Math.floor(Math.random() * 360),
-    s: Math.floor(Math.random() * 100),
-    v: Math.floor(Math.random() * 100),
-  })
+  const randomColor = reactive(generateRandomColor(mode))
   const userColor = reactive({ h: 0, s: 0, v: 0 }) // default to zero, user has to change
   const score = ref(0)
   const [recordPopupOpen, toggleRecordPopup] = useToggle(false)
@@ -54,9 +70,10 @@ export const useGlobalGameState = createGlobalState(() => {
     lives.value = maxLife
 
     // Generate new randomColor
-    randomColor.h = Math.floor(Math.random() * 360)
-    randomColor.s = Math.floor(Math.random() * 100)
-    randomColor.v = Math.floor(Math.random() * 100)
+    const random = generateRandomColor(mode)
+    randomColor.h = random.h
+    randomColor.s = random.s
+    randomColor.v = random.v
   }
 
   function recordRound(wasSuccess) {
