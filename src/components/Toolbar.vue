@@ -9,6 +9,7 @@
         </div>
         <span class="tooltiptext">{{ $t('comboCount') }}</span>
       </div>
+
       <div class="tooltip">
         <div class="button-3d flex items-center rounded-lg bg-pink-600 p-2 text-white">
           <ph-chart-line :size="20" />
@@ -17,6 +18,7 @@
         </div>
         <span class="tooltiptext">{{ $t('winningRate') }}</span>
       </div>
+
       <div class="tooltip">
         <div class="button-3d flex items-center rounded-lg bg-pink-600 p-2 text-white">
           <ph-arrows-clockwise :size="20" />
@@ -27,17 +29,26 @@
     </div>
 
     <div class="flex gap-2">
-      <button class="button-3d rounded-lg bg-pink-600 p-2 text-white" @click="state.toggleRecordPopup(true)">
-        <ph-clock-counter-clockwise :size="20" />
-      </button>
+      <div class="tooltip">
+        <button class="button-3d rounded-lg bg-pink-600 p-2 text-white" @click="state.toggleRecordPopup(true)">
+          <ph-clock-counter-clockwise :size="20" />
+        </button>
+        <span class="tooltiptext">{{ $t('gameRecord') }}</span>
+      </div>
 
-      <button class="button-3d rounded-lg bg-pink-600 p-2 text-white" @click="state.toggleSettingsPopup(true)">
-        <ph-gear-six :size="20" />
-      </button>
+      <div class="tooltip">
+        <button class="button-3d rounded-lg bg-pink-600 p-2 text-white" @click="state.toggleSettingsPopup(true)">
+          <ph-gear-six :size="20" />
+        </button>
+        <span class="tooltiptext">{{ $t('settings.title') }}</span>
+      </div>
 
-      <button class="button-3d rounded-lg bg-pink-600 p-2 text-white" @click="state.toggleAboutPopup(true)">
-        <ph-question :size="20" />
-      </button>
+      <div class="tooltip">
+        <button class="button-3d rounded-lg bg-pink-600 p-2 text-white" @click="state.toggleAboutPopup(true)">
+          <ph-question :size="20" />
+        </button>
+        <span class="tooltiptext">{{ $t('about.title') }}</span>
+      </div>
     </div>
   </div>
 </template>
