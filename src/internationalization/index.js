@@ -6,7 +6,7 @@ import ja from './languages/ja.json'
 
 const availableCodes = ['en', 'zh-TW', 'ja']
 
-const languageCode = localStorage.getItem('lang') || navigator.language || 'zh-TW';
+const languageCode = localStorage.getItem('lang') || navigator.language || 'zh-TW'
 
 const i18n = createI18n({
   locale: availableCodes.includes(languageCode) ? languageCode : 'zh-TW',
