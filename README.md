@@ -17,3 +17,7 @@
 ## Credits
 
 This game takes the original idea from [color-test](https://dream7fragment.itch.io/color-test). Thanks [Fragment](https://www.facebook.com/Dream7Fragment) for his awesome idea!
+
+## License
+
+MIT
