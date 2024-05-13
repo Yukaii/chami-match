@@ -21,6 +21,9 @@
     "maxTries": {
       "label": "Max Tries"
     },
+    "realtimePreview": {
+      "label": "Realtime Preview"
+    },
     "notice": "Applying game options will start a new round.",
     "cta": "Apply",
     "danger": "Danger Zone",

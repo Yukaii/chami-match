@@ -21,6 +21,9 @@
     "maxTries": {
       "label": "最大嘗試次數"
     },
+    "realtimePreview": {
+      "label": "即時預覽"
+    },
     "notice": "套用遊戲選項將開始新一輪的遊戲。",
     "cta": "套用",
     "danger": "危險區域",

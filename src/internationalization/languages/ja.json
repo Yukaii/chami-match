@@ -21,6 +21,9 @@
     "maxTries": {
       "label": "試行回数"
     },
+    "realtimePreview": {
+      "label": "リアルタイムプレビュー"
+    },
     "notice": "ゲームオプションを適用すると、新しいラウンドが始まります。",
     "cta": "適用",
     "danger": "危険ゾーン",

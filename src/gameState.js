@@ -42,7 +42,7 @@ export function resetGameData() {
 
 export const useGlobalGameState = createGlobalState(() => {
   const sessions = useStorage('sessions', [])
-  const preferences = useStorage('preferences', { maxLife: 5, precision: 10, mode: 'Color' })
+  const preferences = useStorage('preferences', { maxLife: 5, precision: 10, mode: 'Color', realtimePreview: false })
   const history = useStorage('history', [])
 
   const currentSession = ref(null)
@@ -53,6 +53,7 @@ export const useGlobalGameState = createGlobalState(() => {
   const lives = ref(maxLife.value)
   const precision = computed(() => preferences.value.precision)
   const mode = computed(() => preferences.value.mode) // default to "Color", can also be "B/W"
+  const realtimePreview = computed(() => preferences.value.realtimePreview)
   const randomColor = reactive(generateRandomColor(mode.value))
   const userColor = reactive({ h: 0, s: 0, v: 0 }) // default to zero, user has to change
   const score = ref(0)
@@ -129,6 +130,10 @@ export const useGlobalGameState = createGlobalState(() => {
 
   function updateMaxLife(newMaxLife) {
     preferences.value.maxLife = newMaxLife
+  }
+
+  function updateRealtimePreview (preview) {
+    preferences.value.realtimePreview = preview
   }
 
   // Action to check if user's guess is correct or not
@@ -215,6 +220,7 @@ export const useGlobalGameState = createGlobalState(() => {
     lives,
     precision,
     mode,
+    realtimePreview,
     randomColor,
     userColor,
     score,
@@ -226,6 +232,7 @@ export const useGlobalGameState = createGlobalState(() => {
     updateMode,
     updatePrecision,
     updateMaxLife,
+    updateRealtimePreview,
     checkGuess,
     winRate,
     winningStreak,

@@ -36,21 +36,31 @@ const state = useGlobalGameState()
 const randomColor = state.randomColor
 const userColor = state.userColor
 const mode = state.mode
+const realtimePreview = state.realtimePreview
 
 const userH = ref(userColor.h)
 const userS = ref(userColor.s)
 const userV = ref(userColor.v)
 
-const submit = () => {
+const hsv = computed(() => {
   const hsv = [parseInt(userH.value, 10), parseInt(userS.value, 10), parseInt(userV.value, 10)]
   if (mode.value === 'B/W') {
     hsv[0] = 0
     hsv[1] = 0
   }
+	return hsv
+})
 
-  state.updateUserColor(...hsv)
+const submit = () => {
+  state.updateUserColor(...hsv.value)
   state.checkGuess()
 }
+
+watch([hsv, realtimePreview], () => {
+	if (realtimePreview.value) {
+		state.updateUserColor(...hsv.value)
+	}
+})
 </script>
 
 <template>

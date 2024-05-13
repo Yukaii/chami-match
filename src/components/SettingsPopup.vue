@@ -77,6 +77,22 @@
         </div>
       </div>
 
+      <!-- Realtime Preview -->
+      <div class="mb-4">
+        <label class="mb-2 block font-bold text-white">{{ $t('settings.realtimePreview.label') }}</label>
+        <div class="flex space-x-2">
+          <button
+            v-for="value in [true, false]"
+            :key="value.toString()"
+            class="button-3d"
+            :class="`px-2 py-1 rounded-lg ${settings.realtimePreview === value ? 'bg-pink-600' : 'bg-slate-600'}`"
+            @click="settings.realtimePreview = value"
+          >
+            {{ value ? 'On' : 'Off' }}
+          </button>
+        </div>
+      </div>
+
       <div class="mb-2 rounded-lg bg-gray-800 px-4 py-2 text-sm">{{ $t('settings.notice') }}</div>
       <button class="button-3d w-full rounded-lg bg-pink-600 px-4 py-2 text-white" @click="onApply">
         {{ $t('settings.cta') }}
@@ -118,6 +134,7 @@ const settings = reactive({
   precision: state.precision.value,
   mode: state.mode.value,
   maxTries: state.maxLife.value,
+  realtimePreview: state.realtimePreview.value,
 })
 
 const onClose = () => {
@@ -129,6 +146,7 @@ watch(state.settingsPopupOpen, () => {
     settings.precision = state.precision.value
     settings.mode = state.mode.value
     settings.maxTries = state.maxLife.value
+    settings.realtimePreview = state.realtimePreview.value
   }
 })
 
@@ -136,6 +154,7 @@ const onApply = () => {
   state.updatePrecision(settings.precision)
   state.updateMode(settings.mode)
   state.updateMaxLife(settings.maxTries)
+  state.updateRealtimePreview(settings.realtimePreview)
   state.startOver()
   onClose()
 }
