@@ -17,7 +17,8 @@ function generateRandomColor(mode) {
       return {
         h: 0,
         s: 0,
-        v: Math.floor(Math.random() * 100),
+        // from 5 to 100
+        v: Math.floor(Math.random() * 95) + 5,
       }
     }
     case 'Color':
@@ -25,7 +26,8 @@ function generateRandomColor(mode) {
       return {
         h: Math.floor(Math.random() * 360),
         s: Math.floor(Math.random() * 100),
-        v: Math.floor(Math.random() * 100),
+        // from 5 to 100
+        v: Math.floor(Math.random() * 95) + 5,
       }
     }
   }
