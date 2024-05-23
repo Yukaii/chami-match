@@ -49,11 +49,11 @@ export const useGlobalGameState = createGlobalState(() => {
 
   // State
   const currentRound = ref(0)
-  const maxLife = computed(() => preferences.value.maxLife)
+  const maxLife = computed(() => preferences.value.maxLife || 5)
   const lives = ref(maxLife.value)
-  const precision = computed(() => preferences.value.precision)
-  const mode = computed(() => preferences.value.mode) // default to "Color", can also be "B/W"
-  const realtimePreview = computed(() => preferences.value.realtimePreview)
+  const precision = computed(() => preferences.value.precision || 10)
+  const mode = computed(() => preferences.value.mode || 'Color') // default to "Color", can also be "B/W"
+  const realtimePreview = computed(() => preferences.value.realtimePreview || false)
   const randomColor = reactive(generateRandomColor(mode.value))
   const userColor = reactive({ h: 0, s: 0, v: 0 }) // default to zero, user has to change
   const score = ref(0)
