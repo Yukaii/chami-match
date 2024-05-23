@@ -22,7 +22,7 @@ const props = defineProps({
 
 const className = computed(() => {
   return cn(
-    'fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-50 z-50',
+    'fixed left-0 top-0 z-50 flex size-full items-center justify-center bg-black/50',
     props.modalClass,
     !props.isOpen && 'hidden'
   )
