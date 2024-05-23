@@ -1,13 +1,10 @@
 <template>
   <Modal :is-open="recordPopupOpen" @on-close="onClose">
-    <div class="mb-4 text-center text-lg text-white">{{ $t('gameRecord') }}</div>
-    <div class="space-y-2">
+    <div class="mb-4 text-center text-lg text-white">{{ $t('gameRecord.title') }}</div>
+    <div v-if="recentRecords?.length > 0" class="space-y-2">
       <!-- Record Items -->
-      <div
-        v-for="(record, index) in recentRecords"
-        :key="index"
-        class="grid grid-cols-5 items-center gap-2 rounded-lg bg-gray-800 p-2"
-      >
+      <div v-for="(record, index) in recentRecords" :key="index"
+        class="grid grid-cols-5 items-center gap-2 rounded-lg bg-gray-800 p-2">
         <!-- Success Indicator -->
         <div class="flex justify-center">
           <span v-if="record.wasSuccess">
@@ -36,6 +33,7 @@
         </div>
       </div>
     </div>
+    <div v-else class="text-balance pb-4 text-center text-white">{{ $t('gameRecord.emptyContent') }}</div>
     <button class="button-3d mt-4 w-full rounded-lg bg-pink-600 px-4 py-2 text-white" @click="onClose">
       {{ $t('close') }}
     </button>

@@ -3,7 +3,10 @@
   "description": "一個簡單又有趣的顏色辨識訓練遊戲！",
   "submit": "送出",
   "close": "關閉",
-  "gameRecord": "遊戲記錄",
+  "gameRecord": {
+    "title": "遊戲記錄",
+    "emptyContent": "你的遊戲紀錄會在這裡顯示，現在還是空的。"
+  },
   "comboCount": "連擊數",
   "winningRate": "勝率",
   "roundCount": "回合數",
