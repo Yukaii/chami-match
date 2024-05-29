@@ -3,6 +3,14 @@
     <div class="flex gap-2">
       <div class="tooltip">
         <div class="button-3d flex items-center rounded-lg bg-pink-600 p-2 text-white">
+          <ph-arrows-clockwise :size="20" />
+          <span class="ml-2">{{ state.currentRound }}</span>
+        </div>
+        <span class="tooltiptext">{{ $t('roundCount') }}</span>
+      </div>
+
+      <div class="tooltip">
+        <div class="button-3d flex items-center rounded-lg bg-pink-600 p-2 text-white">
           <ph-hand-fist :size="20" />
           <i class="fas fa-fist-raised text-white" />
           <span class="ml-2 text-white">{{ state.winningStreak }}</span>
@@ -17,14 +25,6 @@
           <span class="ml-2 text-white">{{ state.winRate.value }}</span>
         </div>
         <span class="tooltiptext">{{ $t('winningRate') }}</span>
-      </div>
-
-      <div class="tooltip">
-        <div class="button-3d flex items-center rounded-lg bg-pink-600 p-2 text-white">
-          <ph-arrows-clockwise :size="20" />
-          <span class="ml-2">{{ state.currentRound }}</span>
-        </div>
-        <span class="tooltiptext">{{ $t('roundCount') }}</span>
       </div>
     </div>
 
