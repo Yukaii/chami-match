@@ -3,6 +3,14 @@
     <div class="flex gap-2">
       <div class="tooltip">
         <div class="button-3d flex items-center rounded-lg bg-pink-600 p-2 text-white">
+          <ph-arrows-clockwise :size="20" />
+          <span class="ml-2">{{ state.currentRound }}</span>
+        </div>
+        <span class="tooltiptext">{{ $t('roundCount') }}</span>
+      </div>
+
+      <div class="tooltip">
+        <div :class="cn('button-3d flex items-center rounded-lg bg-pink-600 p-2 text-white', className)">
           <ph-hand-fist :size="20" />
           <i class="fas fa-fist-raised text-white" />
           <span class="ml-2 text-white">{{ state.winningStreak }}</span>
@@ -17,14 +25,6 @@
           <span class="ml-2 text-white">{{ state.winRate.value }}</span>
         </div>
         <span class="tooltiptext">{{ $t('winningRate') }}</span>
-      </div>
-
-      <div class="tooltip">
-        <div class="button-3d flex items-center rounded-lg bg-pink-600 p-2 text-white">
-          <ph-arrows-clockwise :size="20" />
-          <span class="ml-2">{{ state.currentRound }}</span>
-        </div>
-        <span class="tooltiptext">{{ $t('roundCount') }}</span>
       </div>
     </div>
 
@@ -55,6 +55,7 @@
 
 <script setup>
 import { useGlobalGameState } from '../gameState'
+import { cn } from '../utils/index'
 import {
   PhClockCounterClockwise,
   PhArrowsClockwise,
@@ -65,4 +66,34 @@ import {
 } from '@phosphor-icons/vue'
 
 const state = useGlobalGameState()
+
+const isShaking = ref(false)
+const isFlipping = ref(false)
+
+watch([state.winningStreak, state.currentRound], ([count, round], [prevCount, prevRound]) => {
+  if (round === 1) {
+    // round reset
+    return
+  }
+
+  if (count == (prevCount + 1)) {
+    // win!
+    isFlipping.value = true
+    setTimeout(() => {
+      isFlipping.value = false
+    }, 600)
+  } else {
+    isShaking.value = true
+    setTimeout(() => {
+      isShaking.value = false
+    }, 300)
+  }
+})
+
+const className = computed(() => {
+  return cn(
+    isFlipping.value && 'animate-flip',
+    isShaking.value && 'animate-shake',
+  )
+})
 </script>
