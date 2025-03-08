@@ -1,6 +1,8 @@
 {
   "title": "チャミマッチ - 色を再現してみよう！",
   "description": "色覚を楽しくトレーニング！シンプルな色合わせゲーム",
+  "startStandardGame": "標準モード",
+  "startContextualGame": "コンテキストモード",
   "startGame": "ゲームを始める",
   "startOver": "最初からやり直す",
   "home": "ホーム",
@@ -53,5 +55,18 @@
     "message": "本当にゲームデータをリセットしますか？ 現在の進行状況はすべて失われます。",
     "confirm": "はい、リセット",
     "cancel": "いいえ、キャンセル"
+  },
+  "gameModes": {
+    "standard": {
+      "name": "標準モード",
+      "description": "左側に表示されている色と一致させてください"
+    },
+    "contextual": {
+      "name": "コンテキストモード",
+      "description": "類似した色に囲まれた中央の色を一致させる - より難しい挑戦！",
+      "instructions": "中央の四角に一致する色を選んでください",
+      "selectPrompt": "一致する色を選択：",
+      "lastSelection": "前回の選択："
+    }
   }
 }

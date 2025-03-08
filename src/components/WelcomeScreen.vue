@@ -5,9 +5,16 @@ import { useGlobalGameState } from '../gameState'
 const state = useGlobalGameState()
 const router = useRouter()
 
-function startGame() {
+function startStandardGame() {
+  state.updateGameType('standard')
   state.startOver() // Initialize a new game
   router.push('/game')
+}
+
+function startContextualGame() {
+  state.updateGameType('contextual')
+  state.startOver() // Initialize a new game
+  router.push('/context-game')
 }
 
 function openSettings() {
@@ -26,15 +33,17 @@ function openSettings() {
     <div class="flex w-full max-w-md flex-col gap-4">
       <button
         class="button-3d rounded-lg bg-pink-600 px-6 py-3 text-xl text-white"
-        @click="startGame"
+        @click="startStandardGame"
       >
-        {{ $t('startGame') }}
+        {{ $t('startStandardGame') }}
       </button>
 
-      <!-- Placeholder for future game modes -->
-      <!-- <button class="button-3d rounded-lg bg-purple-600 px-6 py-3 text-xl text-white">
-        {{ $t('otherMode') }}
-      </button> -->
+      <button
+        class="button-3d rounded-lg bg-purple-600 px-6 py-3 text-xl text-white"
+        @click="startContextualGame"
+      >
+        {{ $t('startContextualGame') }}
+      </button>
 
       <button
         class="mt-4 rounded-lg bg-gray-700 px-6 py-2 text-white"
