@@ -1,46 +1,50 @@
 <script setup>
-import { useRouter } from 'vue-router'
-import { useGlobalGameState } from '../gameState'
-import BaseButton from './base/BaseButton.vue'
-import BaseSlider from './base/BaseSlider.vue'
+import { useRouter } from "vue-router";
+import { useGlobalGameState } from "../gameState";
+import BaseButton from "./base/BaseButton.vue";
+import BaseSlider from "./base/BaseSlider.vue";
 
-const router = useRouter()
-const state = useGlobalGameState()
-const randomColor = state.randomColor
-const userColor = state.userColor
-const mode = state.mode
-const realtimePreview = state.realtimePreview
+const router = useRouter();
+const state = useGlobalGameState();
+const randomColor = state.randomColor;
+const userColor = state.userColor;
+const mode = state.mode;
+const realtimePreview = state.realtimePreview;
 
-const userH = ref(userColor.h)
-const userS = ref(userColor.s)
-const userV = ref(userColor.v)
+const userH = ref(userColor.h);
+const userS = ref(userColor.s);
+const userV = ref(userColor.v);
 
 const hsv = computed(() => {
-  const hsv = [parseInt(userH.value, 10), parseInt(userS.value, 10), parseInt(userV.value, 10)]
-  if (mode.value === 'B/W') {
-    hsv[0] = 0
-    hsv[1] = 0
-  }
-  return hsv
-})
+	const hsv = [
+		Number.parseInt(userH.value, 10),
+		Number.parseInt(userS.value, 10),
+		Number.parseInt(userV.value, 10),
+	];
+	if (mode.value === "B/W") {
+		hsv[0] = 0;
+		hsv[1] = 0;
+	}
+	return hsv;
+});
 
 const submit = () => {
-  state.updateUserColor(...hsv.value)
-  state.checkGuess()
-}
+	state.updateUserColor(...hsv.value);
+	state.checkGuess();
+};
 
 watch([hsv, realtimePreview], () => {
-  if (realtimePreview.value) {
-    state.updateUserColor(...hsv.value)
-  }
-})
+	if (realtimePreview.value) {
+		state.updateUserColor(...hsv.value);
+	}
+});
 
 function goToHome() {
-  router.push('/')
+	router.push("/");
 }
 
 function startOver() {
-  state.startOver() // Reset the game state
+	state.startOver(); // Reset the game state
 }
 </script>
 

@@ -27,12 +27,12 @@
 </template>
 
 <script setup>
-import { PhHeart } from '@phosphor-icons/vue'
-import { useGlobalGameState } from '../gameState'
+import { PhHeart } from "@phosphor-icons/vue";
+import { useGlobalGameState } from "../gameState";
 
-const state = useGlobalGameState()
-const lives = state.lives
-const maxLife = state.maxLife
+const state = useGlobalGameState();
+const lives = state.lives;
+const maxLife = state.maxLife;
 </script>
 
 <style scoped>

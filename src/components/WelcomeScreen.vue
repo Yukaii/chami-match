@@ -1,32 +1,32 @@
 <script setup>
-import { useRouter } from 'vue-router'
-import { useGlobalGameState } from '../gameState'
-import BaseButton from './base/BaseButton.vue'
+import { useRouter } from "vue-router";
+import { useGlobalGameState } from "../gameState";
+import BaseButton from "./base/BaseButton.vue";
 
-const state = useGlobalGameState()
-const router = useRouter()
+const state = useGlobalGameState();
+const router = useRouter();
 
 function startStandardGame() {
-  state.updateGameType('standard')
-  state.startOver() // Initialize a new game
-  router.push('/game')
+	state.updateGameType("standard");
+	state.startOver(); // Initialize a new game
+	router.push("/game");
 }
 
 function startContextualGame() {
-  state.updateGameType('contextual')
-  state.startOver() // Initialize a new game
-  router.push('/context-game')
+	state.updateGameType("contextual");
+	state.startOver(); // Initialize a new game
+	router.push("/context-game");
 }
 
 function startRelativeGame() {
-  state.updateGameType('relative')
-  state.startOver() // Initialize a new game
-  router.push('/relative-game')
+	state.updateGameType("relative");
+	state.startOver(); // Initialize a new game
+	router.push("/relative-game");
 }
 
 function openSettings() {
-  state.settingsMode = 'global'
-  state.toggleSettingsPopup()
+	state.settingsMode = "global";
+	state.toggleSettingsPopup();
 }
 </script>
 

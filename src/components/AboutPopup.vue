@@ -79,14 +79,14 @@
 </template>
 
 <script setup>
-import { PhGithubLogo } from '@phosphor-icons/vue'
-import { useGlobalGameState } from '../gameState'
-import BaseButton from './base/BaseButton.vue'
+import { PhGithubLogo } from "@phosphor-icons/vue";
+import { useGlobalGameState } from "../gameState";
+import BaseButton from "./base/BaseButton.vue";
 
-const state = useGlobalGameState()
-const aboutPopupOpen = state.aboutPopupOpen
+const state = useGlobalGameState();
+const aboutPopupOpen = state.aboutPopupOpen;
 
 const onClose = () => {
-  state.toggleAboutPopup(false)
-}
+	state.toggleAboutPopup(false);
+};
 </script>

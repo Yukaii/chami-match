@@ -1,32 +1,32 @@
 <script setup>
-import TestErrorComponent from '../components/TestErrorComponent.vue'
-import { ref } from 'vue'
+import { ref } from "vue";
+import TestErrorComponent from "../components/TestErrorComponent.vue";
 
-const showComponent = ref(true)
+const showComponent = ref(true);
 const resetComponent = () => {
-  showComponent.value = false
-  setTimeout(() => {
-    showComponent.value = true
-  }, 10)
-}
+	showComponent.value = false;
+	setTimeout(() => {
+		showComponent.value = true;
+	}, 10);
+};
 
 // Function that throws error after async operation
 const asyncOperation = async () => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      reject(new Error('Async operation failed'))
-    }, 500)
-  })
-}
+	return new Promise((resolve, reject) => {
+		setTimeout(() => {
+			reject(new Error("Async operation failed"));
+		}, 500);
+	});
+};
 
 // Function to trigger async error
 const triggerAsyncError = async () => {
-  try {
-    await asyncOperation()
-  } catch (error) {
-    throw new Error('Caught and rethrown: ' + error.message)
-  }
-}
+	try {
+		await asyncOperation();
+	} catch (error) {
+		throw new Error("Caught and rethrown: " + error.message);
+	}
+};
 </script>
 
 <template>

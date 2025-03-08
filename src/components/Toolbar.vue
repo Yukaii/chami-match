@@ -74,57 +74,60 @@
 </template>
 
 <script setup>
-import { useGlobalGameState } from '../gameState'
-import { cn } from '../utils/index'
 import {
-  PhClockCounterClockwise,
-  PhArrowsClockwise,
-  PhChartLine,
-  PhHandFist,
-  PhGearSix,
-  PhQuestion,
-} from '@phosphor-icons/vue'
+	PhArrowsClockwise,
+	PhChartLine,
+	PhClockCounterClockwise,
+	PhGearSix,
+	PhHandFist,
+	PhQuestion,
+} from "@phosphor-icons/vue";
+import { useGlobalGameState } from "../gameState";
+import { cn } from "../utils/index";
 
-import BaseButton from './base/BaseButton.vue'
-import BaseTooltip from './base/BaseTooltip.vue'
+import BaseButton from "./base/BaseButton.vue";
+import BaseTooltip from "./base/BaseTooltip.vue";
 
 // Remove ThemeToggle import
 // import ThemeToggle from './ThemeToggle.vue'
 
-const state = useGlobalGameState()
+const state = useGlobalGameState();
 
 function openSettings() {
-  state.settingsMode = 'game'
-  state.toggleSettingsPopup(true)
+	state.settingsMode = "game";
+	state.toggleSettingsPopup(true);
 }
 
-const isShaking = ref(false)
-const isFlipping = ref(false)
+const isShaking = ref(false);
+const isFlipping = ref(false);
 
-watch([state.winningStreak, state.currentRound], ([count, round], [prevCount, prevRound]) => {
-  if (round === 1) {
-    // round reset
-    return
-  }
+watch(
+	[state.winningStreak, state.currentRound],
+	([count, round], [prevCount, prevRound]) => {
+		if (round === 1) {
+			// round reset
+			return;
+		}
 
-  if (count == (prevCount + 1)) {
-    // win!
-    isFlipping.value = true
-    setTimeout(() => {
-      isFlipping.value = false
-    }, 600)
-  } else {
-    isShaking.value = true
-    setTimeout(() => {
-      isShaking.value = false
-    }, 300)
-  }
-})
+		if (count == prevCount + 1) {
+			// win!
+			isFlipping.value = true;
+			setTimeout(() => {
+				isFlipping.value = false;
+			}, 600);
+		} else {
+			isShaking.value = true;
+			setTimeout(() => {
+				isShaking.value = false;
+			}, 300);
+		}
+	},
+);
 
 const className = computed(() => {
-  return cn(
-    isFlipping.value && 'animate-flip',
-    isShaking.value && 'animate-shake',
-  )
-})
+	return cn(
+		isFlipping.value && "animate-flip",
+		isShaking.value && "animate-shake",
+	);
+});
 </script>

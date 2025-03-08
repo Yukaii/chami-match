@@ -186,12 +186,12 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
-import { useGlobalGameState } from '../gameState';
+import { computed, onMounted, ref, watch } from "vue";
+import { useGlobalGameState } from "../gameState";
 
 const state = useGlobalGameState();
 const recordPopupOpen = state.recordPopupOpen;
-const filterType = ref('all');
+const filterType = ref("all");
 const recordsPerPage = 10;
 const currentPage = ref(1);
 const recordsLoaded = ref(false);
@@ -199,206 +199,223 @@ const rawRecords = ref([]);
 
 // Force extract records from the computed property
 function extractRecords() {
-  try {
-    console.log('Extracting records from state...');
-    // Try to access the actual array value directly
-    if (state.lastTriesOfEachRound && Array.isArray(state.lastTriesOfEachRound.value)) {
-      rawRecords.value = state.lastTriesOfEachRound.value;
-      console.log('Extracted records from .value:', rawRecords.value);
-    } else if (Array.isArray(state.lastTriesOfEachRound)) {
-      rawRecords.value = state.lastTriesOfEachRound;
-      console.log('Extracted records directly:', rawRecords.value);
-    } else {
-      console.warn('Could not extract records, invalid format:', state.lastTriesOfEachRound);
-      rawRecords.value = [];
-    }
+	try {
+		console.log("Extracting records from state...");
+		// Try to access the actual array value directly
+		if (
+			state.lastTriesOfEachRound &&
+			Array.isArray(state.lastTriesOfEachRound.value)
+		) {
+			rawRecords.value = state.lastTriesOfEachRound.value;
+			console.log("Extracted records from .value:", rawRecords.value);
+		} else if (Array.isArray(state.lastTriesOfEachRound)) {
+			rawRecords.value = state.lastTriesOfEachRound;
+			console.log("Extracted records directly:", rawRecords.value);
+		} else {
+			console.warn(
+				"Could not extract records, invalid format:",
+				state.lastTriesOfEachRound,
+			);
+			rawRecords.value = [];
+		}
 
-    recordsLoaded.value = true;
-    return rawRecords.value;
-  } catch (error) {
-    console.error('Error extracting records:', error);
-    rawRecords.value = [];
-    return [];
-  }
+		recordsLoaded.value = true;
+		return rawRecords.value;
+	} catch (error) {
+		console.error("Error extracting records:", error);
+		rawRecords.value = [];
+		return [];
+	}
 }
 
 // Helper function to check if we have any records
 const hasRecords = computed(() => {
-  const records = rawRecords.value;
-  const result = Array.isArray(records) && records.length > 0;
-  console.log('RecordPopup - hasRecords:', result, 'Count:', records?.length || 0);
-  return result;
+	const records = rawRecords.value;
+	const result = Array.isArray(records) && records.length > 0;
+	console.log(
+		"RecordPopup - hasRecords:",
+		result,
+		"Count:",
+		records?.length || 0,
+	);
+	return result;
 });
 
 // Get total record count
 const recordCount = computed(() => {
-  const count = rawRecords.value?.length || 0;
-  console.log('RecordPopup - recordCount:', count);
-  return count;
+	const count = rawRecords.value?.length || 0;
+	console.log("RecordPopup - recordCount:", count);
+	return count;
 });
 
 // Session filtering
-const sessionFilter = ref('all'); // 'all' or specific sessionId
+const sessionFilter = ref("all"); // 'all' or specific sessionId
 const availableSessions = computed(() => {
-  if (!Array.isArray(rawRecords.value) || rawRecords.value.length === 0) return [];
+	if (!Array.isArray(rawRecords.value) || rawRecords.value.length === 0)
+		return [];
 
-  // Extract unique sessions from records
-  const sessions = {};
-  rawRecords.value.forEach(record => {
-    if (record.session && record.sessionId) {
-      sessions[record.sessionId] = record.session;
-    }
-  });
+	// Extract unique sessions from records
+	const sessions = {};
+	rawRecords.value.forEach((record) => {
+		if (record.session && record.sessionId) {
+			sessions[record.sessionId] = record.session;
+		}
+	});
 
-  return Object.entries(sessions).map(([id, session]) => ({
-    id,
-    name: formatSessionDate(session.startedAt),
-    isCurrent: id === state.currentSession?.id
-  }));
+	return Object.entries(sessions).map(([id, session]) => ({
+		id,
+		name: formatSessionDate(session.startedAt),
+		isCurrent: id === state.currentSession?.id,
+	}));
 });
 
 // Format session date for display
 function formatSessionDate(timestamp) {
-  try {
-    if (!timestamp) return 'Unknown';
-    const date = new Date(timestamp * 1000);
-    return date.toLocaleString();
-  } catch (e) {
-    return 'Invalid Date';
-  }
+	try {
+		if (!timestamp) return "Unknown";
+		const date = new Date(timestamp * 1000);
+		return date.toLocaleString();
+	} catch (e) {
+		return "Invalid Date";
+	}
 }
 
 // Filter records by session and game type
 const filteredRecords = computed(() => {
-  console.log('RecordPopup - Computing filteredRecords');
+	console.log("RecordPopup - Computing filteredRecords");
 
-  if (!hasRecords.value) {
-    console.log('RecordPopup - No records to filter');
-    return [];
-  }
+	if (!hasRecords.value) {
+		console.log("RecordPopup - No records to filter");
+		return [];
+	}
 
-  const records = rawRecords.value;
-  console.log('RecordPopup - Raw records for filtering:', records);
+	const records = rawRecords.value;
+	console.log("RecordPopup - Raw records for filtering:", records);
 
-  // Apply session filter first
-  let filtered = records;
-  if (sessionFilter.value !== 'all') {
-    filtered = filtered.filter(record => record.sessionId === sessionFilter.value);
-  }
+	// Apply session filter first
+	let filtered = records;
+	if (sessionFilter.value !== "all") {
+		filtered = filtered.filter(
+			(record) => record.sessionId === sessionFilter.value,
+		);
+	}
 
-  // Then apply game type filter
-  if (filterType.value !== 'all') {
-    filtered = filtered.filter(record => {
-      // Handle both old and new format records
-      const recordType = record?.gameType || 'standard';
-      return recordType === filterType.value;
-    });
-  }
+	// Then apply game type filter
+	if (filterType.value !== "all") {
+		filtered = filtered.filter((record) => {
+			// Handle both old and new format records
+			const recordType = record?.gameType || "standard";
+			return recordType === filterType.value;
+		});
+	}
 
-  const paged = filtered.slice(0, recordsPerPage * currentPage.value);
-  console.log('RecordPopup - Filtered records count:', paged.length);
-  return paged;
+	const paged = filtered.slice(0, recordsPerPage * currentPage.value);
+	console.log("RecordPopup - Filtered records count:", paged.length);
+	return paged;
 });
 
 // Watch for popup opening and refresh data
 watch(recordPopupOpen, (isOpen) => {
-  if (isOpen) {
-    console.log('RecordPopup opened - forcing record refresh');
-    // Force records to refresh when popup opens
-    setTimeout(() => {
-      extractRecords();
-    }, 100); // Small delay to ensure state is updated
+	if (isOpen) {
+		console.log("RecordPopup opened - forcing record refresh");
+		// Force records to refresh when popup opens
+		setTimeout(() => {
+			extractRecords();
+		}, 100); // Small delay to ensure state is updated
 
-    // Reset filter values when opening the popup to maintain consistent state
-    sessionFilter.value = 'all';
-    filterType.value = 'all';
-  }
+		// Reset filter values when opening the popup to maintain consistent state
+		sessionFilter.value = "all";
+		filterType.value = "all";
+	}
 });
 
 // Debug function to manually reload data
 function forceRefreshData() {
-  console.log('Manual refresh triggered');
-  extractRecords();
+	console.log("Manual refresh triggered");
+	extractRecords();
 }
 
 onMounted(() => {
-  console.log('RecordPopup mounted');
-  extractRecords(); // Try to load records on mount
+	console.log("RecordPopup mounted");
+	extractRecords(); // Try to load records on mount
 });
 
 // Helper functions to check record types safely with support for old record format
 function isColorRecord(record) {
-  return record && (
-    record.type === 'color' ||
-    (!record.type && record.actualColor && record.guessedColor)
-  );
+	return (
+		record &&
+		(record.type === "color" ||
+			(!record.type && record.actualColor && record.guessedColor))
+	);
 }
 
 function isDifferenceRecord(record) {
-  return record && (
-    record.type === 'difference' ||
-    (record.actualDifference !== undefined && record.guessedDifference !== undefined)
-  );
+	return (
+		record &&
+		(record.type === "difference" ||
+			(record.actualDifference !== undefined &&
+				record.guessedDifference !== undefined))
+	);
 }
 
 // Format game type for display with fallback
 function formatGameType(type) {
-  if (!type) return 'Standard';
-  return type.charAt(0).toUpperCase() + type.slice(1);
+	if (!type) return "Standard";
+	return type.charAt(0).toUpperCase() + type.slice(1);
 }
 
 // Get valid color style even if color values are missing
 function getColorStyle(color) {
-  if (!color) return 'background-color: gray;';
+	if (!color) return "background-color: gray;";
 
-  const h = color.h ?? 0;
-  const s = color.s ?? 0;
-  const v = color.v ?? 0;
+	const h = color.h ?? 0;
+	const s = color.s ?? 0;
+	const v = color.v ?? 0;
 
-  return `background-color: hsl(${h}, ${s}%, ${v}%);`;
+	return `background-color: hsl(${h}, ${s}%, ${v}%);`;
 }
 
 // Load more records
 function loadMoreRecords() {
-  currentPage.value++;
+	currentPage.value++;
 }
 
 const onClose = () => {
-  state.toggleRecordPopup(false);
-  // Reset pagination when closing the popup
-  currentPage.value = 1;
-  // Don't reset filter values here to make them sticky between sessions
+	state.toggleRecordPopup(false);
+	// Reset pagination when closing the popup
+	currentPage.value = 1;
+	// Don't reset filter values here to make them sticky between sessions
 };
 
 // Helper functions to calculate color differences
 function getHueDifference(record) {
-  if (!record?.actualColor?.h || !record?.guessedColor?.h) return 0;
+	if (!record?.actualColor?.h || !record?.guessedColor?.h) return 0;
 
-  // Handle hue's circular nature (0-360)
-  let diff = Math.abs(record.actualColor.h - record.guessedColor.h);
-  if (diff > 180) diff = 360 - diff;
+	// Handle hue's circular nature (0-360)
+	let diff = Math.abs(record.actualColor.h - record.guessedColor.h);
+	if (diff > 180) diff = 360 - diff;
 
-  return diff;
+	return diff;
 }
 
 function getSaturationDifference(record) {
-  if (!record?.actualColor?.s || !record?.guessedColor?.s) return 0;
-  return Math.abs(record.actualColor.s - record.guessedColor.s);
+	if (!record?.actualColor?.s || !record?.guessedColor?.s) return 0;
+	return Math.abs(record.actualColor.s - record.guessedColor.s);
 }
 
 function getValueDifference(record) {
-  if (!record?.actualColor?.v || !record?.guessedColor?.v) return 0;
-  return Math.abs(record.actualColor.v - record.guessedColor.v);
+	if (!record?.actualColor?.v || !record?.guessedColor?.v) return 0;
+	return Math.abs(record.actualColor.v - record.guessedColor.v);
 }
 
 // Format difference to show + or - prefix
 function formatDifference(value) {
-  return value.toFixed(1);
+	return value.toFixed(1);
 }
 
 // Get CSS class based on whether the difference is within precision
 function getColorDifferenceClass(diff) {
-  const precision = 10; // Default precision
-  return diff <= precision ? 'bg-green-500' : 'bg-red-500';
+	const precision = 10; // Default precision
+	return diff <= precision ? "bg-green-500" : "bg-red-500";
 }
 </script>

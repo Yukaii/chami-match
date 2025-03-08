@@ -1,105 +1,109 @@
 <script setup>
-import { useRouter } from 'vue-router'
-import { useGlobalGameState } from '../gameState'
+import { useRouter } from "vue-router";
+import { useGlobalGameState } from "../gameState";
 
-const router = useRouter()
-const state = useGlobalGameState()
-const randomColor = state.randomColor
-const userColor = state.userColor
-const mode = state.mode
-const currentRound = state.currentRound // Add this to watch for round changes
+const router = useRouter();
+const state = useGlobalGameState();
+const randomColor = state.randomColor;
+const userColor = state.userColor;
+const mode = state.mode;
+const currentRound = state.currentRound; // Add this to watch for round changes
 
 // Track selected color index
-const selectedColorIndex = ref(-1)
+const selectedColorIndex = ref(-1);
 
 // Create a reactive local surroundingColor object instead of accessing state.surroundingColors[0]
 const surroundingColor = reactive({
-  h: 0,
-  s: 0,
-  v: 0
-})
+	h: 0,
+	s: 0,
+	v: 0,
+});
 
 // Generate surrounding color with controlled contrast
 function generateSurroundingColor(targetColor, contrastLevel = 30) {
-  // Create a color that contrasts with the target by a specific amount
-  const hVariation = Math.random() > 0.5 ? contrastLevel : -contrastLevel
-  const sVariation = Math.random() * 20 - 10
-  const vVariation = Math.random() * 20 - 10
+	// Create a color that contrasts with the target by a specific amount
+	const hVariation = Math.random() > 0.5 ? contrastLevel : -contrastLevel;
+	const sVariation = Math.random() * 20 - 10;
+	const vVariation = Math.random() * 20 - 10;
 
-  const h = Math.round((targetColor.h + hVariation + 360) % 360)
-  const s = Math.round(Math.max(0, Math.min(100, targetColor.s + sVariation)))
-  const v = Math.round(Math.max(0, Math.min(100, targetColor.v + vVariation)))
+	const h = Math.round((targetColor.h + hVariation + 360) % 360);
+	const s = Math.round(Math.max(0, Math.min(100, targetColor.s + sVariation)));
+	const v = Math.round(Math.max(0, Math.min(100, targetColor.v + vVariation)));
 
-  return { h, s, v }
+	return { h, s, v };
 }
 
 // Update surrounding color when random color changes
 watch(
-  randomColor,
-  (newColor) => {
-    const newSurroundingColor = generateSurroundingColor(newColor)
-    surroundingColor.h = newSurroundingColor.h
-    surroundingColor.s = newSurroundingColor.s
-    surroundingColor.v = newSurroundingColor.v
-  },
-  { immediate: true, deep: true }
-)
+	randomColor,
+	(newColor) => {
+		const newSurroundingColor = generateSurroundingColor(newColor);
+		surroundingColor.h = newSurroundingColor.h;
+		surroundingColor.s = newSurroundingColor.s;
+		surroundingColor.v = newSurroundingColor.v;
+	},
+	{ immediate: true, deep: true },
+);
 
 // Generate color options for selection
 const colorOptions = computed(() => {
-  const options = []
+	const options = [];
 
-  // Add the target color
-  options.push({...randomColor})
+	// Add the target color
+	options.push({ ...randomColor });
 
-  // Generate similar but incorrect colors (6 options)
-  for (let i = 0; i < 5; i++) {
-    const hVariation = (Math.random() * 30 - 15) // -15 to +15 variation
-    const sVariation = (Math.random() * 30 - 15) // -15 to +15 variation
-    const vVariation = (Math.random() * 30 - 15) // -15 to +15 variation
+	// Generate similar but incorrect colors (6 options)
+	for (let i = 0; i < 5; i++) {
+		const hVariation = Math.random() * 30 - 15; // -15 to +15 variation
+		const sVariation = Math.random() * 30 - 15; // -15 to +15 variation
+		const vVariation = Math.random() * 30 - 15; // -15 to +15 variation
 
-    const h = Math.round((randomColor.h + hVariation + 360) % 360)
-    const s = Math.round(Math.max(0, Math.min(100, randomColor.s + sVariation)))
-    const v = Math.round(Math.max(0, Math.min(100, randomColor.v + vVariation)))
+		const h = Math.round((randomColor.h + hVariation + 360) % 360);
+		const s = Math.round(
+			Math.max(0, Math.min(100, randomColor.s + sVariation)),
+		);
+		const v = Math.round(
+			Math.max(0, Math.min(100, randomColor.v + vVariation)),
+		);
 
-    options.push({ h, s, v })
-  }
+		options.push({ h, s, v });
+	}
 
-  // Shuffle the options
-  return options.sort(() => Math.random() - 0.5)
-})
+	// Shuffle the options
+	return options.sort(() => Math.random() - 0.5);
+});
 
 // Use a watcher to detect new rounds and reset the selected color index
 watch(
-  [randomColor, () => currentRound.value],
-  () => {
-    // Reset selection when random color changes (new round starts)
-    selectedColorIndex.value = -1
-  },
-  { deep: true }
-)
+	[randomColor, () => currentRound.value],
+	() => {
+		// Reset selection when random color changes (new round starts)
+		selectedColorIndex.value = -1;
+	},
+	{ deep: true },
+);
 
 function selectColor(color, index) {
-  selectedColorIndex.value = index
-  state.updateUserColor(color.h, color.s, color.v)
-  state.checkGuess()
+	selectedColorIndex.value = index;
+	state.updateUserColor(color.h, color.s, color.v);
+	state.checkGuess();
 }
 
 function goToHome() {
-  router.push('/')
+	router.push("/");
 }
 
 function startOver() {
-  state.startOver() // Reset the game state
-  selectedColorIndex.value = -1 // Reset selected index when starting over
+	state.startOver(); // Reset the game state
+	selectedColorIndex.value = -1; // Reset selected index when starting over
 }
 
 // Define a layout for the grid - now just surrounding color with target in center
 const gridStructure = [
-  ['bg', 'bg', 'bg'],
-  ['bg', 'target', 'bg'],
-  ['bg', 'bg', 'bg']
-]
+	["bg", "bg", "bg"],
+	["bg", "target", "bg"],
+	["bg", "bg", "bg"],
+];
 </script>
 
 <template>

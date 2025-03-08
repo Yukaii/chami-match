@@ -166,83 +166,83 @@
 </template>
 
 <script setup>
-import { useI18n } from 'vue-i18n'
-import { ref, onMounted, reactive, watch } from 'vue';
-import { PhSun, PhMoon, PhDeviceMobile } from '@phosphor-icons/vue'
-import { useGlobalGameState } from '../gameState'
-import BaseButton from './base/BaseButton.vue';
+import { PhDeviceMobile, PhMoon, PhSun } from "@phosphor-icons/vue";
+import { onMounted, reactive, ref, watch } from "vue";
+import { useI18n } from "vue-i18n";
+import { useGlobalGameState } from "../gameState";
+import BaseButton from "./base/BaseButton.vue";
 
-const { locale, t: $t } = useI18n()
-const state = useGlobalGameState()
-const settingsPopupOpen = state.settingsPopupOpen
+const { locale, t: $t } = useI18n();
+const state = useGlobalGameState();
+const settingsPopupOpen = state.settingsPopupOpen;
 const languages = [
-  { code: 'zh-TW', label: '繁體中文' },
-  { code: 'en', label: 'English' },
-  { code: 'ja', label: '日本語' },
-]
+	{ code: "zh-TW", label: "繁體中文" },
+	{ code: "en", label: "English" },
+	{ code: "ja", label: "日本語" },
+];
 const settings = reactive({
-  language: localStorage.getItem('lang') || navigator.language || 'zh-TW',
-  precision: state.precision.value,
-  mode: state.mode.value,
-  maxTries: state.maxLife.value,
-  realtimePreview: state.realtimePreview.value,
-  enableConfetti: true, // Default to enabled
-})
+	language: localStorage.getItem("lang") || navigator.language || "zh-TW",
+	precision: state.precision.value,
+	mode: state.mode.value,
+	maxTries: state.maxLife.value,
+	realtimePreview: state.realtimePreview.value,
+	enableConfetti: true, // Default to enabled
+});
 
 // Theme handling
-const currentTheme = ref(localStorage.getItem('theme') || 'system');
+const currentTheme = ref(localStorage.getItem("theme") || "system");
 
 function setTheme(theme) {
-  currentTheme.value = theme;
+	currentTheme.value = theme;
 
-  if (theme === 'system') {
-    document.documentElement.classList.remove('dark', 'light');
+	if (theme === "system") {
+		document.documentElement.classList.remove("dark", "light");
 
-    // Apply dark theme if system prefers dark
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      document.documentElement.classList.add('dark');
-    }
-  } else if (theme === 'dark') {
-    document.documentElement.classList.add('dark');
-    document.documentElement.classList.remove('light');
-  } else {
-    document.documentElement.classList.remove('dark');
-    document.documentElement.classList.add('light');
-  }
+		// Apply dark theme if system prefers dark
+		if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+			document.documentElement.classList.add("dark");
+		}
+	} else if (theme === "dark") {
+		document.documentElement.classList.add("dark");
+		document.documentElement.classList.remove("light");
+	} else {
+		document.documentElement.classList.remove("dark");
+		document.documentElement.classList.add("light");
+	}
 
-  localStorage.setItem('theme', theme);
+	localStorage.setItem("theme", theme);
 }
 
 const onClose = () => {
-  state.toggleSettingsPopup(false)
-}
+	state.toggleSettingsPopup(false);
+};
 
 watch(state.settingsPopupOpen, () => {
-  if (state.settingsPopupOpen) {
-    settings.precision = state.precision.value
-    settings.mode = state.mode.value
-    settings.maxTries = state.maxLife.value
-    settings.realtimePreview = state.realtimePreview.value
-    settings.enableConfetti = state.preferences?.value?.enableConfetti ?? true
-  }
-})
+	if (state.settingsPopupOpen) {
+		settings.precision = state.precision.value;
+		settings.mode = state.mode.value;
+		settings.maxTries = state.maxLife.value;
+		settings.realtimePreview = state.realtimePreview.value;
+		settings.enableConfetti = state.preferences?.value?.enableConfetti ?? true;
+	}
+});
 
 const onApply = () => {
-  state.updatePrecision(settings.precision)
-  state.updateMode(settings.mode)
-  state.updateMaxLife(settings.maxTries)
-  state.updateRealtimePreview(settings.realtimePreview)
-  state.updateConfetti(settings.enableConfetti)
-  state.startOver()
-  onClose()
-}
+	state.updatePrecision(settings.precision);
+	state.updateMode(settings.mode);
+	state.updateMaxLife(settings.maxTries);
+	state.updateRealtimePreview(settings.realtimePreview);
+	state.updateConfetti(settings.enableConfetti);
+	state.startOver();
+	onClose();
+};
 
 const handleChangeLanguage = (lang) => {
-  settings.language = lang
-  locale.value = lang
-  localStorage.setItem('lang', lang)
+	settings.language = lang;
+	locale.value = lang;
+	localStorage.setItem("lang", lang);
 
-  // Also save confetti setting when changing language
-  state.updateConfetti(settings.enableConfetti)
-}
+	// Also save confetti setting when changing language
+	state.updateConfetti(settings.enableConfetti);
+};
 </script>

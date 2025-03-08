@@ -1,38 +1,39 @@
 <script setup>
-import { ref, onErrorCaptured, useSlots } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { onErrorCaptured, ref, useSlots } from "vue";
+import { useI18n } from "vue-i18n";
 
-const { t } = useI18n()
-const error = ref(null)
-const slots = useSlots()
+const { t } = useI18n();
+const error = ref(null);
+const slots = useSlots();
 
 onErrorCaptured((err) => {
-  error.value = err
-  console.error('ErrorBoundary caught an error:', err)
-  return false // prevent error from propagating further
-})
+	error.value = err;
+	console.error("ErrorBoundary caught an error:", err);
+	return false; // prevent error from propagating further
+});
 
 const resetError = () => {
-  error.value = null
-}
+	error.value = null;
+};
 
 const refreshPage = () => {
-  window.location.reload()
-}
+	window.location.reload();
+};
 
 const copyErrorStack = () => {
-  if (error.value && error.value.stack) {
-    navigator.clipboard.writeText(error.value.stack)
-      .then(() => {
-        // Optional: show a brief notification that the copy was successful
-        // This could be implemented with a toast notification component if available
-        console.log('Error stack copied to clipboard')
-      })
-      .catch(err => {
-        console.error('Failed to copy error stack:', err)
-      })
-  }
-}
+	if (error.value && error.value.stack) {
+		navigator.clipboard
+			.writeText(error.value.stack)
+			.then(() => {
+				// Optional: show a brief notification that the copy was successful
+				// This could be implemented with a toast notification component if available
+				console.log("Error stack copied to clipboard");
+			})
+			.catch((err) => {
+				console.error("Failed to copy error stack:", err);
+			});
+	}
+};
 </script>
 
 <template>

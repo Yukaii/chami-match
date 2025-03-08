@@ -1,51 +1,51 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { onMounted, ref } from "vue";
 
-const shouldError = ref(false)
-const errorType = ref('render')
+const shouldError = ref(false);
+const errorType = ref("render");
 
 // This will cause an error during rendering if shouldError is true
 const triggerRenderError = () => {
-  shouldError.value = true
-  errorType.value = 'render'
-}
+	shouldError.value = true;
+	errorType.value = "render";
+};
 
 // This will cause an error in a method
 const triggerMethodError = () => {
-  errorType.value = 'method'
-  // Immediately throw an error
-  throw new Error('Manual method error thrown for testing')
-}
+	errorType.value = "method";
+	// Immediately throw an error
+	throw new Error("Manual method error thrown for testing");
+};
 
 // This will cause an error in a computed property
 const triggerComputedError = () => {
-  errorType.value = 'computed'
-}
+	errorType.value = "computed";
+};
 
 // This computed property will throw if errorType is 'computed'
 const errorProneComputed = computed(() => {
-  if (errorType.value === 'computed') {
-    throw new Error('Computed property error for testing')
-  }
-  return 'No error in computed'
-})
+	if (errorType.value === "computed") {
+		throw new Error("Computed property error for testing");
+	}
+	return "No error in computed";
+});
 
 // This will cause an error in lifecycle hook
 const triggerLifecycleError = () => {
-  errorType.value = 'lifecycle'
-  // Force component re-render
-  shouldError.value = false
-  nextTick(() => {
-    shouldError.value = true
-  })
-}
+	errorType.value = "lifecycle";
+	// Force component re-render
+	shouldError.value = false;
+	nextTick(() => {
+		shouldError.value = true;
+	});
+};
 
 // Watch for errorType 'lifecycle' and throw in onMounted
 onMounted(() => {
-  if (errorType.value === 'lifecycle') {
-    throw new Error('Lifecycle hook error for testing')
-  }
-})
+	if (errorType.value === "lifecycle") {
+		throw new Error("Lifecycle hook error for testing");
+	}
+});
 </script>
 
 <template>

@@ -15,33 +15,33 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed } from "vue";
 
 const props = defineProps({
-  position: {
-    type: String,
-    default: 'bottom',
-    validator: (value) => ['top', 'right', 'bottom', 'left'].includes(value),
-  },
-  className: {
-    type: String,
-    default: '',
-  },
+	position: {
+		type: String,
+		default: "bottom",
+		validator: (value) => ["top", "right", "bottom", "left"].includes(value),
+	},
+	className: {
+		type: String,
+		default: "",
+	},
 });
 
 const positionClass = computed(() => {
-  switch (props.position) {
-    case 'top':
-      return 'bottom-full left-1/2 -translate-x-1/2 mb-3 arrow-bottom';
-    case 'right':
-      return 'left-full top-1/2 -translate-y-1/2 ml-3 arrow-left';
-    case 'bottom':
-      return 'top-full left-1/2 -translate-x-1/2 mt-3 arrow-top';
-    case 'left':
-      return 'right-full top-1/2 -translate-y-1/2 mr-3 arrow-right';
-    default:
-      return 'top-full left-1/2 -translate-x-1/2 mt-3 arrow-top';
-  }
+	switch (props.position) {
+		case "top":
+			return "bottom-full left-1/2 -translate-x-1/2 mb-3 arrow-bottom";
+		case "right":
+			return "left-full top-1/2 -translate-y-1/2 ml-3 arrow-left";
+		case "bottom":
+			return "top-full left-1/2 -translate-x-1/2 mt-3 arrow-top";
+		case "left":
+			return "right-full top-1/2 -translate-y-1/2 mr-3 arrow-right";
+		default:
+			return "top-full left-1/2 -translate-x-1/2 mt-3 arrow-top";
+	}
 });
 </script>
 

@@ -1,30 +1,30 @@
 <script setup>
-import { useRouter } from 'vue-router'
-import { useGlobalGameState } from '../gameState'
-import BaseButton from './base/BaseButton.vue'
-import BaseSlider from './base/BaseSlider.vue'
+import { useRouter } from "vue-router";
+import { useGlobalGameState } from "../gameState";
+import BaseButton from "./base/BaseButton.vue";
+import BaseSlider from "./base/BaseSlider.vue";
 
-const router = useRouter()
-const state = useGlobalGameState()
-const relativeColors = state.relativeColors
-const mode = state.mode
+const router = useRouter();
+const state = useGlobalGameState();
+const relativeColors = state.relativeColors;
+const mode = state.mode;
 
 // Create a computed property for the slider - modified to not use .value
 const valueDifference = computed({
-  get: () => state.userValueDifference,
-  set: (value) => state.updateUserValueDifference(parseInt(value, 10))
-})
+	get: () => state.userValueDifference,
+	set: (value) => state.updateUserValueDifference(Number.parseInt(value, 10)),
+});
 
 function submit() {
-  state.checkGuess() // Changed from checkRelativeGuess to use the unified API
+	state.checkGuess(); // Changed from checkRelativeGuess to use the unified API
 }
 
 function goToHome() {
-  router.push('/')
+	router.push("/");
 }
 
 function startOver() {
-  state.startOver() // Reset the game state
+	state.startOver(); // Reset the game state
 }
 </script>
 
