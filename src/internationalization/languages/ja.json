@@ -1,6 +1,8 @@
 {
   "title": "チャミマッチ - 色を再現してみよう！",
   "description": "色覚を楽しくトレーニング！シンプルな色合わせゲーム",
+  "startGame": "ゲームを始める",
+  "home": "ホーム",
   "submit": "提出",
   "close": "閉じる",
   "gameRecord": {
