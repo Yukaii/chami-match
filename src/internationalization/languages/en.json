@@ -33,6 +33,11 @@
     "UIOptions": "UI Options",
     "gameOptions": "Game Options",
     "language": "Language",
+    "confetti": {
+      "label": "Celebration Effect",
+      "on": "On",
+      "off": "Off"
+    },
     "precision": {
       "label": "Precision"
     },

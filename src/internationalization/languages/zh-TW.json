@@ -33,6 +33,11 @@
     "UIOptions": "介面選項",
     "gameOptions": "遊戲選項",
     "language": "語言",
+    "confetti": {
+      "label": "慶祝效果",
+      "on": "開啟",
+      "off": "關閉"
+    },
     "precision": {
       "label": "精度"
     },
