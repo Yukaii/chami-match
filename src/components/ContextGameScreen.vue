@@ -110,37 +110,40 @@ const gridStructure = [
       <HealthBar />
     </div>
 
-    <div class="flex flex-col items-center gap-6">
+    <div class="flex h-full flex-col items-center gap-6">
       <!-- Game instructions -->
       <div class="text-center text-white">
         <p>{{ $t('gameModes.contextual.instructions') }}</p>
       </div>
 
-      <!-- Context Color Grid -->
-      <div class="mx-auto grid grid-cols-3 gap-1 overflow-hidden rounded-lg">
-        <template v-for="(row, rowIndex) in gridStructure" :key="rowIndex">
-          <template v-for="(cell, cellIndex) in row" :key="`${rowIndex}-${cellIndex}`">
-            <div
-              class="size-16"
-              :class="{ 'border-2 border-white': cell === 'target' }"
-              :style="`background-color: hsl(${cell === 'target' ? randomColor.h : surroundingColor.h},
-                ${cell === 'target' ? randomColor.s : surroundingColor.s}%,
-                ${cell === 'target' ? randomColor.v : surroundingColor.v}%)`"
-            ></div>
+      <div class="flex-1">
+        <!-- Context Color Grid -->
+        <div class="mx-auto grid grid-cols-3 gap-1 overflow-hidden rounded-lg">
+          <template v-for="(row, rowIndex) in gridStructure" :key="rowIndex">
+            <template v-for="(cell, cellIndex) in row" :key="`${rowIndex}-${cellIndex}`">
+              <div
+                class="size-16"
+                :class="{ 'border-2 border-white': cell === 'target' }"
+                :style="`background-color: hsl(${cell === 'target' ? randomColor.h : surroundingColor.h},
+                  ${cell === 'target' ? randomColor.s : surroundingColor.s}%,
+                  ${cell === 'target' ? randomColor.v : surroundingColor.v}%)`"
+              ></div>
+            </template>
           </template>
-        </template>
+        </div>
+
       </div>
 
       <!-- Color selection options -->
-      <div class="mt-4 w-full">
+      <div class="relative mt-4 flex size-full flex-col">
         <h3 class="mb-2 text-center text-lg font-bold text-white">
           {{ $t('gameModes.contextual.selectPrompt') }}
         </h3>
-        <div class="grid grid-cols-3 gap-3">
+        <div class="grid min-h-20 flex-1 grid-cols-3 gap-3">
           <button
             v-for="(color, index) in colorOptions"
             :key="index"
-            class="h-24 w-full rounded-lg border-2 border-transparent transition-transform hover:scale-105 hover:border-white"
+            class="size-full rounded-lg border-2 border-transparent transition-transform hover:scale-105 hover:border-white"
             :style="`background-color: hsl(${color.h}, ${color.s}%, ${color.v}%)`"
             @click="selectColor(color)"
           />
