@@ -1,15 +1,15 @@
 <template>
-  <Modal :is-open="settingsPopupOpen" @on-close="onClose">
-    <div class="mb-4 text-center text-lg font-bold text-white">{{ $t('settings.title') }}</div>
+  <Modal size="medium" :is-open="settingsPopupOpen" @on-close="onClose">
+    <div class="mb-4 text-center text-lg font-bold text-gray-900 dark:text-white">{{ $t('settings.title') }}</div>
 
     <!-- UI Options -->
     <div class="mb-4">
-      <div class="mb-2 text-xl font-bold text-white">{{ $t('settings.UIOptions') }}</div>
+      <div class="mb-2 text-xl font-bold text-gray-900 dark:text-white">{{ $t('settings.UIOptions') }}</div>
       <hr class="mb-4 border-gray-400" />
 
       <!-- Dark Mode - NEW -->
       <div class="mb-4">
-        <label class="mb-2 block font-bold text-white">{{ $t('settings.theme.title') }}</label>
+        <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.theme.title') }}</label>
         <div class="flex space-x-2">
           <button
             v-for="theme in ['system', 'dark', 'light']"
@@ -28,7 +28,7 @@
 
       <!-- Language -->
       <div class="mb-4">
-        <label class="mb-2 block font-bold text-white">{{ $t('settings.language') }}</label>
+        <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.language') }}</label>
         <div class="flex space-x-2">
           <button
             v-for="lang in languages"
@@ -44,7 +44,7 @@
 
       <!-- Confetti Effect -->
       <div class="mb-4">
-        <label class="mb-2 block font-bold text-white">{{ $t('settings.confetti.label') }}</label>
+        <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.confetti.label') }}</label>
         <div class="flex space-x-2">
           <button
             v-for="value in [true, false]"
@@ -61,12 +61,12 @@
 
     <!-- Game Options - Only shown in game mode -->
     <div v-if="state.settingsMode === 'game'">
-      <div class="mb-2 text-xl font-bold text-white">{{ $t('settings.gameOptions') }}</div>
+      <div class="mb-2 text-xl font-bold text-gray-900 dark:text-white">{{ $t('settings.gameOptions') }}</div>
       <hr class="mb-4 border-gray-400" />
 
       <!-- Precision - Only shown when NOT in contextual mode -->
       <div v-if="state.gameType.value !== 'contextual'" class="mb-4">
-        <label class="mb-2 block font-bold text-white">{{ $t('settings.precision.label') }}</label>
+        <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.precision.label') }}</label>
         <div class="flex space-x-2">
           <button
             v-for="value in [3, 5, 10, 20, 30]"
@@ -82,7 +82,7 @@
 
       <!-- Color Mode -->
       <div class="mb-4">
-        <label class="mb-2 block font-bold text-white">{{ $t('settings.colorMode.label') }}</label>
+        <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.colorMode.label') }}</label>
         <div class="flex space-x-2">
           <button
             v-for="value in ['Color', 'B/W']"
@@ -98,7 +98,7 @@
 
       <!-- Max Tries -->
       <div v-if="state.gameType.value !== 'contextual'" class="mb-4">
-        <label class="mb-2 block font-bold text-white">{{ $t('settings.maxTries.label') }}</label>
+        <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.maxTries.label') }}</label>
         <div class="flex space-x-2">
           <button
             v-for="value in [3, 5, 10]"
@@ -114,7 +114,7 @@
 
       <!-- Realtime Preview -->
       <div class="mb-4">
-        <label class="mb-2 block font-bold text-white">{{ $t('settings.realtimePreview.label') }}</label>
+        <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.realtimePreview.label') }}</label>
         <div class="flex space-x-2">
           <button
             v-for="value in [true, false]"
@@ -135,10 +135,10 @@
     </div>
 
     <div class="mb-4 mt-6">
-      <div class="mb-2 text-xl font-bold text-white">{{ $t('settings.danger') }}</div>
+      <div class="mb-2 text-xl font-bold text-gray-900 dark:text-white">{{ $t('settings.danger') }}</div>
       <hr class="mb-4 border-gray-400" />
 
-      <p class="mb-2 text-white">{{ $t('settings.confirmReset') }}</p>
+      <p class="mb-2 text-gray-900 dark:text-white">{{ $t('settings.confirmReset') }}</p>
 
       <button
         class="button-3d w-full rounded-lg bg-red-600 px-4 py-2 text-white"
