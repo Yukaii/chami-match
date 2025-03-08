@@ -24,7 +24,6 @@ export default defineConfig({
         unheadVueComposablesImports,
       ],
     }),
-    ,
     Components(),
     VitePWA({
       registerType: 'autoUpdate',
