@@ -36,21 +36,33 @@ watch([hsv, realtimePreview], () => {
 function goToHome() {
   router.push('/')
 }
+
+function startOver() {
+  state.startOver() // Reset the game state
+}
 </script>
 
 <template>
   <div class="flex size-full flex-col justify-between p-2 pb-4">
     <div class="flex flex-col gap-3">
-      <Toolbar>
-        <template #left>
-          <button
-            class="flex items-center gap-1 rounded-lg bg-gray-700 px-3 py-1 text-white"
-            @click="goToHome"
-          >
-            <span class="text-lg">←</span> {{ $t('home') }}
-          </button>
-        </template>
-      </Toolbar>
+      <!-- Navigation bar separate from game toolbar -->
+      <div class="flex w-full justify-between">
+        <button
+          class="flex items-center gap-1 rounded-lg bg-gray-700 px-3 py-1 text-white"
+          @click="goToHome"
+        >
+          <span class="text-lg">←</span> {{ $t('home') }}
+        </button>
+        <button
+          class="rounded-lg bg-gray-700 px-3 py-1 text-white"
+          @click="startOver"
+        >
+          {{ $t('startOver') }}
+        </button>
+      </div>
+
+      <!-- Regular game toolbar with all stats -->
+      <Toolbar />
       <HealthBar />
     </div>
 
