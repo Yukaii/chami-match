@@ -179,16 +179,6 @@
           </div>
         </template>
       </div>
-
-      <!-- Pagination if needed -->
-      <div v-if="hasMoreRecords" class="mt-4 text-center">
-        <button
-          class="rounded-lg bg-gray-700 px-4 py-2 text-white hover:bg-gray-600"
-          @click="loadMoreRecords"
-        >
-          {{ $t('loadMore') }}
-        </button>
-      </div>
     </div>
   </Modal>
 </template>
