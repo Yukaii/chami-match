@@ -87,5 +87,7 @@
       "valueDifference": "Value Difference",
       "yourGuess": "Your guess:"
     }
-  }
+  },
+  "colorDifferences": "Color Differences",
+  "precisionTarget": "Target"
 }

@@ -97,6 +97,55 @@
                   ></div>
                 </div>
               </div>
+
+              <!-- Add numeric color differences only for standard mode -->
+              <template v-if="record.gameType === 'standard'">
+                <div class="mt-3 space-y-1 bg-gray-800 p-2 rounded-lg">
+                  <div class="flex justify-between text-sm">
+                    <div class="text-white">{{ $t('colorDifferences') }}:</div>
+                    <div class="text-white">{{ $t('precisionTarget') }}: ±{{ record.session?.precision || 10 }}</div>
+                  </div>
+
+                  <!-- Hue difference -->
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 text-pink-300 font-mono">H:</div>
+                    <div class="flex-1 h-2 bg-gray-700 rounded-full overflow-hidden">
+                      <div
+                        class="h-full"
+                        :class="getColorDifferenceClass(getHueDifference(record))"
+                        :style="`width: ${Math.min(100, getHueDifference(record))}%`"
+                      ></div>
+                    </div>
+                    <div class="w-12 text-right text-xs text-white font-mono">{{ formatDifference(getHueDifference(record)) }}</div>
+                  </div>
+
+                  <!-- Saturation difference -->
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 text-pink-300 font-mono">S:</div>
+                    <div class="flex-1 h-2 bg-gray-700 rounded-full overflow-hidden">
+                      <div
+                        class="h-full"
+                        :class="getColorDifferenceClass(getSaturationDifference(record))"
+                        :style="`width: ${Math.min(100, getSaturationDifference(record))}%`"
+                      ></div>
+                    </div>
+                    <div class="w-12 text-right text-xs text-white font-mono">{{ formatDifference(getSaturationDifference(record)) }}</div>
+                  </div>
+
+                  <!-- Value difference -->
+                  <div class="flex items-center gap-2">
+                    <div class="w-6 text-pink-300 font-mono">V:</div>
+                    <div class="flex-1 h-2 bg-gray-700 rounded-full overflow-hidden">
+                      <div
+                        class="h-full"
+                        :class="getColorDifferenceClass(getValueDifference(record))"
+                        :style="`width: ${Math.min(100, getValueDifference(record))}%`"
+                      ></div>
+                    </div>
+                    <div class="w-12 text-right text-xs text-white font-mono">{{ formatDifference(getValueDifference(record)) }}</div>
+                  </div>
+                </div>
+              </template>
             </template>
 
             <!-- Difference-based record content -->
@@ -324,4 +373,36 @@ const onClose = () => {
   currentPage.value = 1;
   filterType.value = 'all';
 };
+
+// Helper functions to calculate color differences
+function getHueDifference(record) {
+  if (!record?.actualColor?.h || !record?.guessedColor?.h) return 0;
+
+  // Handle hue's circular nature (0-360)
+  let diff = Math.abs(record.actualColor.h - record.guessedColor.h);
+  if (diff > 180) diff = 360 - diff;
+
+  return diff;
+}
+
+function getSaturationDifference(record) {
+  if (!record?.actualColor?.s || !record?.guessedColor?.s) return 0;
+  return Math.abs(record.actualColor.s - record.guessedColor.s);
+}
+
+function getValueDifference(record) {
+  if (!record?.actualColor?.v || !record?.guessedColor?.v) return 0;
+  return Math.abs(record.actualColor.v - record.guessedColor.v);
+}
+
+// Format difference to show + or - prefix
+function formatDifference(value) {
+  return value.toFixed(1);
+}
+
+// Get CSS class based on whether the difference is within precision
+function getColorDifferenceClass(diff) {
+  const precision = 10; // Default precision
+  return diff <= precision ? 'bg-green-500' : 'bg-red-500';
+}
 </script>

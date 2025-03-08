@@ -88,5 +88,7 @@
       "valueDifference": "亮度差異",
       "yourGuess": "你的猜測："
     }
-  }
+  },
+  "colorDifferences": "顏色差異",
+  "precisionTarget": "目標精度"
 }

@@ -28,6 +28,8 @@
   "sessionDate": "ゲーム日時",
   "allSessions": "すべてのセッション",
   "currentSession": "現在のセッション",
+  "colorDifferences": "色の差異",
+  "precisionTarget": "目標精度",
   "settings": {
     "title": "設定",
     "UIOptions": "ユーザーインターフェースオプション",
