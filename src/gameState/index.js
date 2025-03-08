@@ -185,16 +185,13 @@ export const useGlobalGameState = createGlobalState(() => {
 
 	// Game mode specific action handlers - these delegate to the current game mode
 	function updateUserColor(h, s, v) {
-		if (currentGameMode.value && currentGameMode.value.updateUserColor) {
+		if (currentGameMode.value?.updateUserColor) {
 			currentGameMode.value.updateUserColor(h, s, v);
 		}
 	}
 
 	function updateUserValueDifference(value) {
-		if (
-			currentGameMode.value &&
-			currentGameMode.value.updateUserValueDifference
-		) {
+		if (currentGameMode.value?.updateUserValueDifference) {
 			currentGameMode.value.updateUserValueDifference(value);
 		}
 	}
@@ -255,7 +252,7 @@ export const useGlobalGameState = createGlobalState(() => {
 				.reverse()
 				.find((item) => item.round === roundToCheck);
 
-			if (lastTryOfRound && lastTryOfRound.wasSuccess) {
+			if (lastTryOfRound?.wasSuccess) {
 				streak++;
 				roundToCheck--;
 			} else {
@@ -274,7 +271,7 @@ export const useGlobalGameState = createGlobalState(() => {
 			if (Array.isArray(history.value)) {
 				history.value = history.value.map((record) => {
 					// Check if it's an old format record that needs migration
-					if (record && record.sessionId && record.round && !record.id) {
+					if (record?.sessionId && record.round && !record.id) {
 						return {
 							id: nanoid(),
 							timestamp: Date.now(),

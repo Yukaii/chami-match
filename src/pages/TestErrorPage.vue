@@ -24,7 +24,7 @@ const triggerAsyncError = async () => {
 	try {
 		await asyncOperation();
 	} catch (error) {
-		throw new Error("Caught and rethrown: " + error.message);
+		throw new Error(`Caught and rethrown: ${error.message}`);
 	}
 };
 </script>

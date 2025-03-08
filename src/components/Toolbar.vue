@@ -109,7 +109,7 @@ watch(
 			return;
 		}
 
-		if (count == prevCount + 1) {
+		if (count === prevCount + 1) {
 			// win!
 			isFlipping.value = true;
 			setTimeout(() => {

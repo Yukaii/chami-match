@@ -21,7 +21,7 @@ const refreshPage = () => {
 };
 
 const copyErrorStack = () => {
-	if (error.value && error.value.stack) {
+	if (error.value?.stack) {
 		navigator.clipboard
 			.writeText(error.value.stack)
 			.then(() => {

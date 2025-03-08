@@ -6,10 +6,16 @@ export function cn(...inputs) {
 }
 
 export function hsvToRgb(h, s, v) {
-	let r, g, b;
+	let r;
+	let g;
+	let b;
 
 	let i;
-	let f, p, q, t;
+	// biome-ignore lint/style/useConst: <explanation>
+	let f;
+	let p;
+	let q;
+	let t;
 
 	s /= 100;
 	v /= 100;

@@ -24,7 +24,7 @@ export class StandardMode extends BaseMode {
 					v: Math.floor(Math.random() * 95) + 5,
 				};
 			}
-			case "Color":
+			// case "Color":
 			default: {
 				return {
 					h: Math.floor(Math.random() * 360),
