@@ -6,9 +6,10 @@
   "home": "主選單",
   "submit": "送出",
   "close": "關閉",
+  "cancel": "取消",
   "gameRecord": {
     "title": "遊戲記錄",
-    "emptyContent": "你的遊戲紀錄會在這裡顯示，現在還是空的。"
+    "emptyContent": "你的遊戲記錄會在這裡顯示，現在還是空的。"
   },
   "comboCount": "連擊數",
   "winningRate": "勝率",
@@ -34,7 +35,9 @@
     "cta": "套用",
     "danger": "危險區域",
     "confirmReset": "重設將刪除所有遊戲資料和設定。你將無法復原此操作。",
-    "resetGameData": "重設遊戲資料"
+    "resetGameData": "重設遊戲資料",
+    "resetConfirmation": "重設遊戲資料",
+    "resetWarning": "你確定要重設遊戲資料嗎？您將會失去所有目前的進度"
   },
   "about": {
     "title": "關於",

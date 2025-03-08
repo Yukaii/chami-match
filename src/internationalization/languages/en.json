@@ -6,6 +6,7 @@
   "home": "Home",
   "submit": "Submit",
   "close": "Close",
+  "cancel": "Cancel",
   "gameRecord": {
     "title": "Game Record",
     "emptyContent": "Your game records will be displayed here, but it's currently empty."
@@ -34,7 +35,9 @@
     "cta": "Apply",
     "danger": "Danger Zone",
     "confirmReset": "Reset will remove all your game data and settings. You can't undo this action.",
-    "resetGameData": "Reset Game Data"
+    "resetGameData": "Reset Game Data",
+    "resetConfirmation": "Reset Game Data",
+    "resetWarning": "Are you sure you want to reset the game data? All your current progress will be lost."
   },
   "about": {
     "title": "About",

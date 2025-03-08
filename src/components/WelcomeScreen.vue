@@ -9,6 +9,11 @@ function startGame() {
   state.startOver() // Initialize a new game
   router.push('/game')
 }
+
+function openSettings() {
+  state.settingsMode = 'global'
+  state.toggleSettingsPopup()
+}
 </script>
 
 <template>
@@ -33,7 +38,7 @@ function startGame() {
 
       <button
         class="mt-4 rounded-lg bg-gray-700 px-6 py-2 text-white"
-        @click="state.toggleSettingsPopup()"
+        @click="openSettings"
       >
         {{ $t('settings.title') }}
       </button>

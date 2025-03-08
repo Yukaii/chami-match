@@ -6,6 +6,7 @@
   "home": "ホーム",
   "submit": "提出",
   "close": "閉じる",
+  "cancel": "キャンセル",
   "gameRecord": {
     "title": "ゲーム記録",
     "emptyContent": "ゲームの記錄はこちらに表示されますが、現在は空です。"
@@ -34,7 +35,9 @@
     "cta": "適用",
     "danger": "危険ゾーン",
     "confirmReset": "リセットすると、すべてのゲームデータと設定が削除されます。この動作は元に戻すことはできません。",
-    "resetGameData": "ゲームデータをリセット"
+    "resetGameData": "ゲームデータをリセット",
+    "resetConfirmation": "ゲームデータをリセット",
+    "resetWarning": "本当にゲームデータをリセットしますか？ 現在の進行状況はすべて失われます。"
   },
   "about": {
     "title": "このゲームについて",
