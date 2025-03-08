@@ -7,14 +7,14 @@ const state = useGlobalGameState()
 const relativeColors = state.relativeColors
 const mode = state.mode
 
-// Create a computed property for the slider
+// Create a computed property for the slider - modified to not use .value
 const valueDifference = computed({
-  get: () => state.userValueDifference.value,
-  set: (value) => state.userValueDifference.value = parseInt(value, 10)
+  get: () => state.userValueDifference,
+  set: (value) => state.updateUserValueDifference(parseInt(value, 10))
 })
 
 function submit() {
-  state.checkRelativeGuess()
+  state.checkGuess() // Changed from checkRelativeGuess to use the unified API
 }
 
 function goToHome() {
