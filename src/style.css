@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   #app {
     @apply h-full mx-auto max-w-[576px];
@@ -25,7 +27,7 @@
   }
 
   .toy-panel {
-    @apply bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800
+    @apply bg-gray-100 dark:bg-gray-800
            rounded-xl border border-gray-200 dark:border-gray-600 p-4
            shadow-md;
   }

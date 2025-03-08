@@ -35,6 +35,7 @@
     "language": "語言",
     "theme": {
       "title": "主題",
+      "system": "系統設定",
       "dark": "深色模式",
       "light": "淺色模式"
     },

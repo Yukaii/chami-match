@@ -12,13 +12,14 @@
         <label class="mb-2 block font-bold text-white">{{ $t('settings.theme.title') }}</label>
         <div class="flex space-x-2">
           <button
-            v-for="theme in ['dark', 'light']"
+            v-for="theme in ['system', 'dark', 'light']"
             :key="theme"
             class="button-3d flex items-center gap-2"
             :class="`px-2 py-1 rounded-lg ${currentTheme === theme ? 'bg-pink-600' : 'bg-slate-600'}`"
             @click="setTheme(theme)"
           >
-            <ph-moon v-if="theme === 'dark'" size="18" />
+            <ph-device-mobile v-if="theme === 'system'" size="18" />
+            <ph-moon v-else-if="theme === 'dark'" size="18" />
             <ph-sun v-else size="18" />
             {{ $t(`settings.theme.${theme}`) }}
           </button>
@@ -152,7 +153,7 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { ref, onMounted } from 'vue';
-import { PhSun, PhMoon } from '@phosphor-icons/vue'
+import { PhSun, PhMoon, PhDeviceMobile } from '@phosphor-icons/vue'
 import { useGlobalGameState } from '../gameState'
 
 const { locale } = useI18n()
@@ -173,15 +174,24 @@ const settings = reactive({
 })
 
 // Theme handling
-const currentTheme = ref(localStorage.getItem('theme') || 'dark');
+const currentTheme = ref(localStorage.getItem('theme') || 'system');
 
 function setTheme(theme) {
   currentTheme.value = theme;
 
-  if (theme === 'dark') {
+  if (theme === 'system') {
+    document.documentElement.classList.remove('dark', 'light');
+
+    // Apply dark theme if system prefers dark
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.classList.add('dark');
+    }
+  } else if (theme === 'dark') {
     document.documentElement.classList.add('dark');
+    document.documentElement.classList.remove('light');
   } else {
     document.documentElement.classList.remove('dark');
+    document.documentElement.classList.add('light');
   }
 
   localStorage.setItem('theme', theme);

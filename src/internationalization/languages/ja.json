@@ -37,6 +37,7 @@
     "language": "言語",
     "theme": {
       "title": "テーマ",
+      "system": "システム設定",
       "dark": "ダークモード",
       "light": "ライトモード"
     },

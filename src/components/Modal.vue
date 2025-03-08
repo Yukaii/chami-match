@@ -1,7 +1,7 @@
 <template>
   <div :class="className" @click="onClose">
     <div
-      class="animate-pop-in z-50 flex max-h-[80%] w-[90%] flex-col space-y-4 overflow-auto rounded-xl border-2 border-white/30 bg-gradient-to-b from-gray-50 to-gray-100 p-6 shadow-2xl transition-all duration-300 dark:border-gray-600/30 dark:from-gray-700 dark:to-gray-800"
+      class="animate-pop-in z-50 flex max-h-[80%] w-[90%] flex-col space-y-4 overflow-auto rounded-xl border-2 border-white/30  bg-gray-100 p-6 shadow-2xl transition-all duration-300 dark:border-gray-600/30 dark:bg-gray-800"
       :class="[sizeClass]"
       @click.stop
     >

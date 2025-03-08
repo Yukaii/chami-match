@@ -35,6 +35,7 @@
     "language": "Language",
     "theme": {
       "title": "Theme",
+      "system": "System",
       "dark": "Dark Mode",
       "light": "Light Mode"
     },

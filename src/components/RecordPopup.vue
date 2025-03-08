@@ -17,7 +17,7 @@
 
     <div v-else class="max-h-[80vh] overflow-auto">
       <!-- Filter controls with session dropdown and game type - now sticky -->
-      <div class="sticky top-0 z-10 mb-4 bg-[#1f2937] px-2 pb-2 pt-1 shadow-md">
+      <div class="sticky top-0 z-10 mb-4 bg-gray-100 px-2 pb-2 pt-1 shadow-md dark:bg-gray-800">
         <div class="flex flex-col space-y-2">
           <!-- Session filter -->
           <div class="flex items-center justify-between gap-1">
