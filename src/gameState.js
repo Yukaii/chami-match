@@ -48,7 +48,6 @@ export const useGlobalGameState = createGlobalState(() => {
   const currentSession = ref(null)
 
   // State
-  const isGameActive = ref(false) // Track if we're on welcome screen or in game
   const currentRound = ref(0)
   const maxLife = computed(() => preferences.value.maxLife || 5)
   const lives = ref(maxLife.value)
@@ -67,15 +66,6 @@ export const useGlobalGameState = createGlobalState(() => {
   // Add any computed property getters here if required
 
   // Actions
-  function startGame() {
-    isGameActive.value = true
-    startOver()
-  }
-
-  function goToHome() {
-    isGameActive.value = false
-  }
-
   function startOver() {
     // add a new session
     const session = createSession(preferences.value)
@@ -230,7 +220,6 @@ export const useGlobalGameState = createGlobalState(() => {
   }
 
   return {
-    isGameActive,
     currentSession,
     currentRound,
     maxLife,
@@ -263,7 +252,5 @@ export const useGlobalGameState = createGlobalState(() => {
     toggleResetPopup,
     lastTriesOfEachRound,
     startOver,
-    startGame,
-    goToHome,
   }
 })

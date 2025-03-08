@@ -1,11 +1,7 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
-import { useGlobalGameState } from './gameState'
-import WelcomeScreen from './components/WelcomeScreen.vue'
-import GameScreen from './components/GameScreen.vue'
 
 const { t, locale } = useI18n()
-const state = useGlobalGameState()
 
 watch(
   locale,
@@ -37,8 +33,7 @@ watch(
 
 <template>
   <div class="size-full">
-    <WelcomeScreen v-if="!state.isGameActive.value" />
-    <GameScreen v-else />
+    <RouterView />
 
     <!-- Popups should be available on both screens -->
     <RecordPopup />

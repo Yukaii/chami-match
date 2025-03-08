@@ -1,6 +1,8 @@
 <script setup>
+import { useRouter } from 'vue-router'
 import { useGlobalGameState } from '../gameState'
 
+const router = useRouter()
 const state = useGlobalGameState()
 const randomColor = state.randomColor
 const userColor = state.userColor
@@ -30,6 +32,10 @@ watch([hsv, realtimePreview], () => {
     state.updateUserColor(...hsv.value)
   }
 })
+
+function goToHome() {
+  router.push('/')
+}
 </script>
 
 <template>
@@ -39,7 +45,7 @@ watch([hsv, realtimePreview], () => {
         <template #left>
           <button
             class="flex items-center gap-1 rounded-lg bg-gray-700 px-3 py-1 text-white"
-            @click="state.goToHome"
+            @click="goToHome"
           >
             <span class="text-lg">←</span> {{ $t('home') }}
           </button>

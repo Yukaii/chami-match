@@ -1,7 +1,14 @@
 <script setup>
+import { useRouter } from 'vue-router'
 import { useGlobalGameState } from '../gameState'
 
 const state = useGlobalGameState()
+const router = useRouter()
+
+function startGame() {
+  state.startOver() // Initialize a new game
+  router.push('/game')
+}
 </script>
 
 <template>
@@ -14,7 +21,7 @@ const state = useGlobalGameState()
     <div class="flex w-full max-w-md flex-col gap-4">
       <button
         class="button-3d rounded-lg bg-pink-600 px-6 py-3 text-xl text-white"
-        @click="state.startGame"
+        @click="startGame"
       >
         {{ $t('startGame') }}
       </button>
