@@ -1,10 +1,10 @@
+import tailwindcss from "@tailwindcss/vite";
 import { unheadVueComposablesImports } from "@unhead/vue";
 import vue from "@vitejs/plugin-vue";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
-import tailwindcss from "@tailwindcss/vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -13,7 +13,7 @@ export default defineConfig({
 	},
 	plugins: [
 		vue(),
-    tailwindcss(),
+		tailwindcss(),
 		AutoImport({
 			imports: [
 				"vue",

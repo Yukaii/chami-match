@@ -71,7 +71,7 @@
 		"repository": "GitHub repository",
 		"developerCredits": "Developer Credits",
 		"developerText": "A big thanks to all the developers who contributed to this project. Your hard work and dedication make this game better for everyone.",
-			"share": "Share",
+		"share": "Share",
 		"close": "Close"
 	},
 	"reset": {

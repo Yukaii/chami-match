@@ -75,22 +75,24 @@ const sizeClasses = computed(() => ({
 }));
 
 const buttonClasses = computed(() => {
-  // Base classes that are always applied and don't conflict with variants
-  const baseClasses = [
-    "rounded-lg font-medium transition-all duration-200",
-    "focus:outline-hidden focus:ring-2 focus:ring-offset-2",
-    "hover:-translate-y-1 hover:scale-[1.02] active:translate-y-1",
-    sizeClasses.value[props.size],
-    props.fullWidth ? "w-full" : "",
-    props.is3d ? "3d-button" : "",
-    props.disabled ? "cursor-not-allowed opacity-50" : "",
-  ];
+	// Base classes that are always applied and don't conflict with variants
+	const baseClasses = [
+		"rounded-lg font-medium transition-all duration-200",
+		"focus:outline-hidden focus:ring-2 focus:ring-offset-2",
+		"hover:-translate-y-1 hover:scale-[1.02] active:translate-y-1",
+		sizeClasses.value[props.size],
+		props.fullWidth ? "w-full" : "",
+		props.is3d ? "3d-button" : "",
+		props.disabled ? "cursor-not-allowed opacity-50" : "",
+	];
 
-  // Get variant classes
-  const variant = props.overrideStyles ? "" : variantClasses.value[props.variant];
+	// Get variant classes
+	const variant = props.overrideStyles
+		? ""
+		: variantClasses.value[props.variant];
 
-  // Let tailwind-merge handle the conflicts naturally
-  return cn(...baseClasses, variant, props.className);
+	// Let tailwind-merge handle the conflicts naturally
+	return cn(...baseClasses, variant, props.className);
 });
 
 defineEmits(["click"]);
