@@ -4,6 +4,7 @@ import SettingsPopup from './components/SettingsPopup.vue'
 import AboutPopup from './components/AboutPopup.vue'
 import RecordPopup from './components/RecordPopup.vue'
 import ResetPopup from './components/ResetPopup.vue'
+import ErrorBoundary from './components/ErrorBoundary.vue'
 
 const { t, locale } = useI18n()
 const isDarkMode = true // always dark mode for this game
@@ -39,11 +40,24 @@ watch(
 <template>
   <div class="app-container h-full" :class="{ 'dark-theme': isDarkMode }">
     <div class="app-content h-full">
-      <router-view />
+      <ErrorBoundary>
+        <router-view />
+      </ErrorBoundary>
     </div>
-    <SettingsPopup />
-    <AboutPopup />
-    <RecordPopup />
-    <ResetPopup />
+    <ErrorBoundary>
+      <SettingsPopup />
+    </ErrorBoundary>
+
+    <ErrorBoundary>
+      <AboutPopup />
+    </ErrorBoundary>
+
+    <ErrorBoundary>
+      <RecordPopup />
+    </ErrorBoundary>
+
+    <ErrorBoundary>
+      <ResetPopup />
+    </ErrorBoundary>
   </div>
 </template>
