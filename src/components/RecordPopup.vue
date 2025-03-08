@@ -1,5 +1,5 @@
 <template>
-  <Modal :is-open="recordPopupOpen" @on-close="onClose">
+  <Modal :is-open="recordPopupOpen" size="medium" @on-close="onClose">
     <div class="mb-4 text-center text-lg font-bold text-white">{{ $t('gameRecord.title') }}</div>
 
     <div v-if="!hasRecords" class="py-8 text-center text-gray-400">
@@ -16,37 +16,39 @@
     </div>
 
     <div v-else class="max-h-[80vh] overflow-auto">
-      <!-- Filter controls with session dropdown and game type -->
-      <div class="mb-4 flex flex-col space-y-2">
-        <!-- Session filter -->
-        <div class="flex items-center justify-between">
-          <div class="text-white">
-            {{ $t('sessionDate') }}:
+      <!-- Filter controls with session dropdown and game type - now sticky -->
+      <div class="sticky top-0 z-10 mb-4 bg-[#1f2937] px-2 pb-2 pt-1 shadow-md">
+        <div class="flex flex-col space-y-2">
+          <!-- Session filter -->
+          <div class="flex items-center justify-between gap-1">
+            <div class="text-white">
+              {{ $t('sessionDate') }}:
+            </div>
+            <select v-model="sessionFilter" class="rounded-lg bg-gray-700 px-3 py-1 text-white">
+              <option value="all">{{ $t('allSessions') }}</option>
+              <option v-for="session in availableSessions" :key="session.id" :value="session.id">
+                {{ session.isCurrent ? `${$t('currentSession')} - ` : '' }}{{ session.name }}
+              </option>
+            </select>
           </div>
-          <select v-model="sessionFilter" class="rounded-lg bg-gray-700 px-3 py-1 text-white">
-            <option value="all">{{ $t('allSessions') }}</option>
-            <option v-for="session in availableSessions" :key="session.id" :value="session.id">
-              {{ session.isCurrent ? `${$t('currentSession')} - ` : '' }}{{ session.name }}
-            </option>
-          </select>
-        </div>
 
-        <!-- Game type filter -->
-        <div class="flex items-center justify-between">
-          <div class="text-white">
-            {{ $t('totalRounds') }}: {{ recordCount }}
+          <!-- Game type filter -->
+          <div class="flex items-center justify-between gap-1">
+            <div class="text-white">
+              {{ $t('totalRounds') }}: {{ recordCount }}
+            </div>
+            <select v-model="filterType" class="rounded-lg bg-gray-700 px-3 py-1 text-white">
+              <option value="all">{{ $t('allGameTypes') }}</option>
+              <option value="standard">{{ $t('gameModes.standard.name') }}</option>
+              <option value="contextual">{{ $t('gameModes.contextual.name') }}</option>
+              <option value="relative">{{ $t('gameModes.relative.name') }}</option>
+            </select>
           </div>
-          <select v-model="filterType" class="rounded-lg bg-gray-700 px-3 py-1 text-white">
-            <option value="all">{{ $t('allGameTypes') }}</option>
-            <option value="standard">{{ $t('gameModes.standard.name') }}</option>
-            <option value="contextual">{{ $t('gameModes.contextual.name') }}</option>
-            <option value="relative">{{ $t('gameModes.relative.name') }}</option>
-          </select>
         </div>
       </div>
 
-      <!-- Record items with session header -->
-      <div>
+      <!-- Record items with session header - now with padding -->
+      <div class="pt-2">
         <!-- Group records by session -->
         <template v-for="(record) in filteredRecords" :key="record.id">
           <!-- Record item with session indicator -->
@@ -306,6 +308,10 @@ watch(recordPopupOpen, (isOpen) => {
     setTimeout(() => {
       extractRecords();
     }, 100); // Small delay to ensure state is updated
+
+    // Reset filter values when opening the popup to maintain consistent state
+    sessionFilter.value = 'all';
+    filterType.value = 'all';
   }
 });
 
@@ -361,7 +367,7 @@ const onClose = () => {
   state.toggleRecordPopup(false);
   // Reset pagination when closing the popup
   currentPage.value = 1;
-  filterType.value = 'all';
+  // Don't reset filter values here to make them sticky between sessions
 };
 
 // Helper functions to calculate color differences
