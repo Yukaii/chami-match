@@ -116,30 +116,45 @@ export const useGlobalGameState = createGlobalState(() => {
     }
   }
 
-  // Record a round in history
+  // Record a round in history with better error handling and consistent format
   function recordRound(wasSuccess) {
     if (!currentGameMode.value) return;
 
-    // Create history record using mode-specific logic
-    const record = currentGameMode.value.createHistoryRecord(
-      wasSuccess,
-      currentRound.value,
-      currentSession.value.id
-    );
+    try {
+      // Get mode-specific record data
+      const record = currentGameMode.value.createHistoryRecord(
+        wasSuccess,
+        currentRound.value,
+        currentSession.value.id
+      );
 
-    // Add to history
-    history.value.push(record);
+      // Add common fields to ensure consistency
+      const completeRecord = {
+        id: nanoid(), // Unique ID for each record
+        timestamp: Date.now(),
+        sessionId: currentSession.value.id,
+        round: currentRound.value,
+        gameType: gameType.value,
+        wasSuccess,
+        ...record // Include mode-specific fields
+      };
 
-    // Update score and lives
-    if (wasSuccess) {
-      score.value++;
-    } else {
-      lives.value--; // Reduce life if incorrect
-    }
+      // Add to history
+      history.value.push(completeRecord);
 
-    // Check if we need a new round
-    if (wasSuccess || lives.value === 0) {
-      startNewRound();
+      // Update score and lives
+      if (wasSuccess) {
+        score.value++;
+      } else {
+        lives.value--;
+      }
+
+      // Check if we need a new round
+      if (wasSuccess || lives.value === 0) {
+        startNewRound();
+      }
+    } catch (error) {
+      console.error("Error recording game round:", error);
     }
   }
 
@@ -226,31 +241,115 @@ export const useGlobalGameState = createGlobalState(() => {
 
   const MAX_RECORDS = 50;
 
-  const lastTriesOfEachRound = computed(() => {
-    let lastRecords = history.value.slice(-MAX_RECORDS);
-    const tries = [];
-    let lastRoundId = -1;
-
-    for (let i = lastRecords.length - 1; i >= 0; i--) {
-      let record = lastRecords[i];
-      if (record && record.round !== lastRoundId) {
-        tries.push(record);
-        lastRoundId = record.round;
+  // Add data migration function to handle old record formats
+  function migrateHistoryRecords() {
+    try {
+      if (Array.isArray(history.value)) {
+        history.value = history.value.map(record => {
+          // Check if it's an old format record that needs migration
+          if (record && record.sessionId && record.round && !record.id) {
+            return {
+              id: nanoid(),
+              timestamp: Date.now(),
+              sessionId: record.sessionId,
+              round: record.round,
+              gameType: 'standard', // Old records were from standard mode
+              wasSuccess: record.wasSuccess,
+              type: 'color',
+              guessedColor: record.guessedColor,
+              actualColor: record.actualColor
+            };
+          }
+          return record; // Already in new format or unrecognized
+        });
       }
-
-      if (tries.length === MAX_RECORDS) {
-        break;
-      }
+    } catch (error) {
+      console.error("Error migrating history records:", error);
     }
+  }
 
-    return tries.map((tryRecord) => {
-      const session = sessions.value.find((s) => s.id === tryRecord.sessionId);
-      return {
-        ...tryRecord,
-        session: session ? Object.assign({}, session) : undefined,
-      };
-    }).filter(r => r.session); // Filter out records with no session
+  // Run migration when initializing
+  migrateHistoryRecords();
+
+  // Improved record retrieval with better error handling - modified to show all sessions
+  const lastTriesOfEachRound = computed(() => {
+    try {
+      // Check if history is valid
+      if (!Array.isArray(history.value)) {
+        console.warn('History is not an array:', history.value);
+        return [];
+      }
+
+      // Group records by session
+      const recordsBySession = {};
+
+      // Process all records from history
+      history.value.forEach(record => {
+        if (!record || !record.sessionId || !record.round) return;
+
+        // Initialize session if needed
+        if (!recordsBySession[record.sessionId]) {
+          recordsBySession[record.sessionId] = new Map();
+        }
+
+        // Only keep the last attempt for each round in this session
+        recordsBySession[record.sessionId].set(record.round, record);
+      });
+
+      // Flatten and process all session records
+      let allRecords = [];
+
+      Object.keys(recordsBySession).forEach(sessionId => {
+        const sessionRecords = Array.from(recordsBySession[sessionId].values());
+
+        // Find the corresponding session
+        const session = sessions.value.find(s => s.id === sessionId);
+
+        if (session) {
+          // Process all records in this session
+          const processedRecords = sessionRecords
+            .map(record => {
+              // Normalize record structure for compatibility
+              if (!record.id) record.id = nanoid();
+              if (!record.timestamp) record.timestamp = Date.now();
+              if (!record.gameType) record.gameType = session.gameType || 'standard';
+
+              return {
+                ...record,
+                session: Object.assign({}, session),
+                isCurrentSession: sessionId === currentSession.value?.id
+              };
+            });
+
+          allRecords = [...allRecords, ...processedRecords];
+        }
+      });
+
+      // Sort records by timestamp (most recent first)
+      allRecords.sort((a, b) => {
+        // Put current session at the top
+        if (a.isCurrentSession !== b.isCurrentSession) {
+          return a.isCurrentSession ? -1 : 1;
+        }
+        // Then sort by timestamp (most recent first)
+        return (b.timestamp || 0) - (a.timestamp || 0);
+      });
+
+      return allRecords.slice(0, MAX_RECORDS);
+    } catch (error) {
+      console.error("Error getting round history:", error);
+      return [];
+    }
   });
+
+  // Add a method to force record computation - useful for debugging
+  function refreshGameRecords() {
+    console.log('Force refreshing game records');
+    // This is a hack to force the computed property to re-evaluate
+    const temp = [...history.value];
+    history.value = temp;
+    return lastTriesOfEachRound.value;
+  }
 
   // Initialize without starting a game
   if (!currentSession.value) {
@@ -338,5 +437,6 @@ export const useGlobalGameState = createGlobalState(() => {
     get colorOptions() {
       return currentGameMode.value?.state?.colorOptions;
     },
+    refreshGameRecords, // Add this new method
   };
 });

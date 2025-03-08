@@ -21,6 +21,13 @@
   "comboCount": "コンボ数",
   "winningRate": "勝率",
   "roundCount": "ラウンド数",
+  "totalRounds": "総ラウンド数",
+  "allGameTypes": "すべてのゲームモード",
+  "loadMore": "もっと読み込む",
+  "unknownRecordType": "不明な記録タイプ",
+  "sessionDate": "ゲーム日時",
+  "allSessions": "すべてのセッション",
+  "currentSession": "現在のセッション",
   "settings": {
     "title": "設定",
     "UIOptions": "ユーザーインターフェースオプション",

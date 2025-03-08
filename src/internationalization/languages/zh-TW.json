@@ -21,6 +21,13 @@
   "comboCount": "連擊數",
   "winningRate": "勝率",
   "roundCount": "回合數",
+  "totalRounds": "總回合數",
+  "allGameTypes": "所有遊戲模式",
+  "loadMore": "載入更多",
+  "unknownRecordType": "未知記錄類型",
+  "sessionDate": "遊戲時間",
+  "allSessions": "所有遊戲回合",
+  "currentSession": "當前遊戲",
   "settings": {
     "title": "設定",
     "UIOptions": "介面選項",

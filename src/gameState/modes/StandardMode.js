@@ -66,11 +66,9 @@ export class StandardMode extends BaseMode {
 
   createHistoryRecord(wasSuccess, round, sessionId) {
     return {
-      sessionId,
-      round,
+      type: 'color',
       guessedColor: Object.assign({}, this.state.userColor),
       actualColor: Object.assign({}, this.state.randomColor),
-      wasSuccess,
     };
   }
 }

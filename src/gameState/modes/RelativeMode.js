@@ -91,11 +91,9 @@ export class RelativeMode extends BaseMode {
 
   createHistoryRecord(wasSuccess, round, sessionId) {
     return {
-      sessionId,
-      round,
-      guessedDifference: this.state.userValueDifference, // Fixed: no .value needed
+      type: 'difference',
+      guessedDifference: this.state.userValueDifference,
       actualDifference: this.state.relativeColors.valueDifference,
-      wasSuccess,
     };
   }
 }
