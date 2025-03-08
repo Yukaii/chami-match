@@ -4,7 +4,7 @@
 
     <!-- UI Options -->
     <div class="mb-4">
-      <div class="mb-2 text-xl font-bold text-gray-900 dark:text-white">{{ $t('settings.UIOptions') }}</div>
+      <div class="mb-2 text-xl font-bold text-pink-600 dark:text-pink-400">{{ $t('settings.UIOptions') }}</div>
       <hr class="mb-4 border-gray-400" />
 
       <!-- Dark Mode - NEW -->
@@ -148,7 +148,7 @@
     </div>
 
     <div class="mb-4 mt-6">
-      <div class="mb-2 text-xl font-bold text-gray-900 dark:text-white">{{ $t('settings.danger') }}</div>
+      <div class="mb-2 text-xl font-bold text-pink-600 dark:text-pink-400">{{ $t('settings.danger') }}</div>
       <hr class="mb-4 border-gray-400" />
 
       <p class="mb-2 text-gray-900 dark:text-white">{{ $t('settings.confirmReset') }}</p>
