@@ -82,11 +82,10 @@ export class RelativeMode extends BaseMode {
 
   checkGuess() {
     const precision = this.options.precision || 10;
-    const tolerance = precision / 2;
     const guessedDifference = this.state.userValueDifference; // Fixed: no .value needed
     const actualDifference = this.state.relativeColors.valueDifference;
 
-    return Math.abs(guessedDifference - actualDifference) <= tolerance;
+    return Math.abs(guessedDifference - actualDifference) <= precision;
   }
 
   createHistoryRecord(wasSuccess, round, sessionId) {
