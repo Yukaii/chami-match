@@ -40,7 +40,7 @@
         </div>
 
         <div class="tooltip">
-          <button class="button-3d rounded-lg bg-pink-600 p-2 text-white" @click="state.toggleSettingsPopup(true)">
+          <button class="button-3d rounded-lg bg-pink-600 p-2 text-white" @click="openSettings">
             <ph-gear-six :size="20" />
           </button>
           <span class="tooltiptext">{{ $t('settings.title') }}</span>
@@ -70,6 +70,11 @@ import {
 } from '@phosphor-icons/vue'
 
 const state = useGlobalGameState()
+
+function openSettings() {
+  state.settingsMode = 'game'
+  state.toggleSettingsPopup(true)
+}
 
 const isShaking = ref(false)
 const isFlipping = ref(false)

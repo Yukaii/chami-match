@@ -1,7 +1,12 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
+import SettingsPopup from './components/SettingsPopup.vue'
+import AboutPopup from './components/AboutPopup.vue'
+import RecordPopup from './components/RecordPopup.vue'
+import ResetPopup from './components/ResetPopup.vue'
 
 const { t, locale } = useI18n()
+const isDarkMode = true // always dark mode for this game
 
 watch(
   locale,
@@ -32,13 +37,13 @@ watch(
 </script>
 
 <template>
-  <div class="size-full">
-    <RouterView />
-
-    <!-- Popups should be available on both screens -->
-    <RecordPopup />
+  <div class="app-container h-full" :class="{ 'dark-theme': isDarkMode }">
+    <div class="app-content h-full">
+      <router-view />
+    </div>
     <SettingsPopup />
     <AboutPopup />
-    <ResetGameDataConfirmPopup />
+    <RecordPopup />
+    <ResetPopup />
   </div>
 </template>

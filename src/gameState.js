@@ -33,6 +33,20 @@ function generateRandomColor(mode) {
   }
 }
 
+// Generate a single surrounding color for contextual mode
+function generateSurroundingColor(targetColor, contrastLevel = 30) {
+  // Create a color that contrasts with the target by a specific amount
+  const hVariation = Math.random() > 0.5 ? contrastLevel : -contrastLevel
+  const sVariation = Math.random() * 20 - 10
+  const vVariation = Math.random() * 20 - 10
+
+  const h = (targetColor.h + hVariation + 360) % 360
+  const s = Math.max(0, Math.min(100, targetColor.s + sVariation))
+  const v = Math.max(0, Math.min(100, targetColor.v + vVariation))
+
+  return { h, s, v }
+}
+
 export function resetGameData() {
   localStorage.removeItem('sessions')
   localStorage.removeItem('preferences')
@@ -42,14 +56,26 @@ export function resetGameData() {
 
 export const useGlobalGameState = createGlobalState(() => {
   const sessions = useStorage('sessions', [])
-  const preferences = useStorage('preferences', { maxLife: 5, precision: 10, mode: 'Color', realtimePreview: false })
+  const preferences = useStorage('preferences', {
+    maxLife: 5,
+    precision: 10,
+    mode: 'Color',
+    realtimePreview: false,
+    gameType: 'standard' // 'standard' or 'contextual'
+  })
   const history = useStorage('history', [])
 
   const currentSession = ref(null)
 
   // State
   const currentRound = ref(0)
-  const maxLife = computed(() => preferences.value.maxLife || 5)
+  const maxLife = computed(() => {
+    // Override maxLife for contextual mode to always be 2
+    if (preferences.value.gameType === 'contextual') {
+      return 2
+    }
+    return preferences.value.maxLife || 5
+  })
   const lives = ref(maxLife.value)
   const precision = computed(() => preferences.value.precision || 10)
   const mode = computed(() => preferences.value.mode || 'Color') // default to "Color", can also be "B/W"
@@ -61,6 +87,8 @@ export const useGlobalGameState = createGlobalState(() => {
   const [settingsPopupOpen, toggleSettingsPopup] = useToggle(false)
   const [aboutPopupOpen, toggleAboutPopup] = useToggle(false)
   const [resetPopupOpen, toggleResetPopup] = useToggle(false)
+  const settingsMode = ref('global') // 'global' or 'game'
+  const gameType = computed(() => preferences.value.gameType || 'standard')
 
   // Getters
   // Add any computed property getters here if required
@@ -79,13 +107,18 @@ export const useGlobalGameState = createGlobalState(() => {
   function startNewRound() {
     // Increment the round, reset the lives and userColor
     currentRound.value++
-    lives.value = maxLife.value
+    lives.value = maxLife.value // Will be 2 for contextual mode
 
     // Generate new randomColor
     const random = generateRandomColor(mode.value)
     randomColor.h = random.h
     randomColor.s = random.s
     randomColor.v = random.v
+
+    // Reset user color
+    userColor.h = 0
+    userColor.s = 0
+    userColor.v = 0
   }
 
   function recordRound(wasSuccess) {
@@ -134,6 +167,11 @@ export const useGlobalGameState = createGlobalState(() => {
 
   function updateRealtimePreview (preview) {
     preferences.value.realtimePreview = preview
+  }
+
+  // Function to update game type
+  function updateGameType(newGameType) {
+    preferences.value.gameType = newGameType
   }
 
   // Action to check if user's guess is correct or not
@@ -211,6 +249,32 @@ export const useGlobalGameState = createGlobalState(() => {
     })
   })
 
+  // Generate surrounding colors for contextual mode
+  function generateSurroundingColors(color, count = 8) {
+    const colors = []
+    for (let i = 0; i < count; i++) {
+      // Create color variations that are similar but different
+      const hVariation = Math.random() * 20 - 10 // -10 to +10 variation
+      const sVariation = Math.random() * 20 - 10 // -10 to +10 variation
+      const vVariation = Math.random() * 20 - 10 // -10 to +10 variation
+
+      const h = (color.h + hVariation + 360) % 360
+      const s = Math.max(0, Math.min(100, color.s + sVariation))
+      const v = Math.max(0, Math.min(100, color.v + vVariation))
+
+      colors.push({ h, s, v })
+    }
+    return colors
+  }
+
+  // For contextual mode - now returns array with just one color (the surrounding color)
+  const surroundingColors = computed(() => {
+    if (gameType.value === 'contextual') {
+      return [generateSurroundingColor(randomColor)]
+    }
+    return []
+  })
+
   // Initialize without automatically starting the game
   if (!currentSession.value) {
     // Create session but don't start the game automatically
@@ -239,6 +303,7 @@ export const useGlobalGameState = createGlobalState(() => {
     updatePrecision,
     updateMaxLife,
     updateRealtimePreview,
+    updateGameType,
     checkGuess,
     winRate,
     winningStreak,
@@ -252,5 +317,8 @@ export const useGlobalGameState = createGlobalState(() => {
     toggleResetPopup,
     lastTriesOfEachRound,
     startOver,
+    settingsMode,
+    gameType,
+    surroundingColors,
   }
 })

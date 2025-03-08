@@ -1,14 +1,17 @@
 {
   "title": "Chami Match - Recognize the Color!",
   "description": "一個簡單又有趣的顏色辨識訓練遊戲！",
+  "startStandardGame": "標準模式",
+  "startContextualGame": "情境模式",
   "startGame": "開始遊戲",
   "startOver": "重新開始",
   "home": "主選單",
   "submit": "送出",
   "close": "關閉",
+  "cancel": "取消",
   "gameRecord": {
     "title": "遊戲記錄",
-    "emptyContent": "你的遊戲紀錄會在這裡顯示，現在還是空的。"
+    "emptyContent": "你的遊戲記錄會在這裡顯示，現在還是空的。"
   },
   "comboCount": "連擊數",
   "winningRate": "勝率",
@@ -34,7 +37,9 @@
     "cta": "套用",
     "danger": "危險區域",
     "confirmReset": "重設將刪除所有遊戲資料和設定。你將無法復原此操作。",
-    "resetGameData": "重設遊戲資料"
+    "resetGameData": "重設遊戲資料",
+    "resetConfirmation": "重設遊戲資料",
+    "resetWarning": "你確定要重設遊戲資料嗎？您將會失去所有目前的進度"
   },
   "about": {
     "title": "關於",
@@ -51,5 +56,18 @@
     "message": "你確定要重設遊戲資料嗎？您將會失去所有目前的進度",
     "confirm": "是的，重設",
     "cancel": "不，取消"
+  },
+  "gameModes": {
+    "standard": {
+      "name": "標準模式",
+      "description": "嘗試匹配左側顯示的顏色"
+    },
+    "contextual": {
+      "name": "情境模式",
+      "description": "匹配被相似顏色包圍的中心顏色 - 更具挑戰性！",
+      "instructions": "選擇匹配中心方塊的顏色",
+      "selectPrompt": "選擇匹配的顏色：",
+      "lastSelection": "你上次的選擇："
+    }
   }
 }
