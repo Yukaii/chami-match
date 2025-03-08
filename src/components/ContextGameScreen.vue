@@ -117,11 +117,11 @@ const gridStructure = [
       </div>
 
       <!-- Context Color Grid -->
-      <div class="mx-auto grid grid-cols-3 gap-1 rounded-lg overflow-hidden">
+      <div class="mx-auto grid grid-cols-3 gap-1 overflow-hidden rounded-lg">
         <template v-for="(row, rowIndex) in gridStructure" :key="rowIndex">
           <template v-for="(cell, cellIndex) in row" :key="`${rowIndex}-${cellIndex}`">
             <div
-              class="h-16 w-16"
+              class="size-16"
               :class="{ 'border-2 border-white': cell === 'target' }"
               :style="`background-color: hsl(${cell === 'target' ? randomColor.h : surroundingColor.h},
                 ${cell === 'target' ? randomColor.s : surroundingColor.s}%,
@@ -140,7 +140,7 @@ const gridStructure = [
           <button
             v-for="(color, index) in colorOptions"
             :key="index"
-            class="h-24 w-full rounded-lg hover:scale-105 transition-transform border-2 border-transparent hover:border-white"
+            class="h-24 w-full rounded-lg border-2 border-transparent transition-transform hover:scale-105 hover:border-white"
             :style="`background-color: hsl(${color.h}, ${color.s}%, ${color.v}%)`"
             @click="selectColor(color)"
           />
@@ -149,11 +149,11 @@ const gridStructure = [
     </div>
 
     <!-- Last Selected Color (if any) -->
-    <div class="flex justify-center mt-4" v-if="userColor.h !== 0 || userColor.s !== 0 || userColor.v !== 0">
+    <div v-if="userColor.h !== 0 || userColor.s !== 0 || userColor.v !== 0" class="mt-4 flex justify-center">
       <div class="text-center">
-        <p class="text-sm text-white mb-1">{{ $t('gameModes.contextual.lastSelection') }}</p>
+        <p class="mb-1 text-sm text-white">{{ $t('gameModes.contextual.lastSelection') }}</p>
         <div
-          class="mx-auto h-10 w-10 rounded-lg"
+          class="mx-auto size-10 rounded-lg"
           :style="`background-color: hsl(${userColor.h}, ${userColor.s}%, ${userColor.v}%)`"
         ></div>
       </div>

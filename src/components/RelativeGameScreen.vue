@@ -57,13 +57,13 @@ function startOver() {
       </div>
 
       <!-- Two color boxes side by side -->
-      <div class="flex justify-center gap-8 w-full">
+      <div class="flex w-full justify-center gap-8">
         <div
-          class="h-32 w-32 rounded-lg border-2 border-white shadow-lg"
+          class="size-32 rounded-lg border-2 border-white shadow-lg"
           :style="`background-color: hsl(${relativeColors.color1.h}, ${relativeColors.color1.s}%, ${relativeColors.color1.v}%)`"
         ></div>
         <div
-          class="h-32 w-32 rounded-lg border-2 border-white shadow-lg"
+          class="size-32 rounded-lg border-2 border-white shadow-lg"
           :style="`background-color: hsl(${relativeColors.color2.h}, ${relativeColors.color2.s}%, ${relativeColors.color2.v}%)`"
         ></div>
       </div>
@@ -85,7 +85,7 @@ function startOver() {
     </div>
 
     <!-- Submit Button -->
-    <button class="button-3d w-full rounded-lg bg-pink-600 px-4 py-2 text-white mt-6" @click="submit">
+    <button class="button-3d mt-6 w-full rounded-lg bg-pink-600 px-4 py-2 text-white" @click="submit">
       {{ $t('submit') }}
     </button>
   </div>
