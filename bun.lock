@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "hsv-hunter",
+      "name": "chami-match",
       "dependencies": {
         "@phosphor-icons/vue": "^2.1.6",
         "@unhead/vue": "^1.9.4",
