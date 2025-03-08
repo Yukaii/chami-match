@@ -2,6 +2,7 @@ import { useToggle, useStorage } from '@vueuse/core';
 import { reactive, ref, computed } from 'vue';
 import { nanoid } from 'nanoid';
 import { createGameMode } from './modes';
+import { celebrateFirstTry } from '../utils/confetti';
 
 function createSession({ maxLife, precision, mode, gameType }) {
   return {
@@ -29,7 +30,8 @@ export const useGlobalGameState = createGlobalState(() => {
     precision: 10,
     mode: 'Color',
     realtimePreview: false,
-    gameType: 'standard'
+    gameType: 'standard',
+    enableConfetti: true  // Add new preference for confetti
   });
   const history = useStorage('history', []);
 
@@ -61,6 +63,9 @@ export const useGlobalGameState = createGlobalState(() => {
   const mode = computed(() => preferences.value.mode || 'Color');
   const realtimePreview = computed(() => preferences.value.realtimePreview || false);
   const gameType = computed(() => preferences.value.gameType || 'standard');
+
+  // Track first attempt for each round
+  const attemptCount = ref(0);
 
   // Initialize game mode
   function initGameMode() {
@@ -109,6 +114,7 @@ export const useGlobalGameState = createGlobalState(() => {
     // Increment the round and reset lives
     currentRound.value++;
     lives.value = maxLife.value;
+    attemptCount.value = 0; // Reset attempt counter for the new round
 
     // Let the current game mode handle round initialization
     if (currentGameMode.value) {
@@ -121,6 +127,9 @@ export const useGlobalGameState = createGlobalState(() => {
     if (!currentGameMode.value) return;
 
     try {
+      // Increment attempt counter
+      attemptCount.value++;
+
       // Get mode-specific record data
       const record = currentGameMode.value.createHistoryRecord(
         wasSuccess,
@@ -136,6 +145,7 @@ export const useGlobalGameState = createGlobalState(() => {
         round: currentRound.value,
         gameType: gameType.value,
         wasSuccess,
+        attempt: attemptCount.value, // Track which attempt this was
         ...record // Include mode-specific fields
       };
 
@@ -145,6 +155,11 @@ export const useGlobalGameState = createGlobalState(() => {
       // Update score and lives
       if (wasSuccess) {
         score.value++;
+
+        // Only celebrate if this was the first attempt AND it was successful AND confetti is enabled
+        if (attemptCount.value === 1 && preferences.value.enableConfetti) {
+          celebrateFirstTry();
+        }
       } else {
         lives.value--;
       }
@@ -198,6 +213,10 @@ export const useGlobalGameState = createGlobalState(() => {
 
   function updateGameType(newGameType) {
     preferences.value.gameType = newGameType;
+  }
+
+  function updateConfetti(enabled) {
+    preferences.value.enableConfetti = enabled;
   }
 
   // Game statistics
@@ -379,6 +398,7 @@ export const useGlobalGameState = createGlobalState(() => {
     realtimePreview,
     score,
     gameType,
+    preferences,  // Expose preferences for direct access
 
     // Game history
     history,
@@ -407,6 +427,7 @@ export const useGlobalGameState = createGlobalState(() => {
     updateMaxLife,
     updateRealtimePreview,
     updateGameType,
+    updateConfetti,  // Add new setting method
 
     // Statistics
     winRate,
@@ -438,5 +459,6 @@ export const useGlobalGameState = createGlobalState(() => {
       return currentGameMode.value?.state?.colorOptions;
     },
     refreshGameRecords, // Add this new method
+    attemptCount, // Add current attempts count
   };
 });

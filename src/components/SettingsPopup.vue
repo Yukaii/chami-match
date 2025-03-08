@@ -22,6 +22,22 @@
           </button>
         </div>
       </div>
+
+      <!-- Confetti Effect -->
+      <div class="mb-4">
+        <label class="mb-2 block font-bold text-white">{{ $t('settings.confetti.label') }}</label>
+        <div class="flex space-x-2">
+          <button
+            v-for="value in [true, false]"
+            :key="value.toString()"
+            class="button-3d"
+            :class="`px-2 py-1 rounded-lg ${settings.enableConfetti === value ? 'bg-pink-600' : 'bg-slate-600'}`"
+            @click="settings.enableConfetti = value"
+          >
+            {{ value ? $t('settings.confetti.on') : $t('settings.confetti.off') }}
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Game Options - Only shown in game mode -->
@@ -134,6 +150,7 @@ const settings = reactive({
   mode: state.mode.value,
   maxTries: state.maxLife.value,
   realtimePreview: state.realtimePreview.value,
+  enableConfetti: true, // Default to enabled
 })
 
 const onClose = () => {
@@ -146,6 +163,7 @@ watch(state.settingsPopupOpen, () => {
     settings.mode = state.mode.value
     settings.maxTries = state.maxLife.value
     settings.realtimePreview = state.realtimePreview.value
+    settings.enableConfetti = state.preferences?.value?.enableConfetti ?? true
   }
 })
 
@@ -154,6 +172,7 @@ const onApply = () => {
   state.updateMode(settings.mode)
   state.updateMaxLife(settings.maxTries)
   state.updateRealtimePreview(settings.realtimePreview)
+  state.updateConfetti(settings.enableConfetti)
   state.startOver()
   onClose()
 }
@@ -162,5 +181,8 @@ const handleChangeLanguage = (lang) => {
   settings.language = lang
   locale.value = lang
   localStorage.setItem('lang', lang)
+
+  // Also save confetti setting when changing language
+  state.updateConfetti(settings.enableConfetti)
 }
 </script>

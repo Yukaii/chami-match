@@ -35,6 +35,11 @@
     "UIOptions": "ユーザーインターフェースオプション",
     "gameOptions": "ゲームオプション",
     "language": "言語",
+    "confetti": {
+      "label": "お祝いエフェクト",
+      "on": "オン",
+      "off": "オフ"
+    },
     "precision": {
       "label": "精度"
     },
