@@ -1,57 +1,61 @@
 <template>
-  <Modal :is-open="aboutPopupOpen" @on-close="onClose">
-    <div class="mb-4 text-center text-lg font-bold text-white">{{ $t('about.title') }}</div>
+  <Modal :is-open="aboutPopupOpen" size="medium" @on-close="onClose">
+    <div class="mb-6 text-center text-xl font-bold text-pink-600 dark:text-pink-400">
+      {{ $t('about.title') }}
+    </div>
 
-    <p class="mb-2">
-      <i18n-t keypath="about.text1">
-        <template #colorTest>
-          <a
-            class="text-blue-500 underline"
-            href="https://dream7fragment.itch.io/color-test"
-            target="_blank"
-            rel="noopener noreferrer"
-            >color-test</a
-          >
-        </template>
-        <template #fragment>
-          <a
-            class="text-blue-500 underline"
-            href="https://www.facebook.com/Dream7Fragment"
-            target="_blank"
-            rel="noopener noreferrer"
-            >Fragment</a
-          >
-        </template>
-      </i18n-t>
-    </p>
-    <p>
-      <i18n-t keypath="about.text2">
-        <template #githubRepo>
-          <a
-            class="text-blue-500 underline"
-            href="https://github.com/Yukaii/chami-match"
-            target="_blank"
-            rel="noopener noreferrer"
-            ><ph-github-logo :size="20" class="inline" />{{ $t('about.repository') }}</a
-          >
-        </template>
-      </i18n-t>
-    </p>
+    <div class="toy-panel mb-6">
+      <p class="mb-4">
+        <i18n-t keypath="about.text1">
+          <template #colorTest>
+            <a
+              class="text-blue-500 underline transition-colors hover:text-blue-700"
+              href="https://dream7fragment.itch.io/color-test"
+              target="_blank"
+              rel="noopener noreferrer"
+              >color-test</a
+            >
+          </template>
+          <template #fragment>
+            <a
+              class="text-blue-500 underline transition-colors hover:text-blue-700"
+              href="https://www.facebook.com/Dream7Fragment"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Fragment</a
+            >
+          </template>
+        </i18n-t>
+      </p>
+      <p>
+        <i18n-t keypath="about.text2">
+          <template #githubRepo>
+            <a
+              class="inline-flex items-center gap-1 text-blue-500 underline transition-colors hover:text-blue-700"
+              href="https://github.com/Yukaii/chami-match"
+              target="_blank"
+              rel="noopener noreferrer"
+              ><ph-github-logo :size="20" class="inline" />{{ $t('about.repository') }}</a
+            >
+          </template>
+        </i18n-t>
+      </p>
+    </div>
 
     <!-- Developer Credits -->
-    <div class="mb-4">
-      <div class="mb-2 text-xl font-bold text-white">{{ $t('about.developerCredits') }}</div>
-      <hr class="mb-4 border-gray-400" />
-      <p>{{ $t('about.developerText') }}</p>
-      <ul class="list-inside list-disc text-white">
-        <li>
-          <a class="text-blue-500 underline" href="https://github.com/Yukaii" target="_blank" rel="noopener noreferrer"
+    <div class="toy-panel mb-6">
+      <div class="mb-2 text-xl font-bold text-pink-600 dark:text-pink-400">{{ $t('about.developerCredits') }}</div>
+      <hr class="mb-4 border-gray-300 dark:border-gray-600" />
+      <p class="mb-2">{{ $t('about.developerText') }}</p>
+      <ul class="list-inside list-disc space-y-2 text-pink-500 dark:text-pink-400">
+        <li class="transition-transform hover:translate-x-1">
+          <a class="text-blue-500 underline transition-colors hover:text-blue-700" href="https://github.com/Yukaii" target="_blank" rel="noopener noreferrer"
             >Yukai</a
           >
         </li>
-        <li>
+        <li class="transition-transform hover:translate-x-1">
           <a
-            class="text-blue-500 underline"
+            class="text-blue-500 underline transition-colors hover:text-blue-700"
             href="https://github.com/alan10332000"
             target="_blank"
             rel="noopener noreferrer"
@@ -62,21 +66,27 @@
     </div>
 
     <div class="flex w-full justify-center">
-      <button class="button-3d mt-4 rounded-lg bg-pink-600 px-4 py-2 text-white" @click="onClose">
+      <BaseButton
+        variant="primary"
+        is3d
+        size="lg"
+        @click="onClose"
+      >
         {{ $t('about.close') }}
-      </button>
+      </BaseButton>
     </div>
   </Modal>
 </template>
 
 <script setup>
-import { PhGithubLogo } from '@phosphor-icons/vue'
-import { useGlobalGameState } from '../gameState'
+import { PhGithubLogo } from "@phosphor-icons/vue";
+import { useGlobalGameState } from "../gameState";
+import BaseButton from "./base/BaseButton.vue";
 
-const state = useGlobalGameState()
-const aboutPopupOpen = state.aboutPopupOpen
+const state = useGlobalGameState();
+const aboutPopupOpen = state.aboutPopupOpen;
 
 const onClose = () => {
-  state.toggleAboutPopup(false)
-}
+	state.toggleAboutPopup(false);
+};
 </script>

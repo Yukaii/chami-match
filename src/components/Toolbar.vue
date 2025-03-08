@@ -2,107 +2,132 @@
   <div class="flex w-full justify-between space-x-4">
     <div class="flex gap-2">
       <slot name="left">
-        <div class="tooltip">
-          <div class="button-3d flex items-center rounded-lg bg-pink-600 p-2 text-white">
+        <BaseTooltip>
+          <BaseButton
+            variant="primary"
+            size="sm"
+            class-name="cursor-default pointer-events-none"
+            :is3d="false"
+          >
             <ph-arrows-clockwise :size="20" />
             <span class="ml-2">{{ state.currentRound }}</span>
-          </div>
-          <span class="tooltiptext">{{ $t('roundCount') }}</span>
-        </div>
+          </BaseButton>
+          <template #tooltip>{{ $t('roundCount') }}</template>
+        </BaseTooltip>
 
-        <div class="tooltip">
-          <div :class="cn('button-3d flex items-center rounded-lg bg-pink-600 p-2 text-white', className)">
+        <BaseTooltip>
+          <BaseButton
+            variant="primary"
+            size="sm"
+            class-name="cursor-default pointer-events-none"
+            :is3d="false"
+            :class="className"
+          >
             <ph-hand-fist :size="20" />
-            <i class="fas fa-fist-raised text-white" />
-            <span class="ml-2 text-white">{{ state.winningStreak }}</span>
-          </div>
-          <span class="tooltiptext">{{ $t('comboCount') }}</span>
-        </div>
+            <span class="ml-2">{{ state.winningStreak }}</span>
+          </BaseButton>
+          <template #tooltip>{{ $t('comboCount') }}</template>
+        </BaseTooltip>
 
-        <div class="tooltip">
-          <div class="button-3d flex items-center rounded-lg bg-pink-600 p-2 text-white">
+        <BaseTooltip>
+          <BaseButton
+            variant="primary"
+            size="sm"
+            class-name="cursor-default pointer-events-none"
+            :is3d="false"
+          >
             <ph-chart-line :size="20" />
-            <i class="fas fa-chart-line" />
-            <span class="ml-2 text-white">{{ state.winRate.value }}</span>
-          </div>
-          <span class="tooltiptext">{{ $t('winningRate') }}</span>
-        </div>
+            <span class="ml-2">{{ state.winRate.value }}</span>
+          </BaseButton>
+          <template #tooltip>{{ $t('winningRate') }}</template>
+        </BaseTooltip>
       </slot>
     </div>
 
     <div class="flex gap-2">
       <slot name="right">
-        <div class="tooltip">
-          <button class="button-3d rounded-lg bg-pink-600 p-2 text-white" @click="state.toggleRecordPopup(true)">
+        <BaseTooltip>
+          <BaseButton variant="primary" size="sm" @click="state.toggleRecordPopup(true)">
             <ph-clock-counter-clockwise :size="20" />
-          </button>
-          <span class="tooltiptext">{{ $t('gameRecord.title') }}</span>
-        </div>
+          </BaseButton>
+          <template #tooltip>{{ $t('gameRecord.title') }}</template>
+        </BaseTooltip>
 
-        <div class="tooltip">
-          <button class="button-3d rounded-lg bg-pink-600 p-2 text-white" @click="openSettings">
+        <BaseTooltip>
+          <BaseButton variant="primary" size="sm" @click="openSettings">
             <ph-gear-six :size="20" />
-          </button>
-          <span class="tooltiptext">{{ $t('settings.title') }}</span>
-        </div>
+          </BaseButton>
+          <template #tooltip>{{ $t('settings.title') }}</template>
+        </BaseTooltip>
 
-        <div class="tooltip">
-          <button class="button-3d rounded-lg bg-pink-600 p-2 text-white" @click="state.toggleAboutPopup(true)">
+        <BaseTooltip>
+          <BaseButton variant="primary" size="sm" @click="state.toggleAboutPopup(true)">
             <ph-question :size="20" />
-          </button>
-          <span class="tooltiptext">{{ $t('about.title') }}</span>
-        </div>
+          </BaseButton>
+          <template #tooltip>{{ $t('about.title') }}</template>
+        </BaseTooltip>
+
+        <!-- ThemeToggle removed from here and moved to settings -->
       </slot>
     </div>
   </div>
 </template>
 
 <script setup>
-import { useGlobalGameState } from '../gameState'
-import { cn } from '../utils/index'
 import {
-  PhClockCounterClockwise,
-  PhArrowsClockwise,
-  PhChartLine,
-  PhHandFist,
-  PhGearSix,
-  PhQuestion,
-} from '@phosphor-icons/vue'
+	PhArrowsClockwise,
+	PhChartLine,
+	PhClockCounterClockwise,
+	PhGearSix,
+	PhHandFist,
+	PhQuestion,
+} from "@phosphor-icons/vue";
+import { useGlobalGameState } from "../gameState";
+import { cn } from "../utils/index";
 
-const state = useGlobalGameState()
+import BaseButton from "./base/BaseButton.vue";
+import BaseTooltip from "./base/BaseTooltip.vue";
+
+// Remove ThemeToggle import
+// import ThemeToggle from './ThemeToggle.vue'
+
+const state = useGlobalGameState();
 
 function openSettings() {
-  state.settingsMode = 'game'
-  state.toggleSettingsPopup(true)
+	state.settingsMode = "game";
+	state.toggleSettingsPopup(true);
 }
 
-const isShaking = ref(false)
-const isFlipping = ref(false)
+const isShaking = ref(false);
+const isFlipping = ref(false);
 
-watch([state.winningStreak, state.currentRound], ([count, round], [prevCount, prevRound]) => {
-  if (round === 1) {
-    // round reset
-    return
-  }
+watch(
+	[state.winningStreak, state.currentRound],
+	([count, round], [prevCount, prevRound]) => {
+		if (round === 1) {
+			// round reset
+			return;
+		}
 
-  if (count == (prevCount + 1)) {
-    // win!
-    isFlipping.value = true
-    setTimeout(() => {
-      isFlipping.value = false
-    }, 600)
-  } else {
-    isShaking.value = true
-    setTimeout(() => {
-      isShaking.value = false
-    }, 300)
-  }
-})
+		if (count === prevCount + 1) {
+			// win!
+			isFlipping.value = true;
+			setTimeout(() => {
+				isFlipping.value = false;
+			}, 600);
+		} else {
+			isShaking.value = true;
+			setTimeout(() => {
+				isShaking.value = false;
+			}, 300);
+		}
+	},
+);
 
 const className = computed(() => {
-  return cn(
-    isFlipping.value && 'animate-flip',
-    isShaking.value && 'animate-shake',
-  )
-})
+	return cn(
+		isFlipping.value && "animate-flip",
+		isShaking.value && "animate-shake",
+	);
+});
 </script>

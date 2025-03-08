@@ -1,37 +1,37 @@
 <script setup>
-import TestErrorComponent from '../components/TestErrorComponent.vue'
-import { ref } from 'vue'
+import { ref } from "vue";
+import TestErrorComponent from "../components/TestErrorComponent.vue";
 
-const showComponent = ref(true)
+const showComponent = ref(true);
 const resetComponent = () => {
-  showComponent.value = false
-  setTimeout(() => {
-    showComponent.value = true
-  }, 10)
-}
+	showComponent.value = false;
+	setTimeout(() => {
+		showComponent.value = true;
+	}, 10);
+};
 
 // Function that throws error after async operation
 const asyncOperation = async () => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      reject(new Error('Async operation failed'))
-    }, 500)
-  })
-}
+	return new Promise((resolve, reject) => {
+		setTimeout(() => {
+			reject(new Error("Async operation failed"));
+		}, 500);
+	});
+};
 
 // Function to trigger async error
 const triggerAsyncError = async () => {
-  try {
-    await asyncOperation()
-  } catch (error) {
-    throw new Error('Caught and rethrown: ' + error.message)
-  }
-}
+	try {
+		await asyncOperation();
+	} catch (error) {
+		throw new Error(`Caught and rethrown: ${error.message}`);
+	}
+};
 </script>
 
 <template>
   <div class="container mx-auto p-6">
-    <h1 class="text-2xl font-bold mb-6">Error Boundary Test Page</h1>
+    <h1 class="mb-6 text-2xl font-bold">Error Boundary Test Page</h1>
 
     <div class="mb-6 space-y-2">
       <p>This page allows you to test different error scenarios to see how the ErrorBoundary component handles them.</p>
@@ -39,18 +39,18 @@ const triggerAsyncError = async () => {
     </div>
 
     <div class="mb-6 space-x-3">
-      <button @click="resetComponent" class="px-4 py-2 bg-blue-600 text-white rounded">
+      <button class="rounded-sm bg-blue-600 px-4 py-2 text-white" @click="resetComponent">
         Reset Component
       </button>
-      <button @click="triggerAsyncError" class="px-4 py-2 bg-purple-600 text-white rounded">
+      <button class="rounded-sm bg-purple-600 px-4 py-2 text-white" @click="triggerAsyncError">
         Async Error
       </button>
-      <button @click="() => { throw new Error('Direct Error') }" class="px-4 py-2 bg-red-600 text-white rounded">
+      <button class="rounded-sm bg-red-600 px-4 py-2 text-white" @click="() => { throw new Error('Direct Error') }">
         Direct Error
       </button>
     </div>
 
-    <div v-if="showComponent" class="border p-4 rounded">
+    <div v-if="showComponent" class="rounded-sm border p-4">
       <TestErrorComponent />
     </div>
   </div>

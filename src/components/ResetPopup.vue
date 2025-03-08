@@ -23,17 +23,17 @@
 </template>
 
 <script setup>
-import { useGlobalGameState, resetGameData } from '../gameState'
+import { resetGameData, useGlobalGameState } from "../gameState";
 
-const state = useGlobalGameState()
-const resetPopupOpen = state.resetPopupOpen
+const state = useGlobalGameState();
+const resetPopupOpen = state.resetPopupOpen;
 
 const onClose = () => {
-  state.toggleResetPopup(false)
-}
+	state.toggleResetPopup(false);
+};
 
 const confirmReset = () => {
-  resetGameData()
-  onClose()
-}
+	resetGameData();
+	onClose();
+};
 </script>

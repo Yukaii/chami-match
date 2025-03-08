@@ -1,28 +1,30 @@
 <script setup>
-import { useRouter } from 'vue-router'
-import { useGlobalGameState } from '../gameState'
+import { useRouter } from "vue-router";
+import { useGlobalGameState } from "../gameState";
+import BaseButton from "./base/BaseButton.vue";
+import BaseSlider from "./base/BaseSlider.vue";
 
-const router = useRouter()
-const state = useGlobalGameState()
-const relativeColors = state.relativeColors
-const mode = state.mode
+const router = useRouter();
+const state = useGlobalGameState();
+const relativeColors = state.relativeColors;
+const mode = state.mode;
 
 // Create a computed property for the slider - modified to not use .value
 const valueDifference = computed({
-  get: () => state.userValueDifference,
-  set: (value) => state.updateUserValueDifference(parseInt(value, 10))
-})
+	get: () => state.userValueDifference,
+	set: (value) => state.updateUserValueDifference(Number.parseInt(value, 10)),
+});
 
 function submit() {
-  state.checkGuess() // Changed from checkRelativeGuess to use the unified API
+	state.checkGuess(); // Changed from checkRelativeGuess to use the unified API
 }
 
 function goToHome() {
-  router.push('/')
+	router.push("/");
 }
 
 function startOver() {
-  state.startOver() // Reset the game state
+	state.startOver(); // Reset the game state
 }
 </script>
 
@@ -31,18 +33,12 @@ function startOver() {
     <div class="flex flex-col gap-3">
       <!-- Navigation bar -->
       <div class="flex w-full justify-between">
-        <button
-          class="flex items-center gap-1 rounded-lg bg-gray-700 px-3 py-1 text-white"
-          @click="goToHome"
-        >
-          <span class="text-lg">←</span> {{ $t('home') }}
-        </button>
-        <button
-          class="rounded-lg bg-gray-700 px-3 py-1 text-white"
-          @click="startOver"
-        >
+        <BaseButton variant="secondary" size="sm" @click="goToHome">
+          <span class="text-lg mr-1">←</span> {{ $t('home') }}
+        </BaseButton>
+        <BaseButton variant="secondary" size="sm" @click="startOver">
           {{ $t('startOver') }}
-        </button>
+        </BaseButton>
       </div>
 
       <!-- Regular game toolbar with all stats -->
@@ -71,22 +67,24 @@ function startOver() {
       <!-- Value difference control -->
       <div class="w-full max-w-md">
         <label class="mb-2 block text-center font-bold text-white">{{ $t('gameModes.relative.valueDifference') }}</label>
-        <div class="flex items-center">
-          <input
-            v-model="valueDifference"
-            type="range"
-            min="1"
-            max="100"
-            class="slider w-full"
-          />
-          <span class="ml-2 min-w-[65px] rounded-lg bg-gray-700 px-4 py-2 text-center text-white">{{ valueDifference }}</span>
-        </div>
+        <BaseSlider
+          v-model="valueDifference"
+          :min="1"
+          :max="100"
+          variant="default"
+        />
       </div>
     </div>
 
     <!-- Submit Button -->
-    <button class="button-3d mt-6 w-full rounded-lg bg-pink-600 px-4 py-2 text-white" @click="submit">
+    <BaseButton
+      variant="primary"
+      is3d
+      fullWidth
+      class="mt-6"
+      @click="submit"
+    >
       {{ $t('submit') }}
-    </button>
+    </BaseButton>
   </div>
 </template>
