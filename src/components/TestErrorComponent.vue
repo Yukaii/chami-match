@@ -49,21 +49,21 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-6 border rounded bg-gray-800">
-    <h3 class="text-xl mb-4">Error Testing Component</h3>
+  <div class="rounded border bg-gray-800 p-6">
+    <h3 class="mb-4 text-xl">Error Testing Component</h3>
 
     <div class="space-y-4">
       <div class="space-x-2">
-        <button @click="triggerRenderError" class="px-3 py-1 bg-red-600 text-white rounded">
+        <button class="rounded bg-red-600 px-3 py-1 text-white" @click="triggerRenderError">
           Render Error
         </button>
-        <button @click="triggerMethodError" class="px-3 py-1 bg-orange-600 text-white rounded">
+        <button class="rounded bg-orange-600 px-3 py-1 text-white" @click="triggerMethodError">
           Method Error
         </button>
-        <button @click="triggerComputedError" class="px-3 py-1 bg-yellow-600 text-white rounded">
+        <button class="rounded bg-yellow-600 px-3 py-1 text-white" @click="triggerComputedError">
           Computed Error
         </button>
-        <button @click="triggerLifecycleError" class="px-3 py-1 bg-green-600 text-white rounded">
+        <button class="rounded bg-green-600 px-3 py-1 text-white" @click="triggerLifecycleError">
           Lifecycle Error
         </button>
       </div>

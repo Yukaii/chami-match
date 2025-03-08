@@ -1,6 +1,8 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { useGlobalGameState } from '../gameState'
+import BaseButton from './base/BaseButton.vue'
+import BaseSlider from './base/BaseSlider.vue'
 
 const router = useRouter()
 const state = useGlobalGameState()
@@ -47,18 +49,12 @@ function startOver() {
     <div class="flex flex-col gap-3">
       <!-- Navigation bar separate from game toolbar -->
       <div class="flex w-full justify-between">
-        <button
-          class="flex items-center gap-1 rounded-lg bg-gray-700 px-3 py-1 text-white"
-          @click="goToHome"
-        >
-          <span class="text-lg">←</span> {{ $t('home') }}
-        </button>
-        <button
-          class="rounded-lg bg-gray-700 px-3 py-1 text-white"
-          @click="startOver"
-        >
+        <BaseButton variant="secondary" size="sm" @click="goToHome">
+          <span class="mr-1 text-lg">←</span> {{ $t('home') }}
+        </BaseButton>
+        <BaseButton variant="secondary" size="sm" @click="startOver">
           {{ $t('startOver') }}
-        </button>
+        </BaseButton>
       </div>
 
       <!-- Regular game toolbar with all stats -->
@@ -74,28 +70,41 @@ function startOver() {
     <!-- Sliders and Submit Button -->
     <div class="flex flex-col space-y-4">
       <!-- Hue Slider -->
-      <div class="flex items-center">
-        <span class="mr-2 text-orange-300">H:</span>
-        <input v-model="userH" type="range" min="0" max="360" class="slider hue-slider" />
-        <span class="ml-2 min-w-[65px] rounded-lg bg-gray-700 px-4 py-2 text-center text-white">{{ userH }}</span>
-      </div>
+      <BaseSlider
+        v-model="userH"
+        :min="0"
+        :max="360"
+        variant="hue"
+        label="H"
+      />
+
       <!-- Saturation Slider -->
-      <div class="flex items-center">
-        <span class="mr-2 text-orange-300">S:</span>
-        <input v-model="userS" type="range" min="0" max="100" class="slider saturation-slider" />
-        <span class="ml-2 min-w-[65px] rounded-lg bg-gray-700 px-4 py-2 text-center text-white">{{ userS }}</span>
-      </div>
+      <BaseSlider
+        v-model="userS"
+        :min="0"
+        :max="100"
+        variant="saturation"
+        label="S"
+      />
+
       <!-- Value Slider -->
-      <div class="flex items-center">
-        <span class="mr-2 text-orange-300">V:</span>
-        <input v-model="userV" type="range" min="0" max="100" class="slider value-slider" />
-        <span class="ml-2 min-w-[65px] rounded-lg bg-gray-700 px-4 py-2 text-center text-white">{{ userV }}</span>
-      </div>
+      <BaseSlider
+        v-model="userV"
+        :min="0"
+        :max="100"
+        variant="value"
+        label="V"
+      />
 
       <!-- Submit Button -->
-      <button class="button-3d w-full rounded-lg bg-pink-600 px-4 py-2 text-white" @click="submit">
+      <BaseButton
+        variant="primary"
+        is3d
+        full-width
+        @click="submit"
+      >
         {{ $t('submit') }}
-      </button>
+      </BaseButton>
     </div>
   </div>
 </template>

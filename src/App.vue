@@ -1,5 +1,6 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { onMounted } from 'vue'
 import SettingsPopup from './components/SettingsPopup.vue'
 import AboutPopup from './components/AboutPopup.vue'
 import RecordPopup from './components/RecordPopup.vue'
@@ -7,7 +8,15 @@ import ResetPopup from './components/ResetPopup.vue'
 import ErrorBoundary from './components/ErrorBoundary.vue'
 
 const { t, locale } = useI18n()
-const isDarkMode = true // always dark mode for this game
+
+// Theme handling moved to the ThemeToggle component and app initialization
+onMounted(() => {
+  // Apply saved theme on initial load
+  const savedTheme = localStorage.getItem('theme') || 'dark'; // Default to dark
+  if (savedTheme === 'dark') {
+    document.documentElement.classList.add('dark');
+  }
+})
 
 watch(
   locale,
@@ -38,7 +47,7 @@ watch(
 </script>
 
 <template>
-  <div class="app-container h-full" :class="{ 'dark-theme': isDarkMode }">
+  <div class="app-container h-full">
     <div class="app-content h-full">
       <ErrorBoundary>
         <router-view />

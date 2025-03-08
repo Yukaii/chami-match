@@ -33,6 +33,11 @@
     "UIOptions": "介面選項",
     "gameOptions": "遊戲選項",
     "language": "語言",
+    "theme": {
+      "title": "主題",
+      "dark": "深色模式",
+      "light": "淺色模式"
+    },
     "confetti": {
       "label": "慶祝效果",
       "on": "開啟",

@@ -35,6 +35,11 @@
     "UIOptions": "ユーザーインターフェースオプション",
     "gameOptions": "ゲームオプション",
     "language": "言語",
+    "theme": {
+      "title": "テーマ",
+      "dark": "ダークモード",
+      "light": "ライトモード"
+    },
     "confetti": {
       "label": "お祝いエフェクト",
       "on": "オン",

@@ -1,7 +1,7 @@
 <template>
   <div :class="className" @click="onClose">
     <div
-      class="z-50 flex max-h-[80%] w-[90%] flex-col space-y-4 overflow-auto rounded-md bg-[#1f2937] p-4"
+      class="animate-pop-in z-50 flex max-h-[80%] w-[90%] flex-col space-y-4 overflow-auto rounded-xl border-2 border-white/30 bg-gradient-to-b from-gray-50 to-gray-100 p-6 shadow-2xl transition-all duration-300 dark:border-gray-600/30 dark:from-gray-700 dark:to-gray-800"
       :class="[sizeClass]"
       @click.stop
     >
@@ -40,7 +40,7 @@ const sizeClass = computed(() => {
 
 const className = computed(() => {
   return cn(
-    'fixed left-0 top-0 z-50 flex size-full items-center justify-center bg-black/50',
+    'fixed left-0 top-0 z-50 flex size-full items-center justify-center bg-black/50 backdrop-blur-sm',
     props.modalClass,
     !props.isOpen && 'hidden'
   )
@@ -51,3 +51,23 @@ const onClose = () => {
   emit('onClose')
 }
 </script>
+
+<style scoped>
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02) translateY(-5px);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-pop-in {
+  animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+</style>

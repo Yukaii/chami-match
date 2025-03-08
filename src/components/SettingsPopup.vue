@@ -7,6 +7,24 @@
       <div class="mb-2 text-xl font-bold text-white">{{ $t('settings.UIOptions') }}</div>
       <hr class="mb-4 border-gray-400" />
 
+      <!-- Dark Mode - NEW -->
+      <div class="mb-4">
+        <label class="mb-2 block font-bold text-white">{{ $t('settings.theme.title') }}</label>
+        <div class="flex space-x-2">
+          <button
+            v-for="theme in ['dark', 'light']"
+            :key="theme"
+            class="button-3d flex items-center gap-2"
+            :class="`px-2 py-1 rounded-lg ${currentTheme === theme ? 'bg-pink-600' : 'bg-slate-600'}`"
+            @click="setTheme(theme)"
+          >
+            <ph-moon v-if="theme === 'dark'" size="18" />
+            <ph-sun v-else size="18" />
+            {{ $t(`settings.theme.${theme}`) }}
+          </button>
+        </div>
+      </div>
+
       <!-- Language -->
       <div class="mb-4">
         <label class="mb-2 block font-bold text-white">{{ $t('settings.language') }}</label>
@@ -133,7 +151,8 @@
 
 <script setup>
 import { useI18n } from 'vue-i18n'
-
+import { ref, onMounted } from 'vue';
+import { PhSun, PhMoon } from '@phosphor-icons/vue'
 import { useGlobalGameState } from '../gameState'
 
 const { locale } = useI18n()
@@ -152,6 +171,21 @@ const settings = reactive({
   realtimePreview: state.realtimePreview.value,
   enableConfetti: true, // Default to enabled
 })
+
+// Theme handling
+const currentTheme = ref(localStorage.getItem('theme') || 'dark');
+
+function setTheme(theme) {
+  currentTheme.value = theme;
+
+  if (theme === 'dark') {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+  }
+
+  localStorage.setItem('theme', theme);
+}
 
 const onClose = () => {
   state.toggleSettingsPopup(false)
