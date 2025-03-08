@@ -94,5 +94,12 @@
     }
   },
   "colorDifferences": "Color Differences",
-  "precisionTarget": "Target"
+  "precisionTarget": "Target",
+  "errorBoundary": {
+    "title": "Oops, something went wrong!",
+    "message": "The application encountered an unexpected error.",
+    "retry": "Retry",
+    "refresh": "Refresh Page",
+    "copyError": "Copy Error"
+  }
 }

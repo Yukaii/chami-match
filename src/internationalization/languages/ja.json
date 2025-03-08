@@ -75,6 +75,13 @@
     "confirm": "はい、リセット",
     "cancel": "いいえ、キャンセル"
   },
+  "errorBoundary": {
+    "title": "エラーが発生しました",
+    "message": "アプリケーションで予期しないエラーが発生しました。",
+    "retry": "再試行",
+    "refresh": "ページを更新",
+    "copyError": "エラーをコピー"
+  },
   "gameModes": {
     "standard": {
       "name": "標準モード",
