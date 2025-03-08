@@ -44,28 +44,28 @@ const copyErrorStack = () => {
 
         <div class="mb-5 flex space-x-3">
           <button
-            class="rounded bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
+            class="rounded-sm bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
             @click="resetError"
           >
             {{ t('errorBoundary.retry') || 'Retry' }}
           </button>
 
           <button
-            class="rounded bg-green-600 px-4 py-2 text-white transition hover:bg-green-700"
+            class="rounded-sm bg-green-600 px-4 py-2 text-white transition hover:bg-green-700"
             @click="refreshPage"
           >
             {{ t('errorBoundary.refresh') || 'Refresh Page' }}
           </button>
 
           <button
-            class="rounded bg-gray-600 px-4 py-2 text-white transition hover:bg-gray-700"
+            class="rounded-sm bg-gray-600 px-4 py-2 text-white transition hover:bg-gray-700"
             @click="copyErrorStack"
           >
             {{ t('errorBoundary.copyError') || 'Copy Error' }}
           </button>
         </div>
 
-        <pre class="mt-5 max-w-full overflow-auto rounded bg-gray-800 p-3 text-sm text-red-300">{{ error.stack }}</pre>
+        <pre class="mt-5 max-w-full overflow-auto rounded-sm bg-gray-800 p-3 text-sm text-red-300">{{ error.stack }}</pre>
       </div>
     </template>
     <template v-else>

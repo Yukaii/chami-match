@@ -2,7 +2,7 @@
   <div class="group relative inline-block">
     <slot />
     <div
-      class="invisible absolute z-10 min-w-32 scale-95 rounded-xl border border-gray-600/20 bg-gradient-to-b from-gray-700/90 to-gray-800/90 px-3 py-2 text-center text-sm text-white opacity-0 shadow-lg backdrop-blur-sm transition-all duration-200 group-hover:visible group-hover:scale-100 group-hover:opacity-100 dark:from-gray-700/90 dark:to-black/90"
+      class="invisible absolute z-10 min-w-32 scale-95 rounded-xl border border-gray-600/20 bg-linear-to-b from-gray-700/90 to-gray-800/90 px-3 py-2 text-center text-sm text-white opacity-0 shadow-lg backdrop-blur-xs transition-all duration-200 group-hover:visible group-hover:scale-100 group-hover:opacity-100 dark:from-gray-700/90 dark:to-black/90"
       :class="[
         positionClass,
         className,

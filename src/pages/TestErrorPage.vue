@@ -39,18 +39,18 @@ const triggerAsyncError = async () => {
     </div>
 
     <div class="mb-6 space-x-3">
-      <button class="rounded bg-blue-600 px-4 py-2 text-white" @click="resetComponent">
+      <button class="rounded-sm bg-blue-600 px-4 py-2 text-white" @click="resetComponent">
         Reset Component
       </button>
-      <button class="rounded bg-purple-600 px-4 py-2 text-white" @click="triggerAsyncError">
+      <button class="rounded-sm bg-purple-600 px-4 py-2 text-white" @click="triggerAsyncError">
         Async Error
       </button>
-      <button class="rounded bg-red-600 px-4 py-2 text-white" @click="() => { throw new Error('Direct Error') }">
+      <button class="rounded-sm bg-red-600 px-4 py-2 text-white" @click="() => { throw new Error('Direct Error') }">
         Direct Error
       </button>
     </div>
 
-    <div v-if="showComponent" class="rounded border p-4">
+    <div v-if="showComponent" class="rounded-sm border p-4">
       <TestErrorComponent />
     </div>
   </div>

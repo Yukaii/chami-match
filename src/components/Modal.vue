@@ -40,7 +40,7 @@ const sizeClass = computed(() => {
 
 const className = computed(() => {
   return cn(
-    'fixed left-0 top-0 z-50 flex size-full items-center justify-center bg-black/50 backdrop-blur-sm',
+    'fixed left-0 top-0 z-50 flex size-full items-center justify-center bg-black/50 backdrop-blur-xs',
     props.modalClass,
     !props.isOpen && 'hidden'
   )

@@ -1,8 +1,191 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --animate-shake: shake 0.3s ease-in-out;
+  --animate-flip: flip 0.6s forwards;
+
+  @keyframes shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+      transform: translateX(-7px);
+    }
+    20%,
+    40%,
+    60%,
+    80% {
+      transform: translateX(7px);
+    }
+  }
+  @keyframes flip {
+    0% {
+      transform: rotateX(0deg);
+    }
+    100% {
+      transform: rotateX(360deg);
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+@utility toy-bg {
+  @apply bg-white dark:bg-gray-800 rounded-2xl p-6 border-2 border-gray-200 dark:border-gray-700 shadow-xl;
+  background-image:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(255, 255, 255, 0.3) 0%,
+      rgba(255, 255, 255, 0) 75%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.15) 0%,
+      rgba(0, 0, 0, 0.05) 100%
+    );
+}
+
+@utility toy-panel {
+  @apply bg-gray-100 dark:bg-gray-800
+           rounded-xl border border-gray-200 dark:border-gray-600 p-4
+           shadow-md;
+}
+
+@utility toy-container {
+  @apply rounded-2xl p-4 border-2 shadow-xl transition-all duration-300
+           bg-white border-gray-200 shadow-gray-200
+           dark:bg-gray-800 dark:border-gray-700 dark:shadow-gray-900;
+  background-image: radial-gradient(
+    circle at 50% 0%,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(255, 255, 255, 0) 75%
+  );
+}
+
+@utility toy-button {
+  @apply transform transition-all duration-150 ease-out
+          hover:-translate-y-1 active:translate-y-1
+          hover:scale-105 active:scale-100
+          rounded-xl font-bold shadow-lg
+          focus:outline-hidden focus:ring-2 focus:ring-offset-2;
+}
+
+@utility animate-float {
+  /* Animate elements */
+  animation: float 3s ease-in-out infinite;
+}
+
+@utility animate-bounce-subtle {
+  animation: bounce-subtle 2s ease-in-out infinite;
+}
+
+@utility animate-pulse-subtle {
+  animation: pulse-subtle 2s ease-in-out infinite;
+}
+
+@utility button-3d {
+  /* Special 3D button style */
+  @apply transform transition-all duration-150 rounded-xl font-bold text-white
+           border-b-[4px] active:border-b-[2px]
+           hover:-translate-y-1 active:translate-y-0
+           shadow-lg hover:shadow-xl active:shadow-sm
+           bg-linear-to-b;
+
+  &.pink {
+    @apply from-pink-400 to-pink-600 border-pink-800 dark:border-pink-900
+           shadow-pink-200 dark:shadow-pink-900/30;
+  }
+
+  &.blue {
+    @apply from-blue-400 to-blue-600 border-blue-800 dark:border-blue-900
+           shadow-blue-200 dark:shadow-blue-900/30;
+  }
+
+  &.purple {
+    @apply from-purple-400 to-purple-600 border-purple-800 dark:border-purple-900
+           shadow-purple-200 dark:shadow-purple-900/30;
+  }
+
+  &.green {
+    @apply from-green-400 to-green-600 border-green-800 dark:border-green-900
+           shadow-green-200 dark:shadow-green-900/30;
+  }
+
+  &.red {
+    @apply from-red-400 to-red-600 border-red-800 dark:border-red-900
+           shadow-red-200 dark:shadow-red-900/30;
+  }
+
+  &.gray {
+    @apply from-gray-400 to-gray-600 border-gray-800 dark:border-gray-900
+           shadow-gray-200 dark:shadow-gray-900/30;
+  }
+}
+
+@utility pink {
+  &.button-3d {
+    @apply from-pink-400 to-pink-600 border-pink-800 dark:border-pink-900
+           shadow-pink-200 dark:shadow-pink-900/30;
+  }
+}
+
+@utility blue {
+  &.button-3d {
+    @apply from-blue-400 to-blue-600 border-blue-800 dark:border-blue-900
+           shadow-blue-200 dark:shadow-blue-900/30;
+  }
+}
+
+@utility purple {
+  &.button-3d {
+    @apply from-purple-400 to-purple-600 border-purple-800 dark:border-purple-900
+           shadow-purple-200 dark:shadow-purple-900/30;
+  }
+}
+
+@utility green {
+  &.button-3d {
+    @apply from-green-400 to-green-600 border-green-800 dark:border-green-900
+           shadow-green-200 dark:shadow-green-900/30;
+  }
+}
+
+@utility red {
+  &.button-3d {
+    @apply from-red-400 to-red-600 border-red-800 dark:border-red-900
+           shadow-red-200 dark:shadow-red-900/30;
+  }
+}
+
+@utility gray {
+  &.button-3d {
+    @apply from-gray-400 to-gray-600 border-gray-800 dark:border-gray-900
+           shadow-gray-200 dark:shadow-gray-900/30;
+  }
+}
 
 @layer base {
   #app {
@@ -16,51 +199,6 @@
 }
 
 @layer components {
-  .toy-bg {
-    @apply bg-white dark:bg-gray-800 rounded-2xl p-6 border-2 border-gray-200 dark:border-gray-700 shadow-xl;
-    background-image: radial-gradient(circle at 50% 0%,
-      rgba(255, 255, 255, 0.3) 0%,
-      rgba(255, 255, 255, 0) 75%),
-      linear-gradient(to bottom,
-      rgba(255, 255, 255, 0.15) 0%,
-      rgba(0, 0, 0, 0.05) 100%);
-  }
-
-  .toy-panel {
-    @apply bg-gray-100 dark:bg-gray-800
-           rounded-xl border border-gray-200 dark:border-gray-600 p-4
-           shadow-md;
-  }
-
-  .toy-container {
-    @apply rounded-2xl p-4 border-2 shadow-xl transition-all duration-300
-           bg-white border-gray-200 shadow-gray-200
-           dark:bg-gray-800 dark:border-gray-700 dark:shadow-gray-900;
-    background-image: radial-gradient(circle at 50% 0%,
-      rgba(255, 255, 255, 0.3) 0%,
-      rgba(255, 255, 255, 0) 75%);
-  }
-
-  .toy-button {
-    @apply transform transition-all duration-150 ease-out
-          hover:-translate-y-1 active:translate-y-1
-          hover:scale-105 active:scale-100
-          rounded-xl font-bold shadow-lg
-          focus:outline-none focus:ring-2 focus:ring-offset-2;
-  }
-
-  /* Animate elements */
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
-  }
-
-  .animate-bounce-subtle {
-    animation: bounce-subtle 2s ease-in-out infinite;
-  }
-
-  .animate-pulse-subtle {
-    animation: pulse-subtle 2s ease-in-out infinite;
-  }
 
   @keyframes float {
     0% {
@@ -90,45 +228,6 @@
     50% {
       transform: scale(1.05);
     }
-  }
-
-  /* Special 3D button style */
-  .button-3d {
-    @apply transform transition-all duration-150 rounded-xl font-bold text-white
-           border-b-[4px] active:border-b-[2px]
-           hover:-translate-y-1 active:translate-y-0
-           shadow-lg hover:shadow-xl active:shadow
-           bg-gradient-to-b;
-  }
-
-  .button-3d.pink {
-    @apply from-pink-400 to-pink-600 border-pink-800 dark:border-pink-900
-           shadow-pink-200 dark:shadow-pink-900/30;
-  }
-
-  .button-3d.blue {
-    @apply from-blue-400 to-blue-600 border-blue-800 dark:border-blue-900
-           shadow-blue-200 dark:shadow-blue-900/30;
-  }
-
-  .button-3d.purple {
-    @apply from-purple-400 to-purple-600 border-purple-800 dark:border-purple-900
-           shadow-purple-200 dark:shadow-purple-900/30;
-  }
-
-  .button-3d.green {
-    @apply from-green-400 to-green-600 border-green-800 dark:border-green-900
-           shadow-green-200 dark:shadow-green-900/30;
-  }
-
-  .button-3d.red {
-    @apply from-red-400 to-red-600 border-red-800 dark:border-red-900
-           shadow-red-200 dark:shadow-red-900/30;
-  }
-
-  .button-3d.gray {
-    @apply from-gray-400 to-gray-600 border-gray-800 dark:border-gray-900
-           shadow-gray-200 dark:shadow-gray-900/30;
   }
 }
 

@@ -35,12 +35,12 @@
           left: `calc(${percentage}% - ${percentage === 0 ? '0px' : percentage === 100 ? '24px' : '12px'})`,
         }"
       >
-        <div class="absolute inset-0 rounded-full bg-gradient-to-b from-white to-gray-100 opacity-80 dark:from-gray-100 dark:to-gray-300"></div>
+        <div class="absolute inset-0 rounded-full bg-linear-to-b from-white to-gray-100 opacity-80 dark:from-gray-100 dark:to-gray-300"></div>
       </div>
     </div>
 
     <!-- Value display -->
-    <div v-if="showValue" class="ml-3 min-w-[65px] rounded-lg border border-gray-300 bg-gradient-to-b from-gray-100 to-gray-200 px-4 py-2 text-center text-gray-800 shadow-md dark:border-gray-600 dark:from-gray-700 dark:to-gray-800 dark:text-white">
+    <div v-if="showValue" class="ml-3 min-w-[65px] rounded-lg border border-gray-300 bg-linear-to-b from-gray-100 to-gray-200 px-4 py-2 text-center text-gray-800 shadow-md dark:border-gray-600 dark:from-gray-700 dark:to-gray-800 dark:text-white">
       {{ modelValue }}
     </div>
   </div>
@@ -104,7 +104,7 @@ const variantBackgroundClass = computed(() => {
     case 'value':
       return 'value-slider';
     default:
-      return 'bg-gradient-to-r from-pink-400 to-pink-600';
+      return 'bg-linear-to-r from-pink-400 to-pink-600';
   }
 });
 
