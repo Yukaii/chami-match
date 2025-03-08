@@ -3,8 +3,15 @@
  */
 export class BaseMode {
   constructor(options = {}) {
-    this.type = 'base';
     this.options = options;
+    this.state = null;
+    this.type = 'base';
+    this.viewCallbacks = {};
+  }
+
+  // Register a callback function from the view component
+  registerViewCallback(event, callback) {
+    this.viewCallbacks[event] = callback;
   }
 
   // Initialize mode-specific state

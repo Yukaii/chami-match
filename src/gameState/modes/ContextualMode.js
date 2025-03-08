@@ -5,6 +5,12 @@ export class ContextualMode extends StandardMode {
   constructor(options = {}) {
     super(options);
     this.type = 'contextual';
+    this.viewCallbacks = {};
+  }
+
+  // Register a callback function from the view component
+  registerViewCallback(event, callback) {
+    this.viewCallbacks[event] = callback;
   }
 
   initState() {
@@ -62,6 +68,11 @@ export class ContextualMode extends StandardMode {
 
     // Generate new color options
     this.state.colorOptions = this.generateColorOptions();
+
+    // Call the onNewRound callback if registered (remove duplicate call)
+    if (this.viewCallbacks && typeof this.viewCallbacks.onNewRound === 'function') {
+      this.viewCallbacks.onNewRound();
+    }
   }
 
   // Override checkGuess to require exact match, ignoring precision setting

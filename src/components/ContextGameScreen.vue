@@ -7,6 +7,10 @@ const state = useGlobalGameState()
 const randomColor = state.randomColor
 const userColor = state.userColor
 const mode = state.mode
+const currentRound = state.currentRound // Add this to watch for round changes
+
+// Track selected color index
+const selectedColorIndex = ref(-1)
 
 // Create a reactive local surroundingColor object instead of accessing state.surroundingColors[0]
 const surroundingColor = reactive({
@@ -65,7 +69,18 @@ const colorOptions = computed(() => {
   return options.sort(() => Math.random() - 0.5)
 })
 
-function selectColor(color) {
+// Use a watcher to detect new rounds and reset the selected color index
+watch(
+  [randomColor, () => currentRound.value],
+  () => {
+    // Reset selection when random color changes (new round starts)
+    selectedColorIndex.value = -1
+  },
+  { deep: true }
+)
+
+function selectColor(color, index) {
+  selectedColorIndex.value = index
   state.updateUserColor(color.h, color.s, color.v)
   state.checkGuess()
 }
@@ -76,6 +91,7 @@ function goToHome() {
 
 function startOver() {
   state.startOver() // Reset the game state
+  selectedColorIndex.value = -1 // Reset selected index when starting over
 }
 
 // Define a layout for the grid - now just surrounding color with target in center
@@ -143,22 +159,15 @@ const gridStructure = [
           <button
             v-for="(color, index) in colorOptions"
             :key="index"
-            class="size-full rounded-lg border-2 border-transparent transition-transform hover:scale-105 hover:border-white"
+            class="size-full rounded-lg transition-transform hover:scale-105"
+            :class="{
+              'border-2 border-transparent hover:border-white': selectedColorIndex !== index,
+              'border-4 border-white ring-2 ring-offset-2': selectedColorIndex === index
+            }"
             :style="`background-color: hsl(${color.h}, ${color.s}%, ${color.v}%)`"
-            @click="selectColor(color)"
+            @click="selectColor(color, index)"
           />
         </div>
-      </div>
-    </div>
-
-    <!-- Last Selected Color (if any) -->
-    <div v-if="userColor.h !== 0 || userColor.s !== 0 || userColor.v !== 0" class="mt-4 flex justify-center">
-      <div class="text-center">
-        <p class="mb-1 text-sm text-white">{{ $t('gameModes.contextual.lastSelection') }}</p>
-        <div
-          class="mx-auto size-10 rounded-lg"
-          :style="`background-color: hsl(${userColor.h}, ${userColor.s}%, ${userColor.v}%)`"
-        ></div>
       </div>
     </div>
   </div>
