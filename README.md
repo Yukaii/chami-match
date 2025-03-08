@@ -1,5 +1,7 @@
 # Chami Match
 
+[Project dashboard](https://github.com/users/Yukaii/projects/11/views/1)
+
 ## TODOs
 
 - [x] Settings
