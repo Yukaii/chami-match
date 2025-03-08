@@ -33,6 +33,31 @@ function generateRandomColor(mode) {
   }
 }
 
+// Generate a pair of colors with a specific value difference for relative mode
+function generateRelativeValueColors(mode) {
+  // First generate a base color
+  const baseColor = generateRandomColor(mode);
+
+  // Determine a random value difference between 10-90
+  const valueDifference = Math.floor(Math.random() * 80) + 10;
+
+  // Create the second color with the value difference
+  const secondColor = { ...baseColor };
+
+  // Ensure the second color's value stays within 0-100 range
+  if (Math.random() > 0.5) {
+    secondColor.v = Math.min(100, baseColor.v + valueDifference);
+  } else {
+    secondColor.v = Math.max(0, baseColor.v - valueDifference);
+  }
+
+  return {
+    color1: baseColor,
+    color2: secondColor,
+    valueDifference: Math.abs(secondColor.v - baseColor.v)
+  };
+}
+
 // Generate a single surrounding color for contextual mode
 function generateSurroundingColor(targetColor, contrastLevel = 30) {
   // Create a color that contrasts with the target by a specific amount
@@ -89,6 +114,12 @@ export const useGlobalGameState = createGlobalState(() => {
   const [resetPopupOpen, toggleResetPopup] = useToggle(false)
   const settingsMode = ref('global') // 'global' or 'game'
   const gameType = computed(() => preferences.value.gameType || 'standard')
+  const relativeColors = reactive({
+    color1: { h: 0, s: 0, v: 0 },
+    color2: { h: 0, s: 0, v: 0 },
+    valueDifference: 0
+  });
+  const userValueDifference = ref(0);
 
   // Getters
   // Add any computed property getters here if required
@@ -109,16 +140,25 @@ export const useGlobalGameState = createGlobalState(() => {
     currentRound.value++
     lives.value = maxLife.value // Will be 2 for contextual mode
 
-    // Generate new randomColor
-    const random = generateRandomColor(mode.value)
-    randomColor.h = random.h
-    randomColor.s = random.s
-    randomColor.v = random.v
+    if (gameType.value === 'relative') {
+      // Generate relative value difference colors
+      const newColors = generateRelativeValueColors(mode.value);
+      relativeColors.color1 = newColors.color1;
+      relativeColors.color2 = newColors.color2;
+      relativeColors.valueDifference = newColors.valueDifference;
+      userValueDifference.value = 0;
+    } else {
+      // Generate new randomColor for standard/contextual modes
+      const random = generateRandomColor(mode.value)
+      randomColor.h = random.h
+      randomColor.s = random.s
+      randomColor.v = random.v
 
-    // Reset user color
-    userColor.h = 0
-    userColor.s = 0
-    userColor.v = 0
+      // Reset user color
+      userColor.h = 0
+      userColor.s = 0
+      userColor.v = 0
+    }
   }
 
   function recordRound(wasSuccess) {
@@ -181,6 +221,37 @@ export const useGlobalGameState = createGlobalState(() => {
     const vIsGood = Math.abs(randomColor.v - userColor.v) <= precision.value
 
     recordRound(hIsGood && sIsGood && vIsGood)
+  }
+
+  // Check relative value difference guess
+  function checkRelativeGuess() {
+    // Allow a precision tolerance based on the precision setting
+    const tolerance = precision.value / 2;
+    const guessedDifference = userValueDifference.value;
+    const actualDifference = relativeColors.valueDifference;
+
+    const isCorrect = Math.abs(guessedDifference - actualDifference) <= tolerance;
+
+    // Add to history
+    history.value.push({
+      sessionId: currentSession.value.id,
+      round: currentRound.value,
+      guessedDifference,
+      actualDifference,
+      wasSuccess: isCorrect,
+    });
+
+    // Update score and lives
+    if (isCorrect) {
+      score.value++;
+    } else {
+      lives.value--;
+    }
+
+    // Check if we need to start a new round
+    if (isCorrect || lives.value === 0) {
+      startNewRound();
+    }
   }
 
   const winRate = computed(() => {
@@ -320,5 +391,8 @@ export const useGlobalGameState = createGlobalState(() => {
     settingsMode,
     gameType,
     surroundingColors,
+    relativeColors,
+    userValueDifference,
+    checkRelativeGuess,
   }
 })

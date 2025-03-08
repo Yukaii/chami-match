@@ -3,6 +3,7 @@
   "description": "一個簡單又有趣的顏色辨識訓練遊戲！",
   "startStandardGame": "標準模式",
   "startContextualGame": "情境模式",
+  "startRelativeGame": "亮度差異模式",
   "startGame": "開始遊戲",
   "startOver": "重新開始",
   "home": "主選單",
@@ -13,6 +14,10 @@
     "title": "遊戲記錄",
     "emptyContent": "你的遊戲記錄會在這裡顯示，現在還是空的。"
   },
+  "actualColor": "實際顏色",
+  "guessedColor": "你的猜測",
+  "actualDifference": "實際差異",
+  "guessedDifference": "你的猜測",
   "comboCount": "連擊數",
   "winningRate": "勝率",
   "roundCount": "回合數",
@@ -68,6 +73,13 @@
       "instructions": "選擇匹配中心方塊的顏色",
       "selectPrompt": "選擇匹配的顏色：",
       "lastSelection": "你上次的選擇："
+    },
+    "relative": {
+      "name": "亮度差異模式",
+      "description": "判斷兩個顏色之間的亮度差異",
+      "instructions": "使用滑桿指出這些顏色的亮度差異程度（1-100）",
+      "valueDifference": "亮度差異",
+      "yourGuess": "你的猜測："
     }
   }
 }

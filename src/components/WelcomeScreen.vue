@@ -17,6 +17,12 @@ function startContextualGame() {
   router.push('/context-game')
 }
 
+function startRelativeGame() {
+  state.updateGameType('relative')
+  state.startOver() // Initialize a new game
+  router.push('/relative-game')
+}
+
 function openSettings() {
   state.settingsMode = 'global'
   state.toggleSettingsPopup()
@@ -43,6 +49,13 @@ function openSettings() {
         @click="startContextualGame"
       >
         {{ $t('startContextualGame') }}
+      </button>
+
+      <button
+        class="button-3d rounded-lg bg-blue-600 px-6 py-3 text-xl text-white"
+        @click="startRelativeGame"
+      >
+        {{ $t('startRelativeGame') }}
       </button>
 
       <button
