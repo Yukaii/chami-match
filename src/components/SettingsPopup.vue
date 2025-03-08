@@ -11,18 +11,20 @@
       <div class="mb-4">
         <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.theme.title') }}</label>
         <div class="flex space-x-2">
-          <button
+          <BaseButton
             v-for="theme in ['system', 'dark', 'light']"
             :key="theme"
-            class="button-3d flex items-center gap-2"
-            :class="`px-2 py-1 rounded-lg ${currentTheme === theme ? 'bg-pink-600' : 'bg-slate-600'}`"
+            :variant="currentTheme === theme ? 'primary' : 'secondary'"
+            size="sm"
+            is3d
+            class="flex items-center gap-2"
             @click="setTheme(theme)"
           >
             <ph-device-mobile v-if="theme === 'system'" size="18" />
             <ph-moon v-else-if="theme === 'dark'" size="18" />
             <ph-sun v-else size="18" />
             {{ $t(`settings.theme.${theme}`) }}
-          </button>
+          </BaseButton>
         </div>
       </div>
 
@@ -30,15 +32,16 @@
       <div class="mb-4">
         <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.language') }}</label>
         <div class="flex space-x-2">
-          <button
+          <BaseButton
             v-for="lang in languages"
             :key="lang.code"
-            class="button-3d"
-            :class="`px-2 py-1 rounded-lg ${settings.language === lang.code ? 'bg-pink-600' : 'bg-slate-600'}`"
+            :variant="settings.language === lang.code ? 'primary' : 'secondary'"
+            size="sm"
+            is3d
             @click="handleChangeLanguage(lang.code)"
           >
             {{ lang.label }}
-          </button>
+          </BaseButton>
         </div>
       </div>
 
@@ -46,15 +49,16 @@
       <div class="mb-4">
         <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.confetti.label') }}</label>
         <div class="flex space-x-2">
-          <button
+          <BaseButton
             v-for="value in [true, false]"
             :key="value.toString()"
-            class="button-3d"
-            :class="`px-2 py-1 rounded-lg ${settings.enableConfetti === value ? 'bg-pink-600' : 'bg-slate-600'}`"
+            :variant="settings.enableConfetti === value ? 'primary' : 'secondary'"
+            size="sm"
+            is3d
             @click="settings.enableConfetti = value"
           >
             {{ value ? $t('settings.confetti.on') : $t('settings.confetti.off') }}
-          </button>
+          </BaseButton>
         </div>
       </div>
     </div>
@@ -68,15 +72,16 @@
       <div v-if="state.gameType.value !== 'contextual'" class="mb-4">
         <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.precision.label') }}</label>
         <div class="flex space-x-2">
-          <button
+          <BaseButton
             v-for="value in [3, 5, 10, 20, 30]"
             :key="value"
-            class="button-3d"
-            :class="`px-2 py-1 rounded-lg ${settings.precision === value ? 'bg-pink-600' : 'bg-slate-600'}`"
+            :variant="settings.precision === value ? 'primary' : 'secondary'"
+            size="sm"
+            is3d
             @click="settings.precision = value"
           >
             {{ value }}
-          </button>
+          </BaseButton>
         </div>
       </div>
 
@@ -84,15 +89,16 @@
       <div class="mb-4">
         <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.colorMode.label') }}</label>
         <div class="flex space-x-2">
-          <button
+          <BaseButton
             v-for="value in ['Color', 'B/W']"
             :key="value"
-            class="button-3d"
-            :class="`px-2 py-1 rounded-lg ${settings.mode === value ? 'bg-pink-600' : 'bg-slate-600'}`"
+            :variant="settings.mode === value ? 'primary' : 'secondary'"
+            size="sm"
+            is3d
             @click="settings.mode = value"
           >
             {{ value }}
-          </button>
+          </BaseButton>
         </div>
       </div>
 
@@ -100,15 +106,16 @@
       <div v-if="state.gameType.value !== 'contextual'" class="mb-4">
         <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.maxTries.label') }}</label>
         <div class="flex space-x-2">
-          <button
+          <BaseButton
             v-for="value in [3, 5, 10]"
             :key="value"
-            class="button-3d"
-            :class="`px-2 py-1 rounded-lg ${settings.maxTries === value ? 'bg-pink-600' : 'bg-slate-600'}`"
+            :variant="settings.maxTries === value ? 'primary' : 'secondary'"
+            size="sm"
+            is3d
             @click="settings.maxTries = value"
           >
             {{ value }}
-          </button>
+          </BaseButton>
         </div>
       </div>
 
@@ -116,22 +123,28 @@
       <div class="mb-4">
         <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.realtimePreview.label') }}</label>
         <div class="flex space-x-2">
-          <button
+          <BaseButton
             v-for="value in [true, false]"
             :key="value.toString()"
-            class="button-3d"
-            :class="`px-2 py-1 rounded-lg ${settings.realtimePreview === value ? 'bg-pink-600' : 'bg-slate-600'}`"
+            :variant="settings.realtimePreview === value ? 'primary' : 'secondary'"
+            size="sm"
+            is3d
             @click="settings.realtimePreview = value"
           >
             {{ value ? 'On' : 'Off' }}
-          </button>
+          </BaseButton>
         </div>
       </div>
 
       <div class="mb-2 rounded-lg bg-gray-800 px-4 py-2 text-sm">{{ $t('settings.notice') }}</div>
-      <button class="button-3d w-full rounded-lg bg-pink-600 px-4 py-2 text-white" @click="onApply">
+      <BaseButton
+        variant="primary"
+        fullWidth
+        is3d
+        @click="onApply"
+      >
         {{ $t('settings.cta') }}
-      </button>
+      </BaseButton>
     </div>
 
     <div class="mb-4 mt-6">
@@ -140,23 +153,26 @@
 
       <p class="mb-2 text-gray-900 dark:text-white">{{ $t('settings.confirmReset') }}</p>
 
-      <button
-        class="button-3d w-full rounded-lg bg-red-600 px-4 py-2 text-white"
+      <BaseButton
+        variant="danger"
+        fullWidth
+        is3d
         @click="state.toggleResetPopup(true)"
       >
         {{ $t('settings.resetGameData') }}
-      </button>
+      </BaseButton>
     </div>
   </Modal>
 </template>
 
 <script setup>
 import { useI18n } from 'vue-i18n'
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, reactive, watch } from 'vue';
 import { PhSun, PhMoon, PhDeviceMobile } from '@phosphor-icons/vue'
 import { useGlobalGameState } from '../gameState'
+import BaseButton from './base/BaseButton.vue';
 
-const { locale } = useI18n()
+const { locale, t: $t } = useI18n()
 const state = useGlobalGameState()
 const settingsPopupOpen = state.settingsPopupOpen
 const languages = [
