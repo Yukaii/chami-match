@@ -65,9 +65,20 @@
       </ul>
     </div>
 
-    <div class="flex w-full justify-center">
+    <div class="flex w-full justify-center gap-4">
       <BaseButton
         variant="primary"
+        is3d
+        size="lg"
+        @click="shareWebsite"
+      >
+        <div class="flex items-center gap-1">
+          <ph-share-network :size="20" />
+          {{ $t('about.share') }}
+        </div>
+      </BaseButton>
+      <BaseButton
+        variant="secondary"
         is3d
         size="lg"
         @click="onClose"
@@ -79,7 +90,7 @@
 </template>
 
 <script setup>
-import { PhGithubLogo } from "@phosphor-icons/vue";
+import { PhGithubLogo, PhShareNetwork } from "@phosphor-icons/vue";
 import { useGlobalGameState } from "../gameState";
 import BaseButton from "./base/BaseButton.vue";
 
@@ -88,5 +99,30 @@ const aboutPopupOpen = state.aboutPopupOpen;
 
 const onClose = () => {
 	state.toggleAboutPopup(false);
+};
+
+const shareWebsite = async () => {
+  const url = window.location.origin;
+
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: "Chami Match",
+        url: url
+      });
+    } catch (error) {
+      console.error("Error sharing:", error);
+    }
+  } else {
+    // Fallback to clipboard
+    try {
+      await navigator.clipboard.writeText(url);
+      alert("URL copied to clipboard!");
+    } catch (error) {
+      console.error("Failed to copy:", error);
+      // Ultimate fallback - show URL to manually copy
+      prompt("Copy this URL:", url);
+    }
+  }
 };
 </script>
