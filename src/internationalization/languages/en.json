@@ -14,6 +14,10 @@
     "title": "Game Record",
     "emptyContent": "Your game records will be displayed here, but it's currently empty."
   },
+  "totalRounds": "Total Rounds",
+  "allGameTypes": "All Game Types",
+  "loadMore": "Load More",
+  "unknownRecordType": "Unknown record type",
   "actualColor": "Actual Color",
   "guessedColor": "Your Guess",
   "actualDifference": "Actual Difference",
@@ -21,6 +25,9 @@
   "comboCount": "Combo Count",
   "winningRate": "Winning Rate",
   "roundCount": "Round Count",
+  "sessionDate": "Session Date",
+  "allSessions": "All Sessions",
+  "currentSession": "Current Session",
   "settings": {
     "title": "Settings",
     "UIOptions": "UI Options",
@@ -80,5 +87,7 @@
       "valueDifference": "Value Difference",
       "yourGuess": "Your guess:"
     }
-  }
+  },
+  "colorDifferences": "Color Differences",
+  "precisionTarget": "Target"
 }
