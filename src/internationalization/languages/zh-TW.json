@@ -84,13 +84,13 @@
 	"gameModes": {
 		"standard": {
 			"name": "標準模式",
-			"description": "嘗試匹配左側顯示的顏色"
+			"description": "嘗試配對左側顯示的顏色"
 		},
 		"contextual": {
 			"name": "情境模式",
-			"description": "匹配被相似顏色包圍的中心顏色 - 更具挑戰性！",
-			"instructions": "選擇匹配中心方塊的顏色",
-			"selectPrompt": "選擇匹配的顏色：",
+			"description": "配對被相似顏色包圍的中心顏色 - 更具挑戰性！",
+			"instructions": "選擇配對中心方塊的顏色",
+			"selectPrompt": "選擇配對的顏色：",
 			"lastSelection": "你上次的選擇："
 		},
 		"relative": {
