@@ -63,4 +63,14 @@ export class ContextualMode extends StandardMode {
     // Generate new color options
     this.state.colorOptions = this.generateColorOptions();
   }
+
+  // Override checkGuess to require exact match, ignoring precision setting
+  checkGuess() {
+    // In contextual mode, we need exact matches since user selects from predefined options
+    const hIsExact = this.state.randomColor.h === this.state.userColor.h;
+    const sIsExact = this.state.randomColor.s === this.state.userColor.s;
+    const vIsExact = this.state.randomColor.v === this.state.userColor.v;
+
+    return hIsExact && sIsExact && vIsExact;
+  }
 }

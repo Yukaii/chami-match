@@ -45,8 +45,8 @@
       <div class="mb-2 text-xl font-bold text-white">{{ $t('settings.gameOptions') }}</div>
       <hr class="mb-4 border-gray-400" />
 
-      <!-- Precision -->
-      <div class="mb-4">
+      <!-- Precision - Only shown when NOT in contextual mode -->
+      <div v-if="state.gameType.value !== 'contextual'" class="mb-4">
         <label class="mb-2 block font-bold text-white">{{ $t('settings.precision.label') }}</label>
         <div class="flex space-x-2">
           <button
@@ -78,7 +78,7 @@
       </div>
 
       <!-- Max Tries -->
-      <div class="mb-4">
+      <div v-if="state.gameType.value !== 'contextual'" class="mb-4">
         <label class="mb-2 block font-bold text-white">{{ $t('settings.maxTries.label') }}</label>
         <div class="flex space-x-2">
           <button
