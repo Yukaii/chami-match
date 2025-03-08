@@ -1,6 +1,9 @@
 {
   "title": "Chami Match - Recognize the Color!",
   "description": "A simple and fun color recognition training game!",
+  "startGame": "Start Game",
+  "startOver": "Start Over",
+  "home": "Home",
   "submit": "Submit",
   "close": "Close",
   "gameRecord": {

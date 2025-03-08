@@ -211,7 +211,13 @@ export const useGlobalGameState = createGlobalState(() => {
     })
   })
 
-  startOver()
+  // Initialize without automatically starting the game
+  if (!currentSession.value) {
+    // Create session but don't start the game automatically
+    const session = createSession(preferences.value)
+    currentSession.value = session
+    sessions.value.push(session)
+  }
 
   return {
     currentSession,

@@ -1,6 +1,9 @@
 {
   "title": "Chami Match - Recognize the Color!",
   "description": "一個簡單又有趣的顏色辨識訓練遊戲！",
+  "startGame": "開始遊戲",
+  "startOver": "重新開始",
+  "home": "主選單",
   "submit": "送出",
   "close": "關閉",
   "gameRecord": {
