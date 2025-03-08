@@ -43,9 +43,15 @@ const props = defineProps({
 		type: Boolean,
 		default: false,
 	},
+	// Updated to match attribute in the template
 	className: {
 		type: String,
 		default: "",
+	},
+	// Add a new prop to control whether className should completely override styles
+	overrideStyles: {
+		type: Boolean,
+		default: false,
 	},
 });
 
@@ -69,17 +75,22 @@ const sizeClasses = computed(() => ({
 }));
 
 const buttonClasses = computed(() => {
-	const baseClasses = [
-		"rounded-lg font-medium transition-all duration-200 focus:outline-hidden focus:ring-2 focus:ring-offset-2",
-		"hover:-translate-y-1 hover:scale-[1.02] active:translate-y-1",
-		sizeClasses.value[props.size],
-		variantClasses.value[props.variant],
-		props.fullWidth ? "w-full" : "",
-		props.is3d ? "3d-button" : "",
-		props.disabled ? "cursor-not-allowed opacity-50" : "",
-	];
+  // Base classes that are always applied and don't conflict with variants
+  const baseClasses = [
+    "rounded-lg font-medium transition-all duration-200",
+    "focus:outline-hidden focus:ring-2 focus:ring-offset-2",
+    "hover:-translate-y-1 hover:scale-[1.02] active:translate-y-1",
+    sizeClasses.value[props.size],
+    props.fullWidth ? "w-full" : "",
+    props.is3d ? "3d-button" : "",
+    props.disabled ? "cursor-not-allowed opacity-50" : "",
+  ];
 
-	return cn(...baseClasses, props.className);
+  // Get variant classes
+  const variant = props.overrideStyles ? "" : variantClasses.value[props.variant];
+
+  // Let tailwind-merge handle the conflicts naturally
+  return cn(...baseClasses, variant, props.className);
 });
 
 defineEmits(["click"]);

@@ -44,6 +44,7 @@ function openSettings() {
         size="lg"
         full-width
         class-name="bg-green-500 dark:bg-green-600 hover:bg-green-600 dark:hover:bg-green-700 border-b-4 border-green-700 dark:border-green-800"
+        :override-styles="true"
         @click="startStandardGame"
       >
         {{ $t('startStandardGame') }}
@@ -55,6 +56,7 @@ function openSettings() {
         size="lg"
         full-width
         class-name="bg-purple-500 dark:bg-purple-600 hover:bg-purple-600 dark:hover:bg-purple-700 border-b-4 border-purple-700 dark:border-purple-800"
+        :override-styles="true"
         @click="startContextualGame"
       >
         {{ $t('startContextualGame') }}
@@ -66,6 +68,7 @@ function openSettings() {
         size="lg"
         full-width
         class-name="bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700 border-b-4 border-blue-700 dark:border-blue-800"
+        :override-styles="true"
         @click="startRelativeGame"
       >
         {{ $t('startRelativeGame') }}
