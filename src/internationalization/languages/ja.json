@@ -3,6 +3,7 @@
   "description": "色覚を楽しくトレーニング！シンプルな色合わせゲーム",
   "startStandardGame": "標準モード",
   "startContextualGame": "コンテキストモード",
+  "startRelativeGame": "明度差モード",
   "startGame": "ゲームを始める",
   "startOver": "最初からやり直す",
   "home": "ホーム",
@@ -13,6 +14,10 @@
     "title": "ゲーム記録",
     "emptyContent": "ゲームの記錄はこちらに表示されますが、現在は空です。"
   },
+  "actualColor": "実際の色",
+  "guessedColor": "あなたの推測",
+  "actualDifference": "実際の差異",
+  "guessedDifference": "あなたの推測",
   "comboCount": "コンボ数",
   "winningRate": "勝率",
   "roundCount": "ラウンド数",
@@ -67,6 +72,13 @@
       "instructions": "中央の四角に一致する色を選んでください",
       "selectPrompt": "一致する色を選択：",
       "lastSelection": "前回の選択："
+    },
+    "relative": {
+      "name": "明度差モード",
+      "description": "2つの色の明るさの違いを判断する",
+      "instructions": "スライダーを使用して、これらの色の明るさの違いを示してください（1〜100）",
+      "valueDifference": "明度差",
+      "yourGuess": "あなたの推測："
     }
   }
 }

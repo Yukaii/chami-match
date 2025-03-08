@@ -1,55 +1,100 @@
 <template>
   <Modal :is-open="recordPopupOpen" @on-close="onClose">
-    <div class="mb-4 text-center text-lg text-white">{{ $t('gameRecord.title') }}</div>
-    <div v-if="recentRecords?.length > 0" class="space-y-2">
-      <!-- Record Items -->
-      <div v-for="(record, index) in recentRecords" :key="index"
-        class="grid grid-cols-5 items-center gap-2 rounded-lg bg-gray-800 p-2">
-        <!-- Success Indicator -->
-        <div class="flex justify-center">
-          <span v-if="record.wasSuccess">
-            <ph-check-circle :size="16" class="text-green-500" />
-          </span>
-          <span v-else>
-            <ph-x-circle :size="16" class="text-red-500" />
-          </span>
+    <div class="mb-4 text-center text-lg font-bold text-white">{{ $t('gameRecord.title') }}</div>
+    <div v-if="validRecords.length === 0" class="text-gray-400">
+      {{ $t('gameRecord.emptyContent') }}
+    </div>
+    <div v-else class="max-h-[80vh] overflow-auto">
+      <div
+        v-for="(record, index) in validRecords"
+        :key="index"
+        class="mb-4 rounded-lg border border-slate-700 p-4"
+      >
+        <div class="mb-2 flex items-center justify-between">
+          <div class="text-white">
+            {{ $t('roundCount') }}: {{ record.round }}
+          </div>
+          <div
+            class="rounded-lg px-2 py-1 text-white"
+            :class="record.wasSuccess ? 'bg-green-700' : 'bg-red-700'"
+          >
+            {{ record.wasSuccess ? '✓' : '✗' }}
+          </div>
         </div>
 
-        <div class="col-span-2 flex space-x-2">
-          <ColorBlock :color="record.actualColor" />
-          <ColorBlock :color="record.guessedColor" />
-        </div>
+        <!-- Standard/Contextual Mode Display -->
+        <template v-if="hasColorProperties(record)">
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <div class="mb-2 text-white">{{ $t('actualColor') }}</div>
+              <div
+                class="h-16 w-full rounded-lg"
+                :style="`background-color: hsl(${record.actualColor.h}, ${record.actualColor.s}%, ${record.actualColor.v}%)`"
+              ></div>
+            </div>
+            <div>
+              <div class="mb-2 text-white">{{ $t('guessedColor') }}</div>
+              <div
+                class="h-16 w-full rounded-lg"
+                :style="`background-color: hsl(${record.guessedColor.h}, ${record.guessedColor.s}%, ${record.guessedColor.v}%)`"
+              ></div>
+            </div>
+          </div>
+        </template>
 
-        <div class="col-span-2 flex flex-col text-right">
-          <span class="text-orange-300">
-            H: {{ record.actualColor.h }} ({{ record.guessedColor.h - record.actualColor.h }})
-          </span>
-          <span class="text-orange-300">
-            S: {{ record.actualColor.s }} ({{ record.guessedColor.s - record.actualColor.s }})
-          </span>
-          <span class="text-orange-300">
-            V: {{ record.actualColor.v }} ({{ record.guessedColor.v - record.actualColor.v }})
-          </span>
-        </div>
+        <!-- Relative Mode Display -->
+        <template v-else-if="hasDifferenceProperties(record)">
+          <div class="mb-2 text-white">
+            <div class="mb-2">{{ $t('actualDifference') }}: <span class="font-bold">{{ record.actualDifference }}</span></div>
+            <div>{{ $t('guessedDifference') }}: <span class="font-bold">{{ record.guessedDifference }}</span></div>
+          </div>
+
+          <div class="mt-2 h-2 w-full bg-gray-700 rounded-full overflow-hidden">
+            <div class="h-full bg-green-500" :style="`width: ${record.actualDifference}%`"></div>
+          </div>
+          <div class="mt-1 h-2 w-full bg-gray-700 rounded-full overflow-hidden">
+            <div class="h-full bg-blue-500" :style="`width: ${record.guessedDifference}%`"></div>
+          </div>
+          <div class="mt-1 flex justify-between text-xs text-gray-400">
+            <span>0%</span>
+            <span>50%</span>
+            <span>100%</span>
+          </div>
+        </template>
       </div>
     </div>
-    <div v-else class="text-balance pb-4 text-center text-white">{{ $t('gameRecord.emptyContent') }}</div>
-    <button class="button-3d mt-4 w-full rounded-lg bg-pink-600 px-4 py-2 text-white" @click="onClose">
-      {{ $t('close') }}
-    </button>
   </Modal>
 </template>
 
 <script setup>
-import { PhCheckCircle, PhXCircle } from '@phosphor-icons/vue'
 import { useGlobalGameState } from '../gameState'
 
 const state = useGlobalGameState()
 const recordPopupOpen = state.recordPopupOpen
 
+// Filter out invalid records with safety checks
+const validRecords = computed(() => {
+  // Check if lastTriesOfEachRound exists and is an array
+  if (!state.lastTriesOfEachRound || !Array.isArray(state.lastTriesOfEachRound)) {
+    return [];
+  }
+
+  return state.lastTriesOfEachRound.filter(record =>
+    record && typeof record === 'object' && 'round' in record && 'wasSuccess' in record
+  );
+});
+
+// Helper function to determine if a record has color properties
+function hasColorProperties(record) {
+  return record && record.actualColor && record.guessedColor;
+}
+
+// Helper function to determine if a record has difference properties
+function hasDifferenceProperties(record) {
+  return record && record.actualDifference !== undefined && record.guessedDifference !== undefined;
+}
+
 const onClose = () => {
   state.toggleRecordPopup(false)
 }
-
-const recentRecords = computed(() => state.lastTriesOfEachRound.value.slice(0, 5))
 </script>

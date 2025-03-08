@@ -3,6 +3,7 @@
   "description": "A simple and fun color recognition training game!",
   "startStandardGame": "Standard Mode",
   "startContextualGame": "Contextual Mode",
+  "startRelativeGame": "Value Difference Mode",
   "startGame": "Start Game",
   "startOver": "Start Over",
   "home": "Home",
@@ -13,6 +14,10 @@
     "title": "Game Record",
     "emptyContent": "Your game records will be displayed here, but it's currently empty."
   },
+  "actualColor": "Actual Color",
+  "guessedColor": "Your Guess",
+  "actualDifference": "Actual Difference",
+  "guessedDifference": "Your Guess",
   "comboCount": "Combo Count",
   "winningRate": "Winning Rate",
   "roundCount": "Round Count",
@@ -67,6 +72,13 @@
       "instructions": "Choose the color that matches the center square",
       "selectPrompt": "Select the matching color:",
       "lastSelection": "Your last selection:"
+    },
+    "relative": {
+      "name": "Value Difference Mode",
+      "description": "Determine the brightness difference between two colors",
+      "instructions": "Use the slider to indicate how different the brightness of these colors is (1-100)",
+      "valueDifference": "Value Difference",
+      "yourGuess": "Your guess:"
     }
   }
 }
