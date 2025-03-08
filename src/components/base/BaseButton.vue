@@ -1,16 +1,7 @@
 <template>
   <button
     :type="type"
-    :class="[
-      'rounded-lg font-medium transition-all duration-200 focus:outline-hidden focus:ring-2 focus:ring-offset-2',
-      'hover:-translate-y-1 hover:scale-[1.02] active:translate-y-1',
-      sizeClasses[size],
-      variantClasses[variant],
-      fullWidth ? 'w-full' : '',
-      is3d ? '3d-button' : '',
-      disabled ? 'cursor-not-allowed opacity-50' : '',
-      className
-    ]"
+    :class="buttonClasses"
     :disabled="disabled"
     @click="$emit('click', $event)"
   >
@@ -22,6 +13,7 @@
 
 <script setup>
 import { computed } from 'vue';
+import { twMerge } from 'tailwind-merge';
 
 const props = defineProps({
   variant: {
@@ -69,6 +61,20 @@ const sizeClasses = computed(() => ({
   md: 'px-4 py-2',
   lg: 'px-6 py-3 text-lg',
 }));
+
+const buttonClasses = computed(() => {
+  const baseClasses = [
+    'rounded-lg font-medium transition-all duration-200 focus:outline-hidden focus:ring-2 focus:ring-offset-2',
+    'hover:-translate-y-1 hover:scale-[1.02] active:translate-y-1',
+    sizeClasses.value[props.size],
+    variantClasses.value[props.variant],
+    props.fullWidth ? 'w-full' : '',
+    props.is3d ? '3d-button' : '',
+    props.disabled ? 'cursor-not-allowed opacity-50' : '',
+  ].join(' ');
+
+  return twMerge(baseClasses, props.className);
+});
 
 defineEmits(['click']);
 </script>
