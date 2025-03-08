@@ -13,7 +13,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '../../utils';
 
 const props = defineProps({
   variant: {
@@ -71,9 +71,9 @@ const buttonClasses = computed(() => {
     props.fullWidth ? 'w-full' : '',
     props.is3d ? '3d-button' : '',
     props.disabled ? 'cursor-not-allowed opacity-50' : '',
-  ].join(' ');
+  ];
 
-  return twMerge(baseClasses, props.className);
+  return cn(...baseClasses, props.className);
 });
 
 defineEmits(['click']);
