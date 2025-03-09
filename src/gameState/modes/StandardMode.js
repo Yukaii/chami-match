@@ -40,13 +40,6 @@ export class StandardMode extends BaseMode {
 		this.state.randomColor.h = random.h;
 		this.state.randomColor.s = random.s;
 		this.state.randomColor.v = random.v;
-		this.resetUserInput();
-	}
-
-	resetUserInput() {
-		this.state.userColor.h = 0;
-		this.state.userColor.s = 0;
-		this.state.userColor.v = 0;
 	}
 
 	updateUserColor(h, s, v) {
