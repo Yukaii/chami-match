@@ -32,7 +32,6 @@ const submit = () => {
 };
 
 watch([hsv, realtimePreview], () => {
-  console.log(realtimePreview.value, 'realtimePreview.value')
 	if (realtimePreview.value) {
 		state.updateUserColor(...hsv.value);
 	}
