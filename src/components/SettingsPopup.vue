@@ -216,7 +216,7 @@ const applyTheme = (theme) => {
 function setTheme(theme) {
 	currentTheme.value = theme;
 
-	applyTheme(theme)
+	applyTheme(theme);
 }
 
 const onClose = () => {
