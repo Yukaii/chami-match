@@ -61,7 +61,7 @@ function selectColor(color, index) {
 }
 
 function resetSelection() {
-  selectedColorIndex.value = -1; // Reset selected index
+	selectedColorIndex.value = -1; // Reset selected index
 }
 
 // Define a layout for the grid - now just surrounding color with target in center

@@ -70,8 +70,9 @@ export const useGlobalGameState = createGlobalState(() => {
 	watch(
 		() => preferences.value.gameType,
 		(newGameType) => {
-			lives.value = newGameType === "contextual" ? 2 : (preferences.value.maxLife || 5);
-		}
+			lives.value =
+				newGameType === "contextual" ? 2 : preferences.value.maxLife || 5;
+		},
 	);
 
 	// Track first attempt for each round
@@ -225,7 +226,8 @@ export const useGlobalGameState = createGlobalState(() => {
 	function updateGameType(newGameType) {
 		preferences.value.gameType = newGameType;
 		// Immediately update lives when game type changes
-		lives.value = newGameType === "contextual" ? 2 : (preferences.value.maxLife || 5);
+		lives.value =
+			newGameType === "contextual" ? 2 : preferences.value.maxLife || 5;
 	}
 
 	function updateConfetti(enabled) {

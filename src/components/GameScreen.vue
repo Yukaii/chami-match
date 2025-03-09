@@ -1,8 +1,8 @@
 <script setup>
 import { useGlobalGameState } from "../gameState";
+import GameNavBar from "./GameNavBar.vue";
 import BaseButton from "./base/BaseButton.vue";
 import BaseSlider from "./base/BaseSlider.vue";
-import GameNavBar from "./GameNavBar.vue";
 
 const state = useGlobalGameState();
 const mode = state.mode;

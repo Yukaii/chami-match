@@ -5,18 +5,18 @@ import BaseButton from "./base/BaseButton.vue";
 
 const router = useRouter();
 const state = useGlobalGameState();
-const emit = defineEmits(['startOver']);
+const emit = defineEmits(["startOver"]);
 
 function goToHome() {
-  router.push("/");
+	router.push("/");
 }
 
 function startOver() {
-  // Directly access game state to reset
-  state.startOver();
+	// Directly access game state to reset
+	state.startOver();
 
-  // Still emit event for backward compatibility
-  emit('startOver');
+	// Still emit event for backward compatibility
+	emit("startOver");
 }
 </script>
 
