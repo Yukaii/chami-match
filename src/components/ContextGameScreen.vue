@@ -45,33 +45,7 @@ watch(
 	{ immediate: true, deep: true },
 );
 
-// Generate color options for selection
-const colorOptions = computed(() => {
-	const options = [];
-
-	// Add the target color
-	options.push({ ...randomColor });
-
-	// Generate similar but incorrect colors (6 options)
-	for (let i = 0; i < 5; i++) {
-		const hVariation = Math.random() * 30 - 15; // -15 to +15 variation
-		const sVariation = Math.random() * 30 - 15; // -15 to +15 variation
-		const vVariation = Math.random() * 30 - 15; // -15 to +15 variation
-
-		const h = Math.round((randomColor.h + hVariation + 360) % 360);
-		const s = Math.round(
-			Math.max(0, Math.min(100, randomColor.s + sVariation)),
-		);
-		const v = Math.round(
-			Math.max(0, Math.min(100, randomColor.v + vVariation)),
-		);
-
-		options.push({ h, s, v });
-	}
-
-	// Shuffle the options
-	return options.sort(() => Math.random() - 0.5);
-});
+// Remove the local computed colorOptions property since we'll use state.colorOptions
 
 // Use a watcher to detect new rounds and reset the selected color index
 watch(
@@ -161,15 +135,15 @@ const gridStructure = [
         </h3>
         <div class="grid min-h-20 flex-1 grid-cols-3 gap-3">
           <button
-            v-for="(color, index) in colorOptions"
+            v-for="(color, index) in state.colorOptions || []"
             :key="index"
             class="size-full rounded-lg transition-transform hover:scale-105"
             :class="{
               'border-2 border-transparent hover:border-white': selectedColorIndex !== index,
               'border-4 border-white ring-2 ring-offset-2': selectedColorIndex === index
             }"
-            :style="`background-color: hsl(${color.h}, ${color.s}%, ${color.v}%)`"
-            @click="selectColor(color, index)"
+            :style="`background-color: hsl(${color?.h || 0}, ${color?.s || 0}%, ${color?.v || 0}%)`"
+            @click="color && selectColor(color, index)"
           />
         </div>
       </div>

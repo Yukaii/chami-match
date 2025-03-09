@@ -1,6 +1,6 @@
 import { useStorage, useToggle } from "@vueuse/core";
 import { nanoid } from "nanoid";
-import { computed, reactive, ref } from "vue";
+import { computed, reactive, ref, watch } from "vue"; // Add watch import
 import { celebrateFirstTry } from "../utils/confetti";
 import { createGameMode } from "./modes";
 
@@ -66,6 +66,14 @@ export const useGlobalGameState = createGlobalState(() => {
 	);
 	const gameType = computed(() => preferences.value.gameType || "standard");
 
+	// Watch for game type changes and update lives accordingly
+	watch(
+		() => preferences.value.gameType,
+		(newGameType) => {
+			lives.value = newGameType === "contextual" ? 2 : (preferences.value.maxLife || 5);
+		}
+	);
+
 	// Track first attempt for each round
 	const attemptCount = ref(0);
 
@@ -103,6 +111,7 @@ export const useGlobalGameState = createGlobalState(() => {
 		// Reset the round and score
 		currentRound.value = 0;
 		score.value = 0;
+		lives.value = maxLife.value; // Explicitly reset lives based on maxLife
 
 		// Initialize the game mode
 		initGameMode();
@@ -215,6 +224,8 @@ export const useGlobalGameState = createGlobalState(() => {
 
 	function updateGameType(newGameType) {
 		preferences.value.gameType = newGameType;
+		// Immediately update lives when game type changes
+		lives.value = newGameType === "contextual" ? 2 : (preferences.value.maxLife || 5);
 	}
 
 	function updateConfetti(enabled) {
