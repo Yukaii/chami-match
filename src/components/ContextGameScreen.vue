@@ -4,7 +4,7 @@ import { useGlobalGameState } from "../gameState";
 import GameNavBar from "./GameNavBar.vue";
 
 const state = useGlobalGameState();
-const randomColor = state.randomColor;
+// Removed local randomColor reference
 const currentRound = state.currentRound; // Add this to watch for round changes
 
 // Track selected color index
@@ -45,7 +45,7 @@ function generateSurroundingColor(targetColor, contrastLevel = 30) {
 
 // Update surrounding color when random color changes
 watch(
-	randomColor,
+	() => state.randomColor,
 	(newColor) => {
 		const newSurroundingColor = generateSurroundingColor(newColor);
 		surroundingColor.h = newSurroundingColor.h;
@@ -59,7 +59,7 @@ watch(
 
 // Use a watcher to detect new rounds and reset the selected color index
 watch(
-	[randomColor, () => currentRound.value],
+	[() => state.randomColor, () => currentRound.value],
 	() => {
 		// Reset selection when random color changes (new round starts)
 		selectedColorIndex.value = -1;
@@ -110,9 +110,9 @@ const gridStructure = [
               <div
                 class="size-16"
                 :class="{ 'border-2 border-white': cell === 'target' }"
-                :style="`background-color: hsl(${cell === 'target' ? randomColor.h : surroundingColor.h},
-                  ${cell === 'target' ? randomColor.s : surroundingColor.s}%,
-                  ${cell === 'target' ? randomColor.v : surroundingColor.v}%)`"
+                :style="`background-color: hsl(${cell === 'target' ? state.randomColor.h : surroundingColor.h},
+                  ${cell === 'target' ? state.randomColor.s : surroundingColor.s}%,
+                  ${cell === 'target' ? state.randomColor.v : surroundingColor.v}%)`"
               ></div>
             </template>
           </template>
