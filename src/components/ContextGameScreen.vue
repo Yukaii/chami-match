@@ -1,12 +1,9 @@
 <script setup>
-import { useRouter } from "vue-router";
 import { useGlobalGameState } from "../gameState";
+import GameNavBar from "./GameNavBar.vue";
 
-const router = useRouter();
 const state = useGlobalGameState();
 const randomColor = state.randomColor;
-const userColor = state.userColor;
-const mode = state.mode;
 const currentRound = state.currentRound; // Add this to watch for round changes
 
 // Track selected color index
@@ -45,33 +42,7 @@ watch(
 	{ immediate: true, deep: true },
 );
 
-// Generate color options for selection
-const colorOptions = computed(() => {
-	const options = [];
-
-	// Add the target color
-	options.push({ ...randomColor });
-
-	// Generate similar but incorrect colors (6 options)
-	for (let i = 0; i < 5; i++) {
-		const hVariation = Math.random() * 30 - 15; // -15 to +15 variation
-		const sVariation = Math.random() * 30 - 15; // -15 to +15 variation
-		const vVariation = Math.random() * 30 - 15; // -15 to +15 variation
-
-		const h = Math.round((randomColor.h + hVariation + 360) % 360);
-		const s = Math.round(
-			Math.max(0, Math.min(100, randomColor.s + sVariation)),
-		);
-		const v = Math.round(
-			Math.max(0, Math.min(100, randomColor.v + vVariation)),
-		);
-
-		options.push({ h, s, v });
-	}
-
-	// Shuffle the options
-	return options.sort(() => Math.random() - 0.5);
-});
+// Remove the local computed colorOptions property since we'll use state.colorOptions
 
 // Use a watcher to detect new rounds and reset the selected color index
 watch(
@@ -89,13 +60,8 @@ function selectColor(color, index) {
 	state.checkGuess();
 }
 
-function goToHome() {
-	router.push("/");
-}
-
-function startOver() {
-	state.startOver(); // Reset the game state
-	selectedColorIndex.value = -1; // Reset selected index when starting over
+function resetSelection() {
+	selectedColorIndex.value = -1; // Reset selected index
 }
 
 // Define a layout for the grid - now just surrounding color with target in center
@@ -110,20 +76,7 @@ const gridStructure = [
   <div class="flex size-full flex-col justify-between p-2 pb-4">
     <div class="flex flex-col gap-3">
       <!-- Navigation bar separate from game toolbar -->
-      <div class="flex w-full justify-between">
-        <button
-          class="flex items-center gap-1 rounded-lg bg-gray-700 px-3 py-1 text-white"
-          @click="goToHome"
-        >
-          <span class="text-lg">←</span> {{ $t('home') }}
-        </button>
-        <button
-          class="rounded-lg bg-gray-700 px-3 py-1 text-white"
-          @click="startOver"
-        >
-          {{ $t('startOver') }}
-        </button>
-      </div>
+      <GameNavBar @start-over="resetSelection" />
 
       <!-- Regular game toolbar with all stats -->
       <Toolbar />
@@ -161,15 +114,15 @@ const gridStructure = [
         </h3>
         <div class="grid min-h-20 flex-1 grid-cols-3 gap-3">
           <button
-            v-for="(color, index) in colorOptions"
+            v-for="(color, index) in state.colorOptions || []"
             :key="index"
             class="size-full rounded-lg transition-transform hover:scale-105"
             :class="{
               'border-2 border-transparent hover:border-white': selectedColorIndex !== index,
               'border-4 border-white ring-2 ring-offset-2': selectedColorIndex === index
             }"
-            :style="`background-color: hsl(${color.h}, ${color.s}%, ${color.v}%)`"
-            @click="selectColor(color, index)"
+            :style="`background-color: hsl(${color?.h || 0}, ${color?.s || 0}%, ${color?.v || 0}%)`"
+            @click="color && selectColor(color, index)"
           />
         </div>
       </div>
