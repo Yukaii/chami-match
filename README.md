@@ -1,20 +1,26 @@
 # Chami Match
 
+Language: [English](README.md) | [日本語](README.ja.md) | [繁體中文](README.zh-TW.md)
+
 [Project dashboard](https://github.com/users/Yukaii/projects/11/views/1)
-
-## TODOs
-
-- [x] Settings
-- [x] About
-- [x] persistent history
-- [ ] Design overhaul
 
 ## Gameplay
 
-| Screen         | Screenshots                                 |
-| -------------- | ------------------------------------------- |
-| Gameplay       | <img src="./docs/images/1.png" width="400"> |
-| Recent guesses | <img src="./docs/images/2.png" width="400"> |
+| Screen          | Screenshots                                                              |
+| --------------- | ------------------------------------------------------------------------ |
+| Welcome         | <img src="./docs/screenshots/en/light/mobile/welcome.png" width="400">  |
+| Game            | <img src="./docs/screenshots/en/light/mobile/game.png" width="400">      |
+| Context Game    | <img src="./docs/screenshots/en/light/mobile/context-game.png" width="400"> |
+| Relative Game   | <img src="./docs/screenshots/en/light/mobile/relative-game.png" width="400"> |
+
+### Dark Mode
+
+| Screen          | Screenshots                                                             |
+| --------------- | ----------------------------------------------------------------------- |
+| Welcome         | <img src="./docs/screenshots/en/dark/mobile/welcome.png" width="400">   |
+| Game            | <img src="./docs/screenshots/en/dark/mobile/game.png" width="400">      |
+| Context Game    | <img src="./docs/screenshots/en/dark/mobile/context-game.png" width="400"> |
+| Relative Game   | <img src="./docs/screenshots/en/dark/mobile/relative-game.png" width="400"> |
 
 ## Credits
 

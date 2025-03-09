@@ -9,7 +9,8 @@
 		"preview": "vite preview",
 		"lint": "biome check .",
 		"format": "biome format --write .",
-		"lint:fix": "biome check --write ."
+		"lint:fix": "biome check --write .",
+		"screenshots": "bun run scripts/generateScreenshots.js"
 	},
 	"dependencies": {
 		"@phosphor-icons/vue": "^2.1.6",
@@ -27,6 +28,7 @@
 		"@biomejs/biome": "^1.6.1",
 		"@tailwindcss/vite": "^4.0.12",
 		"@vitejs/plugin-vue": "^5.0.4",
+		"playwright-chromium": "^1.51.0",
 		"tailwindcss": "^4.0.12",
 		"unplugin-auto-import": "^0.17.5",
 		"unplugin-vue-components": "^0.26.0",

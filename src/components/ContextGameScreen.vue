@@ -132,7 +132,7 @@ const gridStructure = [
 
     <div class="flex h-full flex-col items-center gap-6">
       <!-- Game instructions -->
-      <div class="text-center text-white">
+      <div class="text-center">
         <p>{{ $t('gameModes.contextual.instructions') }}</p>
       </div>
 
@@ -156,7 +156,7 @@ const gridStructure = [
 
       <!-- Color selection options -->
       <div class="relative mt-4 flex size-full flex-col">
-        <h3 class="mb-2 text-center text-lg font-bold text-white">
+        <h3 class="mb-2 text-center text-lg font-bold">
           {{ $t('gameModes.contextual.selectPrompt') }}
         </h3>
         <div class="grid min-h-20 flex-1 grid-cols-3 gap-3">
