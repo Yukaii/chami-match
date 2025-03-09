@@ -59,7 +59,7 @@ const variantClasses = computed(() => ({
 	primary:
 		"bg-linear-to-b from-pink-500 to-pink-600 dark:from-pink-500 dark:to-pink-700 text-white hover:from-pink-400 hover:to-pink-500 focus:from-pink-400 focus:to-pink-500 dark:hover:from-pink-400 dark:hover:to-pink-600 dark:focus:from-pink-400 dark:focus:to-pink-600 focus:ring-pink-400 dark:focus:ring-pink-500 border-b-4 border-pink-700 dark:border-pink-800",
 	secondary:
-		"bg-linear-to-b from-slate-300 to-slate-400 dark:from-gray-600 dark:to-gray-800 text-gray-800 dark:text-white hover:from-slate-200 hover:to-slate-300 focus:from-slate-200 focus:to-slate-300 dark:hover:from-gray-500 dark:hover:to-gray-700 dark:focus:from-gray-500 dark:focus:to-gray-700 focus:ring-slate-400 dark:focus:ring-gray-600 border-b-4 border-slate-500 dark:border-gray-900",
+		"bg-linear-to-b from-slate-300 to-slate-400 dark:from-gray-500 dark:to-gray-700 text-gray-800 dark:text-white hover:from-slate-200 hover:to-slate-300 focus:from-slate-200 focus:to-slate-300 dark:hover:from-gray-400 dark:hover:to-gray-600 dark:focus:from-gray-400 dark:focus:to-gray-600 focus:ring-slate-400 dark:focus:ring-gray-600 border-b-4 border-slate-500 dark:border-gray-900",
 	danger:
 		"bg-linear-to-b from-red-400 to-red-500 dark:from-red-600 dark:to-red-800 text-white hover:from-red-300 hover:to-red-400 focus:from-red-300 focus:to-red-400 dark:hover:from-red-500 dark:hover:to-red-700 dark:focus:from-red-500 dark:focus:to-red-700 focus:ring-red-400 dark:focus:ring-red-500 border-b-4 border-red-600 dark:border-red-800",
 	outline:
