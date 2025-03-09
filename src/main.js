@@ -18,8 +18,8 @@ app
 	.use(
 		VueGtag,
 		{
-      appName: 'Chami Match',
-      pageTrackerScreenviewEnabled: true,
+			appName: "Chami Match",
+			pageTrackerScreenviewEnabled: true,
 			config: { id: import.meta.env.GA_MEASUREMENT_ID },
 		},
 		router,
