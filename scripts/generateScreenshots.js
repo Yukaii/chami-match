@@ -6,7 +6,7 @@ import { chromium } from "playwright";
 // Get directory paths
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const screenshotsDir = path.join(__dirname, "..", "tmp", "screenshots");
+const screenshotsDir = path.join(__dirname, "..", "docs", "screenshots");
 
 // The routes should match the routes in the Vue router
 const routes = [
