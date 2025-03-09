@@ -3,11 +3,23 @@ import { useRouter } from "vue-router";
 import { useGlobalGameState } from "../gameState";
 import BaseButton from "./base/BaseButton.vue";
 import BaseSlider from "./base/BaseSlider.vue";
+import { onMounted, computed } from "vue";
 
 const router = useRouter();
 const state = useGlobalGameState();
-const relativeColors = state.relativeColors;
 const mode = state.mode;
+
+// Ensure the relative mode is initialized when component loads
+onMounted(() => {
+  if (state.gameType !== "relative") {
+    state.updateGameType("relative");
+    state.startOver(); // This will initialize the game mode and start a round
+  }
+  // If we're already in relative mode but don't have colors, just start a new round
+  else if (!state.relativeColors || !state.relativeColors.color1) {
+    state.startNewRound();
+  }
+});
 
 // Create a computed property for the slider - modified to not use .value
 const valueDifference = computed({
@@ -46,7 +58,7 @@ function startOver() {
       <HealthBar />
     </div>
 
-    <div class="flex flex-col items-center gap-6">
+    <div class="flex flex-col items-center gap-6" v-if="state.relativeColors?.color1">
       <!-- Game instructions -->
       <div class="text-center text-white">
         <p>{{ $t('gameModes.relative.instructions') }}</p>
@@ -56,11 +68,11 @@ function startOver() {
       <div class="flex w-full justify-center gap-8">
         <div
           class="size-32 rounded-lg border-2 border-white shadow-lg"
-          :style="`background-color: hsl(${relativeColors.color1.h}, ${relativeColors.color1.s}%, ${relativeColors.color1.v}%)`"
+          :style="`background-color: hsl(${state.relativeColors.color1.h}, ${state.relativeColors.color1.s}%, ${state.relativeColors.color1.v}%)`"
         ></div>
         <div
           class="size-32 rounded-lg border-2 border-white shadow-lg"
-          :style="`background-color: hsl(${relativeColors.color2.h}, ${relativeColors.color2.s}%, ${relativeColors.color2.v}%)`"
+          :style="`background-color: hsl(${state.relativeColors.color2.h}, ${state.relativeColors.color2.s}%, ${state.relativeColors.color2.v}%)`"
         ></div>
       </div>
 
@@ -83,6 +95,7 @@ function startOver() {
       fullWidth
       class="mt-6"
       @click="submit"
+      :disabled="!state.relativeColors?.color1"
     >
       {{ $t('submit') }}
     </BaseButton>
