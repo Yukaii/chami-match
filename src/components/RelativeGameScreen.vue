@@ -1,9 +1,9 @@
 <script setup>
+import { computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useGlobalGameState } from "../gameState";
 import BaseButton from "./base/BaseButton.vue";
 import BaseSlider from "./base/BaseSlider.vue";
-import { onMounted, computed } from "vue";
 
 const router = useRouter();
 const state = useGlobalGameState();
@@ -11,14 +11,14 @@ const mode = state.mode;
 
 // Ensure the relative mode is initialized when component loads
 onMounted(() => {
-  if (state.gameType !== "relative") {
-    state.updateGameType("relative");
-    state.startOver(); // This will initialize the game mode and start a round
-  }
-  // If we're already in relative mode but don't have colors, just start a new round
-  else if (!state.relativeColors || !state.relativeColors.color1) {
-    state.startNewRound();
-  }
+	if (state.gameType !== "relative") {
+		state.updateGameType("relative");
+		state.startOver(); // This will initialize the game mode and start a round
+	}
+	// If we're already in relative mode but don't have colors, just start a new round
+	else if (!state.relativeColors || !state.relativeColors.color1) {
+		state.startNewRound();
+	}
 });
 
 // Create a computed property for the slider - modified to not use .value

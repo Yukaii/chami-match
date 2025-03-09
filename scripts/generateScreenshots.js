@@ -43,7 +43,7 @@ const colorSchemes = [
 const languages = [
 	{ code: "ja", name: "Japanese" },
 	{ code: "en", name: "English" },
-	{ code: "zh-TW", name: "Traditional Chinese" }
+	{ code: "zh-TW", name: "Traditional Chinese" },
 ];
 
 async function captureScreenshots() {
@@ -63,11 +63,15 @@ async function captureScreenshots() {
 	try {
 		// Loop through each language
 		for (const language of languages) {
-			console.log(`Capturing screenshots for ${language.name} (${language.code})`);
+			console.log(
+				`Capturing screenshots for ${language.name} (${language.code})`,
+			);
 
 			// Loop through each color scheme
 			for (const colorScheme of colorSchemes) {
-				console.log(`Capturing ${language.name} screenshots in ${colorScheme.name} mode`);
+				console.log(
+					`Capturing ${language.name} screenshots in ${colorScheme.name} mode`,
+				);
 
 				// Loop through each dimension
 				for (const dimension of dimensions) {
@@ -79,11 +83,16 @@ async function captureScreenshots() {
 					const context = await browser.newContext({
 						viewport: { width: dimension.width, height: dimension.height },
 						colorScheme: colorScheme.scheme,
-						locale: language.code
+						locale: language.code,
 					});
 
 					// Create language, dimension and color scheme specific directory
-					const modeDir = path.join(screenshotsDir, language.code, colorScheme.name, dimension.name);
+					const modeDir = path.join(
+						screenshotsDir,
+						language.code,
+						colorScheme.name,
+						dimension.name,
+					);
 					await fs.mkdir(modeDir, { recursive: true });
 
 					// Create a new page
@@ -92,7 +101,9 @@ async function captureScreenshots() {
 					// Loop through each route and take a screenshot
 					for (const route of routes) {
 						const url = `http://localhost:5173${route.path}`;
-						console.log(`Navigating to ${url} (${language.name}, ${colorScheme.name} mode)`);
+						console.log(
+							`Navigating to ${url} (${language.name}, ${colorScheme.name} mode)`,
+						);
 
 						await page.goto(url, { waitUntil: "networkidle" });
 
@@ -106,7 +117,9 @@ async function captureScreenshots() {
 							// Viewport only
 						});
 
-						console.log(`Saved ${language.name} ${colorScheme.name} mode screenshot to: ${screenshotPath}`);
+						console.log(
+							`Saved ${language.name} ${colorScheme.name} mode screenshot to: ${screenshotPath}`,
+						);
 					}
 
 					await context.close();
@@ -123,7 +136,9 @@ async function captureScreenshots() {
 
 // Make sure Vite dev server is running before starting
 console.log("Make sure your Vite dev server is running (npm run dev)");
-console.log("Port is set to 5173. If different, please adjust the URL in the script.");
+console.log(
+	"Port is set to 5173. If different, please adjust the URL in the script.",
+);
 console.log("Waiting 3 seconds before starting...");
 
 setTimeout(captureScreenshots, 3000);
