@@ -21,8 +21,6 @@ onMounted(() => {
 watch(
 	locale,
 	() => {
-		console.log("locale", locale.value);
-
 		useHead({
 			title: t("title"),
 			meta: [
