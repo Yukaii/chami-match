@@ -4,13 +4,6 @@
 
 [專案儀表板](https://github.com/users/Yukaii/projects/11/views/1)
 
-## 待辦事項
-
-- [x] 設定
-- [x] 關於
-- [x] 紀錄儲存
-- [ ] 設計改版
-
 ## 遊戲畫面
 
 | 畫面             | 截圖                                                                     |
