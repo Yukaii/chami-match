@@ -1,4 +1,5 @@
 <script setup>
+import { onMounted, reactive, ref, watch } from "vue";
 import { useGlobalGameState } from "../gameState";
 import GameNavBar from "./GameNavBar.vue";
 
@@ -14,6 +15,18 @@ const surroundingColor = reactive({
 	h: 0,
 	s: 0,
 	v: 0,
+});
+
+// Add initialization logic when component mounts
+onMounted(() => {
+	if (state.gameType !== "contextual") {
+		state.updateGameType("contextual");
+		state.startOver(); // This will initialize the game mode and start a round
+	}
+	// If we're already in contextual mode but don't have options, just start a new round
+	else if (!state.colorOptions || state.colorOptions.length === 0) {
+		state.startNewRound();
+	}
 });
 
 // Generate surrounding color with controlled contrast
