@@ -1,10 +1,9 @@
 <script setup>
-import { useRouter } from "vue-router";
 import { useGlobalGameState } from "../gameState";
 import BaseButton from "./base/BaseButton.vue";
 import BaseSlider from "./base/BaseSlider.vue";
+import GameNavBar from "./GameNavBar.vue";
 
-const router = useRouter();
 const state = useGlobalGameState();
 const mode = state.mode;
 const realtimePreview = state.realtimePreview;
@@ -36,28 +35,13 @@ watch([hsv, realtimePreview], () => {
 		state.updateUserColor(...hsv.value);
 	}
 });
-
-function goToHome() {
-	router.push("/");
-}
-
-function startOver() {
-	state.startOver(); // Reset the game state
-}
 </script>
 
 <template>
   <div class="flex size-full flex-col justify-between p-2 pb-4">
     <div class="flex flex-col gap-3">
       <!-- Navigation bar separate from game toolbar -->
-      <div class="flex w-full justify-between">
-        <BaseButton variant="secondary" size="sm" @click="goToHome">
-          <span class="mr-1 text-lg">←</span> {{ $t('home') }}
-        </BaseButton>
-        <BaseButton variant="secondary" size="sm" @click="startOver">
-          {{ $t('startOver') }}
-        </BaseButton>
-      </div>
+      <GameNavBar />
 
       <!-- Regular game toolbar with all stats -->
       <Toolbar />

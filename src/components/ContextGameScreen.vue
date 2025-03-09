@@ -1,12 +1,9 @@
 <script setup>
-import { useRouter } from "vue-router";
 import { useGlobalGameState } from "../gameState";
+import GameNavBar from "./GameNavBar.vue";
 
-const router = useRouter();
 const state = useGlobalGameState();
 const randomColor = state.randomColor;
-const userColor = state.userColor;
-const mode = state.mode;
 const currentRound = state.currentRound; // Add this to watch for round changes
 
 // Track selected color index
@@ -63,13 +60,8 @@ function selectColor(color, index) {
 	state.checkGuess();
 }
 
-function goToHome() {
-	router.push("/");
-}
-
-function startOver() {
-	state.startOver(); // Reset the game state
-	selectedColorIndex.value = -1; // Reset selected index when starting over
+function resetSelection() {
+  selectedColorIndex.value = -1; // Reset selected index
 }
 
 // Define a layout for the grid - now just surrounding color with target in center
@@ -84,20 +76,7 @@ const gridStructure = [
   <div class="flex size-full flex-col justify-between p-2 pb-4">
     <div class="flex flex-col gap-3">
       <!-- Navigation bar separate from game toolbar -->
-      <div class="flex w-full justify-between">
-        <button
-          class="flex items-center gap-1 rounded-lg bg-gray-700 px-3 py-1 text-white"
-          @click="goToHome"
-        >
-          <span class="text-lg">←</span> {{ $t('home') }}
-        </button>
-        <button
-          class="rounded-lg bg-gray-700 px-3 py-1 text-white"
-          @click="startOver"
-        >
-          {{ $t('startOver') }}
-        </button>
-      </div>
+      <GameNavBar @start-over="resetSelection" />
 
       <!-- Regular game toolbar with all stats -->
       <Toolbar />
