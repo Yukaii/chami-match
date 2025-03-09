@@ -66,8 +66,6 @@
           </BaseButton>
           <template #tooltip>{{ $t('about.title') }}</template>
         </BaseTooltip>
-
-        <!-- ThemeToggle removed from here and moved to settings -->
       </slot>
     </div>
   </div>
@@ -87,9 +85,6 @@ import { cn } from "../utils/index";
 
 import BaseButton from "./base/BaseButton.vue";
 import BaseTooltip from "./base/BaseTooltip.vue";
-
-// Remove ThemeToggle import
-// import ThemeToggle from './ThemeToggle.vue'
 
 const state = useGlobalGameState();
 

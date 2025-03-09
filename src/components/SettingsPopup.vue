@@ -192,25 +192,31 @@ const settings = reactive({
 // Theme handling
 const currentTheme = ref(localStorage.getItem("theme") || "system");
 
-function setTheme(theme) {
-	currentTheme.value = theme;
-
+const applyTheme = (theme) => {
 	if (theme === "system") {
+		// Remove any theme class to respect system preference
 		document.documentElement.classList.remove("dark", "light");
+		localStorage.setItem("theme", "system");
 
-		// Apply dark theme if system prefers dark
+		// Check system preference to set UI appropriately
 		if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
 			document.documentElement.classList.add("dark");
 		}
 	} else if (theme === "dark") {
 		document.documentElement.classList.add("dark");
 		document.documentElement.classList.remove("light");
+		localStorage.setItem("theme", "dark");
 	} else {
 		document.documentElement.classList.remove("dark");
 		document.documentElement.classList.add("light");
+		localStorage.setItem("theme", "light");
 	}
+};
 
-	localStorage.setItem("theme", theme);
+function setTheme(theme) {
+	currentTheme.value = theme;
+
+	applyTheme(theme)
 }
 
 const onClose = () => {
@@ -245,4 +251,29 @@ const handleChangeLanguage = (lang) => {
 	// Also save confetti setting when changing language
 	state.updateConfetti(settings.enableConfetti);
 };
+
+onMounted(() => {
+	if (currentTheme && ["system", "dark", "light"].includes(currentTheme)) {
+		currentTheme.value = savedTheme;
+	} else {
+		// Default to system theme if no preference is saved
+		currentTheme.value = "system";
+	}
+
+	// Apply the theme
+	applyTheme(currentTheme.value);
+
+	// Listen for system preference changes when in system mode
+	window
+		.matchMedia("(prefers-color-scheme: dark)")
+		.addEventListener("change", (e) => {
+			if (currentTheme.value === "system") {
+				if (e.matches) {
+					document.documentElement.classList.add("dark");
+				} else {
+					document.documentElement.classList.remove("dark");
+				}
+			}
+		});
+});
 </script>
