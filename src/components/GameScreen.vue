@@ -6,14 +6,12 @@ import BaseSlider from "./base/BaseSlider.vue";
 
 const router = useRouter();
 const state = useGlobalGameState();
-const randomColor = state.randomColor;
-const userColor = state.userColor;
 const mode = state.mode;
 const realtimePreview = state.realtimePreview;
 
-const userH = ref(userColor.h);
-const userS = ref(userColor.s);
-const userV = ref(userColor.v);
+const userH = ref(state.userColor.h);
+const userS = ref(state.userColor.s);
+const userV = ref(state.userColor.v);
 
 const hsv = computed(() => {
 	const hsv = [
@@ -34,6 +32,7 @@ const submit = () => {
 };
 
 watch([hsv, realtimePreview], () => {
+  console.log(realtimePreview.value, 'realtimePreview.value')
 	if (realtimePreview.value) {
 		state.updateUserColor(...hsv.value);
 	}
@@ -67,8 +66,8 @@ function startOver() {
     </div>
 
     <div class="flex gap-2">
-      <ColorBlock :color="randomColor" />
-      <ColorBlock :color="userColor" />
+      <ColorBlock :color="state.randomColor" />
+      <ColorBlock :color="state.userColor" />
     </div>
 
     <!-- Sliders and Submit Button -->
