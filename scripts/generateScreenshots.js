@@ -39,6 +39,13 @@ const colorSchemes = [
 	{ name: "dark", scheme: "dark" },
 ];
 
+// Languages to capture
+const languages = [
+	{ code: "ja", name: "Japanese" },
+	{ code: "en", name: "English" },
+	{ code: "zh-TW", name: "Traditional Chinese" }
+];
+
 async function captureScreenshots() {
 	console.log("Starting screenshot generation...");
 
@@ -54,50 +61,56 @@ async function captureScreenshots() {
 	const browser = await chromium.launch();
 
 	try {
-		// Loop through each color scheme
-		for (const colorScheme of colorSchemes) {
-			console.log(`Capturing screenshots for ${colorScheme.name} mode`);
+		// Loop through each language
+		for (const language of languages) {
+			console.log(`Capturing screenshots for ${language.name} (${language.code})`);
 
-			// Loop through each dimension
-			for (const dimension of dimensions) {
-				console.log(
-					`Capturing ${colorScheme.name} mode screenshots for ${dimension.name} (${dimension.width}x${dimension.height})`,
-				);
+			// Loop through each color scheme
+			for (const colorScheme of colorSchemes) {
+				console.log(`Capturing ${language.name} screenshots in ${colorScheme.name} mode`);
 
-				// Create a new context with the specific viewport size and color scheme
-				const context = await browser.newContext({
-					viewport: { width: dimension.width, height: dimension.height },
-					colorScheme: colorScheme.scheme,
-				});
+				// Loop through each dimension
+				for (const dimension of dimensions) {
+					console.log(
+						`Capturing ${language.name} screenshots in ${colorScheme.name} mode for ${dimension.name} (${dimension.width}x${dimension.height})`,
+					);
 
-				// Create dimension and color scheme specific directory
-				const modeDir = path.join(screenshotsDir, colorScheme.name, dimension.name);
-				await fs.mkdir(modeDir, { recursive: true });
-
-				// Create a new page
-				const page = await context.newPage();
-
-				// Loop through each route and take a screenshot
-				for (const route of routes) {
-					const url = `http://localhost:5173${route.path}`;
-					console.log(`Navigating to ${url} (${colorScheme.name} mode)`);
-
-					await page.goto(url, { waitUntil: "networkidle" });
-
-					// Wait a moment for any animations to complete
-					await page.waitForTimeout(1000);
-
-					// Take the screenshot
-					const screenshotPath = path.join(modeDir, `${route.name}.png`);
-					await page.screenshot({
-						path: screenshotPath,
-						// Viewport only
+					// Create a new context with the specific viewport size, color scheme, and language
+					const context = await browser.newContext({
+						viewport: { width: dimension.width, height: dimension.height },
+						colorScheme: colorScheme.scheme,
+						locale: language.code
 					});
 
-					console.log(`Saved ${colorScheme.name} mode screenshot to: ${screenshotPath}`);
-				}
+					// Create language, dimension and color scheme specific directory
+					const modeDir = path.join(screenshotsDir, language.code, colorScheme.name, dimension.name);
+					await fs.mkdir(modeDir, { recursive: true });
 
-				await context.close();
+					// Create a new page
+					const page = await context.newPage();
+
+					// Loop through each route and take a screenshot
+					for (const route of routes) {
+						const url = `http://localhost:5173${route.path}`;
+						console.log(`Navigating to ${url} (${language.name}, ${colorScheme.name} mode)`);
+
+						await page.goto(url, { waitUntil: "networkidle" });
+
+						// Wait a moment for any animations to complete
+						await page.waitForTimeout(1000);
+
+						// Take the screenshot
+						const screenshotPath = path.join(modeDir, `${route.name}.png`);
+						await page.screenshot({
+							path: screenshotPath,
+							// Viewport only
+						});
+
+						console.log(`Saved ${language.name} ${colorScheme.name} mode screenshot to: ${screenshotPath}`);
+					}
+
+					await context.close();
+				}
 			}
 		}
 	} catch (error) {
