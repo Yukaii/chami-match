@@ -60,7 +60,7 @@ function startOver() {
 
     <div class="flex flex-col items-center gap-6" v-if="state.relativeColors?.color1">
       <!-- Game instructions -->
-      <div class="text-center text-white">
+      <div class="text-center">
         <p>{{ $t('gameModes.relative.instructions') }}</p>
       </div>
 
@@ -78,7 +78,7 @@ function startOver() {
 
       <!-- Value difference control -->
       <div class="w-full max-w-md">
-        <label class="mb-2 block text-center font-bold text-white">{{ $t('gameModes.relative.valueDifference') }}</label>
+        <label class="mb-2 block text-center font-bold">{{ $t('gameModes.relative.valueDifference') }}</label>
         <BaseSlider
           v-model="valueDifference"
           :min="1"
