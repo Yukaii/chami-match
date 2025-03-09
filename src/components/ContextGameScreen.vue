@@ -1,7 +1,7 @@
 <script setup>
+import { onMounted, reactive, ref, watch } from "vue";
 import { useGlobalGameState } from "../gameState";
 import GameNavBar from "./GameNavBar.vue";
-import { onMounted, ref, reactive, watch } from "vue";
 
 const state = useGlobalGameState();
 const randomColor = state.randomColor;
