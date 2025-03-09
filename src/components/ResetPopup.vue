@@ -5,25 +5,30 @@
     <p class="mb-6 text-center text-white">{{ $t('reset.message') }}</p>
 
     <div class="flex space-x-4">
-      <button
-        class="button-3d flex-1 rounded-lg bg-gray-600 px-4 py-2 text-white"
+      <BaseButton
+        variant="secondary"
+        className="flex-1"
+        is3d
         @click="onClose"
       >
         {{ $t('reset.cancel') }}
-      </button>
+      </BaseButton>
 
-      <button
-        class="button-3d flex-1 rounded-lg bg-red-600 px-4 py-2 text-white"
+      <BaseButton
+        variant="danger"
+        className="flex-1"
+        is3d
         @click="confirmReset"
       >
         {{ $t('reset.confirm') }}
-      </button>
+      </BaseButton>
     </div>
   </Modal>
 </template>
 
 <script setup>
 import { resetGameData, useGlobalGameState } from "../gameState";
+import BaseButton from "./base/BaseButton.vue";
 
 const state = useGlobalGameState();
 const resetPopupOpen = state.resetPopupOpen;
