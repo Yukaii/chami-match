@@ -136,7 +136,7 @@
         </div>
       </div>
 
-      <div class="mb-2 rounded-lg bg-gray-800 px-4 py-2 text-sm">{{ $t('settings.notice') }}</div>
+      <div class="mb-2 rounded-lg px-4 py-2 text-sm">{{ $t('settings.notice') }}</div>
       <BaseButton
         variant="primary"
         fullWidth
