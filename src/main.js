@@ -20,7 +20,7 @@ app
 		{
 			appName: "Chami Match",
 			pageTrackerScreenviewEnabled: true,
-			config: { id: import.meta.env.GA_MEASUREMENT_ID },
+			config: { id: import.meta.env.VITE_GA_MEASUREMENT_ID },
 		},
 		router,
 	);
