@@ -130,6 +130,13 @@ export class ImageMode extends ContextualMode {
 		super(options);
 		this.type = "image";
 		this.viewCallbacks = {};
+		this.prefetchedImages = [];
+		this.prefetchBatchSize = 3;
+		this.prefetchThreshold = 2;
+		this.prefetchInProgress = false;
+
+		// Start prefetching immediately
+		this.prefetchImageBatch();
 	}
 
 	initState() {
@@ -149,15 +156,39 @@ export class ImageMode extends ContextualMode {
 		});
 	}
 
-	resetUserInput() {
-		if (!this.state || !this.state.userColor) {
-			console.warn("State or userColor is undefined in resetUserInput");
-			return;
-		}
+	// Generate a random image URL
+	generateRandomImageUrl() {
+		const size = 600;
+		return `https://picsum.photos/${size}/${size}?_=${Date.now()}-${Math.random()}`;
+	}
 
-		this.state.userColor.h = 0;
-		this.state.userColor.s = 0;
-		this.state.userColor.v = 0;
+	// Prefetch a batch of images in the background
+	async prefetchImageBatch() {
+		if (this.prefetchInProgress) return;
+
+		this.prefetchInProgress = true;
+		try {
+			const prefetchPromises = [];
+			for (let i = 0; i < this.prefetchBatchSize; i++) {
+				const url = this.generateRandomImageUrl();
+				prefetchPromises.push(
+					preloadImage(url)
+						.then(() => url)
+						.catch(() => null)
+				);
+			}
+
+			// Wait for all images to load and filter out any failed loads
+			const results = await Promise.all(prefetchPromises);
+			const successfulUrls = results.filter(url => url !== null);
+			this.prefetchedImages.push(...successfulUrls);
+
+			console.log(`Prefetched ${successfulUrls.length} images. Queue size: ${this.prefetchedImages.length}`);
+		} catch (error) {
+			console.error("Error during batch prefetch:", error);
+		} finally {
+			this.prefetchInProgress = false;
+		}
 	}
 
 	async fetchRandomImage() {
@@ -172,20 +203,34 @@ export class ImageMode extends ContextualMode {
 		});
 
 		try {
-			// Use completely random images instead of predefined IDs
-			const size = 600;
-			const url = `https://picsum.photos/${size}/${size}?_=${Date.now()}`;
+			let url;
 
-			// Attempt preloading but continue even if it fails
-			await preloadImage(url).catch((e) =>
-				console.warn("Preload failed; using URL:", url, e),
-			);
+			// Use a prefetched image if available
+			if (this.prefetchedImages.length > 0) {
+				url = this.prefetchedImages.shift();
+				console.log("Using prefetched image:", url);
+
+				// If we're running low on prefetched images, trigger another batch
+				if (this.prefetchedImages.length <= this.prefetchThreshold) {
+					this.prefetchImageBatch();
+				}
+			} else {
+				// Fall back to direct fetch if no prefetched images are available
+				console.log("No prefetched images available, fetching new one");
+				url = this.generateRandomImageUrl();
+				await preloadImage(url).catch((e) =>
+					console.warn("Preload failed; using URL:", url, e),
+				);
+			}
+
 			this.state.imageUrl = url;
 			return url;
 		} catch (error) {
 			console.error("Error fetching random image:", error);
-			this.state.imageUrl = url;
-			return this.state.imageUrl;
+			// Generate a new URL in case of error
+			const fallbackUrl = this.generateRandomImageUrl();
+			this.state.imageUrl = fallbackUrl;
+			return fallbackUrl;
 		} finally {
 			this.state.imageLoading = false;
 		}
@@ -271,6 +316,28 @@ export class ImageMode extends ContextualMode {
 		}
 	}
 
+	resetUserInput() {
+		// Properly initialize userColor if it doesn't exist
+		if (!this.state) {
+			console.warn("State is undefined in resetUserInput");
+			return;
+		}
+
+		// Make sure userColor is initialized as a reactive object
+		if (!this.state.userColor) {
+			this.state.userColor = reactive({
+				h: 0,
+				s: 0,
+				v: 0
+			});
+		} else {
+			// Update existing userColor object
+			this.state.userColor.h = 0;
+			this.state.userColor.s = 0;
+			this.state.userColor.v = 0;
+		}
+	}
+
 	setTargetColorAndGenerateOptions(color) {
 		try {
 			if (!this.state) {
@@ -352,6 +419,12 @@ export class ImageMode extends ContextualMode {
 
 	async startRound() {
 		try {
+				// Make sure we have prefetched images before starting the round
+			if (this.prefetchedImages.length === 0 && !this.prefetchInProgress) {
+				console.log("No prefetched images available, starting batch prefetch");
+				await this.prefetchImageBatch();
+			}
+
 			// Fetch new image and update state
 			await this.fetchRandomImage();
 			this.resetUserInput();
