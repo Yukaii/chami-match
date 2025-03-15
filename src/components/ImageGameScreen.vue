@@ -27,7 +27,6 @@ const selectedColorIndex = ref(-1);
 // Target circle properties (renamed from magnifier)
 const targetCircleSize = ref(15);
 // Remove targetCircleZoom
-const showTargetCircle = ref(true);
 
 // Direct reference to ColorMode implementation
 const colorMode = ref(null);
@@ -275,11 +274,6 @@ function resetSelection() {
 	}
 }
 
-// Toggle target circle visibility (renamed from toggleMagnifier)
-function toggleTargetCircle() {
-	showTargetCircle.value = !showTargetCircle.value;
-}
-
 // Development mode flag
 const isDevMode = ref(import.meta.env.DEV);
 
@@ -329,10 +323,9 @@ const innerColorDotSize = 10;
               @error="console.error('Image failed to load:', store.currentModeState.imageUrl)"
             />
 
-            <!-- Target circle overlay (formerly magnifier) -->
+            <!-- Target circle overlay (formerly magnifier) - now always visible -->
             <div
-              v-if="showTargetCircle && imageLoaded && !imageProcessing &&
-                    getTargetRegion?.x !== undefined"
+              v-if="imageLoaded && !imageProcessing && getTargetRegion?.x !== undefined"
               class="absolute pointer-events-none border-2 border-white shadow-lg overflow-hidden rounded-full"
               :style="{
                 width: `${targetCircleSize}px`,
@@ -346,17 +339,7 @@ const innerColorDotSize = 10;
           </div>
         </div>
 
-        <!-- Toggle target circle button - replaced with BaseButton -->
-        <BaseButton
-          v-if="imageLoaded && !imageProcessing"
-          variant="secondary"
-          size="sm"
-          class="absolute top-2 right-2"
-          @click="toggleTargetCircle"
-        >
-          <span v-if="showTargetCircle">{{ $t('gameModes.color.toggleTargetCircle.hide') }}</span>
-          <span v-else>{{ $t('gameModes.color.toggleTargetCircle.show') }}</span>
-        </BaseButton>
+        <!-- Toggle target circle button removed -->
 
         <!-- Debug overlay for development -->
         <div
