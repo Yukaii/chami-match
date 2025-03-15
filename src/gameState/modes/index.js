@@ -36,9 +36,6 @@ export function createGameMode(type, options = {}) {
 			return new StandardMode(options);
 		}
 
-		console.log("Created game mode:", type,
-			"with methods:", Object.getOwnPropertyNames(Object.getPrototypeOf(newMode)));
-
 		return newMode;
 	} catch (error) {
 		console.error(`Error creating game mode ${type}:`, error);

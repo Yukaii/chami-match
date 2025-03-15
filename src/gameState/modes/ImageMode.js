@@ -100,7 +100,7 @@ export class ImageMode extends ContextualMode {
 			let hasData = false;
 			try {
 				const testData = ctx.getImageData(width / 2, height / 2, 1, 1);
-				hasData = testData && testData.data && testData.data.length >= 4;
+				hasData = testData?.data && testData.data.length >= 4;
 			} catch (e) {
 				console.error("CORS issue detected when reading canvas data:", e);
 			}

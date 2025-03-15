@@ -77,19 +77,19 @@ const currentColorOptions = computed(() => {
 
 // Calculate adjusted position for target circle and magnifier with null checks
 function getAdjustedPosition(x, y) {
-  console.log('getAdjustedPosition called with:', { x, y });
-  console.log('Current state:', {
-    imageLoaded: imageLoaded.value,
-    hasImage: !!imageElement.value,
-    hasContainer: !!imageContainerRef.value,
-    dimensions: {
-      displayed: { w: displayedImageWidth.value, h: displayedImageHeight.value },
-      natural: imageElement.value?.naturalWidth && {
-        w: imageElement.value.naturalWidth,
-        h: imageElement.value.naturalHeight
-      }
-    }
-  });
+  // console.log('getAdjustedPosition called with:', { x, y });
+  // console.log('Current state:', {
+  //   imageLoaded: imageLoaded.value,
+  //   hasImage: !!imageElement.value,
+  //   hasContainer: !!imageContainerRef.value,
+  //   dimensions: {
+  //     displayed: { w: displayedImageWidth.value, h: displayedImageHeight.value },
+  //     natural: imageElement.value?.naturalWidth && {
+  //       w: imageElement.value.naturalWidth,
+  //       h: imageElement.value.naturalHeight
+  //     }
+  //   }
+  // });
 
   if (!imageElement.value || !imageContainerRef.value ||
       typeof x !== 'number' || typeof y !== 'number') {
@@ -105,14 +105,14 @@ function getAdjustedPosition(x, y) {
     const imageRect = imageElement.value.getBoundingClientRect();
     const containerRect = imageContainerRef.value.getBoundingClientRect();
 
-    console.log('Raw element dimensions:', {
-      image: {
-        natural: { w: imageElement.value.naturalWidth, h: imageElement.value.naturalHeight },
-        client: { w: imageElement.value.clientWidth, h: imageElement.value.clientHeight },
-        rect: imageRect
-      },
-      container: containerRect
-    });
+    // console.log('Raw element dimensions:', {
+    //   image: {
+    //     natural: { w: imageElement.value.naturalWidth, h: imageElement.value.naturalHeight },
+    //     client: { w: imageElement.value.clientWidth, h: imageElement.value.clientHeight },
+    //     rect: imageRect
+    //   },
+    //   container: containerRect
+    // });
 
     // Calculate the actual scaling of the image
     const scaleX = imageRect.width / imageElement.value.naturalWidth;
@@ -127,12 +127,12 @@ function getAdjustedPosition(x, y) {
     const scaledY = y * scaleY + imageOffsetY;
 
     const result = { x: scaledX, y: scaledY };
-    console.log('Position calculation result:', {
-      input: { x, y },
-      scale: { x: scaleX, y: scaleY },
-      offset: { x: imageOffsetX, y: imageOffsetY },
-      output: result
-    });
+    // console.log('Position calculation result:', {
+    //   input: { x, y },
+    //   scale: { x: scaleX, y: scaleY },
+    //   offset: { x: imageOffsetX, y: imageOffsetY },
+    //   output: result
+    // });
 
     return result;
   } catch (error) {
@@ -237,21 +237,21 @@ async function handleImageLoad() {
     updateImageDimensions();
 
     // Add immediate position check right after dimensions update
-    console.log('Checking target region after image load:', {
-      region: state.currentModeState?.targetRegion,
-      ready: state.currentModeState?.targetRegion?.targetRegionReady
-    });
+    // console.log('Checking target region after image load:', {
+    //   region: state.currentModeState?.targetRegion,
+    //   ready: state.currentModeState?.targetRegion?.targetRegionReady
+    // });
 
     if (getTargetRegion.value) {
       const pos = getAdjustedPosition(getTargetRegion.value.x, getTargetRegion.value.y);
       console.log('Initial position after image load:', pos);
     }
 
-    console.log('Image loaded and dimensions updated:', {
-      width: displayedImageWidth.value,
-      height: displayedImageHeight.value,
-      targetRegion: getTargetRegion.value
-    });
+    // console.log('Image loaded and dimensions updated:', {
+    //   width: displayedImageWidth.value,
+    //   height: displayedImageHeight.value,
+    //   targetRegion: getTargetRegion.value
+    // });
 
     // Update image mode first
     imageMode.value.setTargetColorAndGenerateOptions(extractedColor);
@@ -272,11 +272,11 @@ async function handleImageLoad() {
       Object.assign(imageMode.value.state, newState);
       Object.assign(state.currentModeState, newState);
 
-      console.log("Updated states:", {
-        imageMode: imageMode.value.state.targetRegion,
-        global: state.currentModeState.targetRegion,
-        ready: state.currentModeState.targetRegionReady
-      });
+      // console.log("Updated states:", {
+      //   imageMode: imageMode.value.state.targetRegion,
+      //   global: state.currentModeState.targetRegion,
+      //   ready: state.currentModeState.targetRegionReady
+      // });
     }
 
   } catch (error) {
