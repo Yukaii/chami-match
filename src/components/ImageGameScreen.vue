@@ -56,6 +56,17 @@ const imageScaleFactor = computed(() => {
 	};
 });
 
+// Check if target color is light to determine border color
+const isTargetColorLight = computed(() => {
+	if (!colorMode.value?.state?.randomColor) return false;
+
+	// Get brightness value (v in HSV)
+	const brightness = colorMode.value.state.randomColor.v;
+
+	// Consider colors with value > 70 as light
+	return brightness > 70;
+});
+
 // Get target region with defensive checks
 const getTargetRegion = computed(() => {
 	if (!store.currentModeState?.targetRegion) {
@@ -417,7 +428,8 @@ watch([imageWrapperRef, imageElement], ([newWrapper, newImage]) => {
             <!-- Target circle overlay - now using computed adjustedTargetPosition -->
             <div
               v-if="imageLoaded && !imageProcessing && getTargetRegion?.x !== undefined"
-              class="absolute pointer-events-none border-2 border-white shadow-lg overflow-hidden rounded-full"
+              class="absolute pointer-events-none shadow-lg overflow-hidden rounded-full"
+              :class="{ 'border-black border-2': isTargetColorLight, 'border-white border-2': !isTargetColorLight }"
               :style="{
                 width: `${targetCircleSize}px`,
                 height: `${targetCircleSize}px`,
