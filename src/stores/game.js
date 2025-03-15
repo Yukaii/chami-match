@@ -91,7 +91,7 @@ export const useGameStore = defineStore('game', {
       return state.currentGameMode?.state?.surroundingColor;
     },
     colorOptions(state) {
-      return state.currentGameMode?.state?.colorOptions;
+      return state.currentGameMode?.state?.colorOptions || [];
     },
 
     // Game statistics
@@ -267,6 +267,14 @@ export const useGameStore = defineStore('game', {
       // Let the current game mode handle round initialization
       if (this.currentGameMode) {
         this.currentGameMode.startRound();
+
+        // For contextual mode, ensure colorOptions are generated
+        if (this.gameType === "contextual" &&
+            (!this.currentGameMode.state.colorOptions ||
+             this.currentGameMode.state.colorOptions.length === 0)) {
+          this.currentGameMode.state.colorOptions =
+            this.currentGameMode.generateColorOptions();
+        }
       }
     },
 

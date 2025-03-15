@@ -1,16 +1,16 @@
 <script setup>
-import { onMounted, reactive, ref, watch } from "vue";
-import { useGlobalGameState } from "../gameState";
+import { onMounted, reactive, ref, watch, computed } from "vue";
+import { useGameStore } from "../stores/game";
 import GameNavBar from "./GameNavBar.vue";
 
-const state = useGlobalGameState();
-// Removed local randomColor reference
-const currentRound = state.currentRound; // Add this to watch for round changes
+const store = useGameStore();
+// Use computed for proper reactivity with the store
+const currentRound = computed(() => store.currentRound);
 
 // Track selected color index
 const selectedColorIndex = ref(-1);
 
-// Create a reactive local surroundingColor object instead of accessing state.surroundingColors[0]
+// Create a reactive local surroundingColor object
 const surroundingColor = reactive({
 	h: 0,
 	s: 0,
@@ -19,13 +19,13 @@ const surroundingColor = reactive({
 
 // Add initialization logic when component mounts
 onMounted(() => {
-	if (state.gameType !== "contextual") {
-		state.updateGameType("contextual");
-		state.startOver(); // This will initialize the game mode and start a round
+	if (store.gameType !== "contextual") {
+		store.updateGameType("contextual");
+		store.startOver(); // This will initialize the game mode and start a round
 	}
 	// If we're already in contextual mode but don't have options, just start a new round
-	else if (!state.colorOptions || state.colorOptions.length === 0) {
-		state.startNewRound();
+	else if (!store.colorOptions || store.colorOptions.length === 0) {
+		store.startNewRound();
 	}
 });
 
@@ -43,23 +43,23 @@ function generateSurroundingColor(targetColor, contrastLevel = 30) {
 	return { h, s, v };
 }
 
-// Update surrounding color when random color changes
+// Update surrounding color when random color changes with proper Pinia reactivity
 watch(
-	() => state.randomColor,
+	() => store.randomColor,
 	(newColor) => {
-		const newSurroundingColor = generateSurroundingColor(newColor);
-		surroundingColor.h = newSurroundingColor.h;
-		surroundingColor.s = newSurroundingColor.s;
-		surroundingColor.v = newSurroundingColor.v;
+		if (newColor) {
+			const newSurroundingColor = generateSurroundingColor(newColor);
+			surroundingColor.h = newSurroundingColor.h;
+			surroundingColor.s = newSurroundingColor.s;
+			surroundingColor.v = newSurroundingColor.v;
+		}
 	},
 	{ immediate: true, deep: true },
 );
 
-// Remove the local computed colorOptions property since we'll use state.colorOptions
-
 // Use a watcher to detect new rounds and reset the selected color index
 watch(
-	[() => state.randomColor, () => currentRound.value],
+	[() => store.randomColor, currentRound],
 	() => {
 		// Reset selection when random color changes (new round starts)
 		selectedColorIndex.value = -1;
@@ -69,8 +69,8 @@ watch(
 
 function selectColor(color, index) {
 	selectedColorIndex.value = index;
-	state.updateUserColor(color.h, color.s, color.v);
-	state.checkGuess();
+	store.updateUserColor(color.h, color.s, color.v);
+	store.checkGuess();
 }
 
 function resetSelection() {
@@ -83,6 +83,11 @@ const gridStructure = [
 	["bg", "target", "bg"],
 	["bg", "bg", "bg"],
 ];
+
+// Debug computed property to check if colorOptions is available
+const hasColorOptions = computed(() => {
+	return Array.isArray(store.colorOptions) && store.colorOptions.length > 0;
+});
 </script>
 
 <template>
@@ -110,14 +115,18 @@ const gridStructure = [
               <div
                 class="size-16"
                 :class="{ 'border-2 border-white': cell === 'target' }"
-                :style="`background-color: hsl(${cell === 'target' ? state.randomColor.h : surroundingColor.h},
-                  ${cell === 'target' ? state.randomColor.s : surroundingColor.s}%,
-                  ${cell === 'target' ? state.randomColor.v : surroundingColor.v}%)`"
+                :style="`background-color: hsl(${cell === 'target' ? (store.randomColor?.h || 0) : surroundingColor.h},
+                  ${cell === 'target' ? (store.randomColor?.s || 0) : surroundingColor.s}%,
+                  ${cell === 'target' ? (store.randomColor?.v || 0) : surroundingColor.v}%)`"
               ></div>
             </template>
           </template>
         </div>
+      </div>
 
+      <!-- Color selection options with debug info -->
+      <div v-if="!hasColorOptions" class="text-sm text-red-500">
+        No color options available. Please try starting a new game.
       </div>
 
       <!-- Color selection options -->
@@ -127,7 +136,7 @@ const gridStructure = [
         </h3>
         <div class="grid min-h-20 flex-1 grid-cols-3 gap-3">
           <button
-            v-for="(color, index) in state.colorOptions || []"
+            v-for="(color, index) in store.colorOptions || []"
             :key="index"
             class="size-full rounded-lg transition-transform hover:scale-105"
             :class="{

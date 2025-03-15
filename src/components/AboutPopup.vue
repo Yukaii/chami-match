@@ -1,5 +1,5 @@
 <template>
-  <Modal :is-open="aboutPopupOpen" size="medium" @on-close="onClose">
+  <Modal :is-open="store.aboutPopupOpen" size="medium" @on-close="onClose">
     <div class="mb-6 text-center text-xl font-bold text-pink-600 dark:text-pink-400">
       {{ $t('about.title') }}
     </div>
@@ -91,14 +91,13 @@
 
 <script setup>
 import { PhGithubLogo, PhShareNetwork } from "@phosphor-icons/vue";
-import { useGlobalGameState } from "../gameState";
+import { useGameStore } from "../stores/game";
 import BaseButton from "./base/BaseButton.vue";
 
-const state = useGlobalGameState();
-const aboutPopupOpen = state.aboutPopupOpen;
+const store = useGameStore();
 
 const onClose = () => {
-	state.toggleAboutPopup(false);
+	store.toggleAboutPopup();
 };
 
 const shareWebsite = async () => {

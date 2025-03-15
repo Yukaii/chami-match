@@ -27,17 +27,17 @@
 </template>
 
 <script setup>
-import { resetGameData, useGlobalGameState } from "../gameState";
+import { useGameStore } from "../stores/game";
 import BaseButton from "./base/BaseButton.vue";
 
-const state = useGlobalGameState();
+const store = useGameStore();
 
 const onClose = () => {
-	state.toggleResetPopup(false);
+	store.toggleResetPopup();
 };
 
 const confirmReset = () => {
-	resetGameData();
+	store.resetGameData();
 	onClose();
 };
 </script>
