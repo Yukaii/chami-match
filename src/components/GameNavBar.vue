@@ -1,10 +1,10 @@
 <script setup>
 import { useRouter } from "vue-router";
-import { useGlobalGameState } from "../gameState";
+import { useGameStore } from "../stores/game";
 import BaseButton from "./base/BaseButton.vue";
 
 const router = useRouter();
-const state = useGlobalGameState();
+const store = useGameStore();
 const emit = defineEmits(["startOver"]);
 
 function goToHome() {
@@ -12,8 +12,8 @@ function goToHome() {
 }
 
 function startOver() {
-	// Directly access game state to reset
-	state.startOver();
+	// Use the Pinia store to reset
+	store.startOver();
 
 	// Still emit event for backward compatibility
 	emit("startOver");

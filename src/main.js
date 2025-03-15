@@ -1,6 +1,8 @@
 import { createHead } from "@unhead/vue";
 import { createApp } from "vue";
 import VueGtag from "vue-gtag";
+import { createPinia } from 'pinia';
+import { initializeStores } from './stores';
 
 import "./style.css";
 import App from "./App.vue";
@@ -15,6 +17,7 @@ app
 	.use(i18n)
 	.use(head)
 	.use(router)
+	.use(createPinia())
 	.use(
 		VueGtag,
 		{
@@ -24,5 +27,8 @@ app
 		},
 		router,
 	);
+
+// Initialize all stores that need initialization
+initializeStores();
 
 app.mount("#app");
