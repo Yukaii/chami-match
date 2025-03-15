@@ -3,7 +3,7 @@ import { useStorage } from "@vueuse/core";
 import { nanoid } from "nanoid";
 import { computed, watch } from "vue";
 import { celebrateFirstTry } from "../utils/confetti";
-import { createGameMode } from "../gameState/modes";
+import { createGameMode } from "./modes";
 
 function createSession({ maxLife, precision, mode, gameType }) {
   return {
