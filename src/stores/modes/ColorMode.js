@@ -172,15 +172,9 @@ export class ColorMode extends ContextualMode {
 		});
 
 		try {
-			// Use a list of reliable image IDs
-			const reliableImageIds = [
-				237, 24, 36, 37, 43, 76, 101, 133, 164, 197, 219, 230, 301, 334, 338,
-				396, 25, 27, 29, 30, 33, 42, 60, 67, 100, 151, 200,
-			];
-			const randomId =
-				reliableImageIds[Math.floor(Math.random() * reliableImageIds.length)];
+			// Use completely random images instead of predefined IDs
 			const size = 600;
-			const url = `https://picsum.photos/id/${randomId}/${size}/${size}`;
+			const url = `https://picsum.photos/${size}/${size}`;
 
 			// Attempt preloading but continue even if it fails
 			await preloadImage(url).catch((e) =>
