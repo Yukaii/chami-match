@@ -53,7 +53,10 @@ export const useGameStore = defineStore("game", {
 	getters: {
 		maxLife(state) {
 			// Override maxLife for contextual and image mode to always be 2
-			if (state.preferences.gameType === "contextual" || state.preferences.gameType === "image") {
+			if (
+				state.preferences.gameType === "contextual" ||
+				state.preferences.gameType === "image"
+			) {
 				return 2;
 			}
 			return state.preferences.maxLife || 5;
@@ -372,7 +375,9 @@ export const useGameStore = defineStore("game", {
 			this.preferences.gameType = newGameType;
 			// Immediately update lives when game type changes
 			this.lives =
-				newGameType === "contextual" || newGameType === "image" ? 2 : this.preferences.maxLife || 5;
+				newGameType === "contextual" || newGameType === "image"
+					? 2
+					: this.preferences.maxLife || 5;
 		},
 
 		updateConfetti(enabled) {
@@ -451,7 +456,9 @@ export const useGameStore = defineStore("game", {
 				() => this.preferences.gameType,
 				(newGameType) => {
 					this.lives =
-						newGameType === "contextual" || newGameType === "image" ? 2 : this.preferences.maxLife || 5;
+						newGameType === "contextual" || newGameType === "image"
+							? 2
+							: this.preferences.maxLife || 5;
 				},
 			);
 		},
