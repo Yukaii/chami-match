@@ -1,4 +1,3 @@
-import { PhFeather } from "@phosphor-icons/vue";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -27,10 +26,10 @@ const routes = [
 		path: "/relative-game",
 		name: "relative-game",
 	},
-  {
-    path: "/image-game",
-    name: "image-game",
-  },
+	{
+		path: "/image-game",
+		name: "image-game",
+	},
 ];
 
 // Dimensions to capture
