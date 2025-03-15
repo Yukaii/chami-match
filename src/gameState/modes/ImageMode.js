@@ -13,19 +13,20 @@ export class ImageMode extends ContextualMode {
 
 	initState() {
 		const baseState = super.initState();
-		return {
+		// Always create a reactive state with default values
+		return reactive({
 			...baseState,
 			imageUrl: null,
 			imageLoading: false,
-			colorOptions: [], // Ensure colorOptions is initialized
-			targetRegion: {
+			colorOptions: [],
+			targetRegion: reactive({
 				x: 0,
 				y: 0,
 				radius: 20,
-				// Add a flag to track if target region is ready
 				targetRegionReady: false
-			},
-		};
+			}),
+			targetRegionReady: false
+		});
 	}
 
 	// Implement the missing resetUserInput method
@@ -119,13 +120,21 @@ export class ImageMode extends ContextualMode {
 
 			const { x, y, color } = findSuitableColorRegion(ctx, width, height);
 
-			// Ensure target region is properly initialized with all required properties
-			this.state.targetRegion = {
-				x: x || 0,
-				y: y || 0,
+			console.log('Selected color region:', { x, y, color });
+
+			// Ensure we're updating existing reactive object instead of creating new one
+			Object.assign(this.state.targetRegion, {
+				x: Number(x) || 0,
+				y: Number(y) || 0,
 				radius: 20,
 				targetRegionReady: true
-			};
+			});
+			this.state.targetRegionReady = true;
+
+			console.log('Updated target region state:', {
+				region: this.state.targetRegion,
+				ready: this.state.targetRegionReady
+			});
 
 			return color;
 		} catch (error) {

@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch, computed, onBeforeUnmount, reactive } from "vue";
+import { onMounted, ref, watch, computed, onBeforeUnmount, reactive, nextTick } from "vue";
 import { useGlobalGameState } from "../gameState";
 import GameNavBar from "./GameNavBar.vue";
 import { ImageMode } from "../gameState/modes/ImageMode"; // Import ImageMode explicitly
@@ -43,15 +43,22 @@ const imageScaleFactor = computed(() => {
   };
 });
 
-// Add safety checks for target region access
+// Make getTargetRegion more defensive
 const getTargetRegion = computed(() => {
-  if (!state.currentModeState?.targetRegion ||
-      !state.currentModeState.targetRegionReady ||
-      typeof state.currentModeState.targetRegion.x !== 'number' ||
-      typeof state.currentModeState.targetRegion.y !== 'number') {
-    return null;
+  if (!state.currentModeState?.targetRegion) {
+    return { x: 0, y: 0, radius: 20 };
   }
-  return state.currentModeState.targetRegion;
+
+  const region = state.currentModeState.targetRegion;
+  const ready = state.currentModeState.targetRegionReady;
+
+  // Ensure we always return valid numbers
+  return {
+    x: Number(region.x) || 0,
+    y: Number(region.y) || 0,
+    radius: Number(region.radius) || 20,
+    ready: Boolean(ready)
+  };
 });
 
 // Update the hasColorOptions computed property
@@ -70,15 +77,42 @@ const currentColorOptions = computed(() => {
 
 // Calculate adjusted position for target circle and magnifier with null checks
 function getAdjustedPosition(x, y) {
+  console.log('getAdjustedPosition called with:', { x, y });
+  console.log('Current state:', {
+    imageLoaded: imageLoaded.value,
+    hasImage: !!imageElement.value,
+    hasContainer: !!imageContainerRef.value,
+    dimensions: {
+      displayed: { w: displayedImageWidth.value, h: displayedImageHeight.value },
+      natural: imageElement.value?.naturalWidth && {
+        w: imageElement.value.naturalWidth,
+        h: imageElement.value.naturalHeight
+      }
+    }
+  });
+
   if (!imageElement.value || !imageContainerRef.value ||
       typeof x !== 'number' || typeof y !== 'number') {
-    console.log('Invalid inputs for position adjustment:', { x, y, imageElement: !!imageElement.value });
+    console.warn('Invalid inputs for position adjustment:', {
+      x, y,
+      hasImage: !!imageElement.value,
+      hasContainer: !!imageContainerRef.value
+    });
     return { x: 0, y: 0 };
   }
 
   try {
     const imageRect = imageElement.value.getBoundingClientRect();
     const containerRect = imageContainerRef.value.getBoundingClientRect();
+
+    console.log('Raw element dimensions:', {
+      image: {
+        natural: { w: imageElement.value.naturalWidth, h: imageElement.value.naturalHeight },
+        client: { w: imageElement.value.clientWidth, h: imageElement.value.clientHeight },
+        rect: imageRect
+      },
+      container: containerRect
+    });
 
     // Calculate the actual scaling of the image
     const scaleX = imageRect.width / imageElement.value.naturalWidth;
@@ -92,21 +126,17 @@ function getAdjustedPosition(x, y) {
     const scaledX = x * scaleX + imageOffsetX;
     const scaledY = y * scaleY + imageOffsetY;
 
-    console.log('Position calculation:', {
-      original: { x, y },
-      scaled: { x: scaledX, y: scaledY },
+    const result = { x: scaledX, y: scaledY };
+    console.log('Position calculation result:', {
+      input: { x, y },
       scale: { x: scaleX, y: scaleY },
       offset: { x: imageOffsetX, y: imageOffsetY },
-      imageRect,
-      containerRect
+      output: result
     });
 
-    return {
-      x: scaledX,
-      y: scaledY
-    };
+    return result;
   } catch (error) {
-    console.error("Error calculating adjusted position:", error);
+    console.error("Error calculating position:", error);
     return { x: 0, y: 0 };
   }
 }
@@ -203,7 +233,25 @@ async function handleImageLoad() {
     console.log("Extracted color:", extractedColor);
 
     imageLoaded.value = true;
+    await nextTick();
     updateImageDimensions();
+
+    // Add immediate position check right after dimensions update
+    console.log('Checking target region after image load:', {
+      region: state.currentModeState?.targetRegion,
+      ready: state.currentModeState?.targetRegion?.targetRegionReady
+    });
+
+    if (getTargetRegion.value) {
+      const pos = getAdjustedPosition(getTargetRegion.value.x, getTargetRegion.value.y);
+      console.log('Initial position after image load:', pos);
+    }
+
+    console.log('Image loaded and dimensions updated:', {
+      width: displayedImageWidth.value,
+      height: displayedImageHeight.value,
+      targetRegion: getTargetRegion.value
+    });
 
     // Update image mode first
     imageMode.value.setTargetColorAndGenerateOptions(extractedColor);
@@ -214,16 +262,21 @@ async function handleImageLoad() {
     // Update the game mode state directly with safety check
     if (imageMode.value?.state) {
       const newState = {
-        targetRegion: {
-          ...imageMode.value.state.targetRegion,
-          targetRegionReady: true
-        },
+        targetRegion: imageMode.value.state.targetRegion,
+        targetRegionReady: true,
         colorOptions: [...(imageMode.value.state.colorOptions || [])],
         imageUrl: imageMode.value.state.imageUrl
       };
 
+      // Ensure atomic state update
       Object.assign(imageMode.value.state, newState);
-      console.log("Updated state with color options:", newState.colorOptions?.length);
+      Object.assign(state.currentModeState, newState);
+
+      console.log("Updated states:", {
+        imageMode: imageMode.value.state.targetRegion,
+        global: state.currentModeState.targetRegion,
+        ready: state.currentModeState.targetRegionReady
+      });
     }
 
   } catch (error) {
@@ -269,6 +322,23 @@ function toggleMagnifier() {
 
 // Remove the isDev computed property and add isDevMode ref
 const isDevMode = ref(import.meta.env.DEV);
+
+// Add watchers for debugging position updates
+watch(() => getTargetRegion.value, (newRegion) => {
+  console.log('Target region updated:', newRegion);
+  if (newRegion && imageLoaded.value) {
+    const pos = getAdjustedPosition(newRegion.x, newRegion.y);
+    console.log('New adjusted position:', pos);
+  }
+}, { deep: true, immediate: true });
+
+watch([displayedImageWidth, displayedImageHeight], ([width, height]) => {
+  console.log('Image dimensions changed:', { width, height });
+  if (getTargetRegion.value) {
+    const pos = getAdjustedPosition(getTargetRegion.value.x, getTargetRegion.value.y);
+    console.log('Recalculated position after dimension change:', pos);
+  }
+}, { immediate: true });
 </script>
 
 <template>
@@ -317,8 +387,9 @@ const isDevMode = ref(import.meta.env.DEV);
 
           <!-- Magnifier overlay with adjusted position -->
           <div
-            v-if="showMagnifier && imageLoaded && !imageProcessing && getTargetRegion"
-            class="absolute pointer-events-none border-4 border-white shadow-lg overflow-hidden rounded-full"
+            v-if="showMagnifier && imageLoaded && !imageProcessing &&
+                  getTargetRegion?.x !== undefined"
+            class="absolute pointer-events-none border-4 border-white shadow-lg overflow-hidden rounded-full bg-white"
             :style="{
               width: `${magnifierSize}px`,
               height: `${magnifierSize}px`,
@@ -328,10 +399,6 @@ const isDevMode = ref(import.meta.env.DEV);
               transformOrigin: 'center',
               zIndex: 10
             }"
-            @vue:mounted="() => console.log('Magnifier mounted with position:', {
-              x: getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).x,
-              y: getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).y
-            })"
           >
             <img
               :src="state.currentModeState.imageUrl"
@@ -339,23 +406,23 @@ const isDevMode = ref(import.meta.env.DEV);
               :style="{
                 width: `${displayedImageWidth}px`,
                 height: `${displayedImageHeight}px`,
-                top: `${-(getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).y - magnifierSize/2)}px`,
-                left: `${-(getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).x - magnifierSize/2)}px`
+                top: `${getTargetRegion ? -(getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).y - magnifierSize/2) : 0}px`,
+                left: `${getTargetRegion ? -(getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).x - magnifierSize/2) : 0}px`
               }"
             />
           </div>
 
           <!-- Target circle with adjusted position -->
           <div
-            v-if="imageLoaded && !imageProcessing && getTargetRegion"
+            v-if="imageLoaded && !imageProcessing && getTargetRegion?.x !== undefined"
             class="absolute rounded-full border-2 border-white pointer-events-none"
             :style="{
-              width: `${(getTargetRegion.radius || 20) * 2 * imageScaleFactor.value.x}px`,
-              height: `${(getTargetRegion.radius || 20) * 2 * imageScaleFactor.value.y}px`,
+              width: `${(getTargetRegion.radius || 20) * 2 * imageScaleFactor.x}px`,
+              height: `${(getTargetRegion.radius || 20) * 2 * imageScaleFactor.y}px`,
               top: `${getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).y -
-                    ((getTargetRegion.radius || 20) * imageScaleFactor.value.y)}px`,
+                    ((getTargetRegion.radius || 20) * imageScaleFactor.y)}px`,
               left: `${getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).x -
-                    ((getTargetRegion.radius || 20) * imageScaleFactor.value.x)}px`
+                    ((getTargetRegion.radius || 20) * imageScaleFactor.x)}px`
             }"
           ></div>
         </div>
