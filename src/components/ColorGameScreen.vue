@@ -282,26 +282,8 @@ function toggleTargetCircle() {
 // Development mode flag
 const isDevMode = ref(import.meta.env.DEV);
 
-// Replace selectedColorStyle with answerColorStyle to show the correct answer color
-const answerColorStyle = computed(() => {
-  // Get the answer color from the game state
-  const answerColor = colorMode.value?.state?.randomColor ||
-                     store.currentModeState?.randomColor;
-
-  if (answerColor) {
-    return {
-      backgroundColor: `hsla(${answerColor.h || 0}, ${answerColor.s || 0}%, ${answerColor.v || 0}%, 0.7)`,
-      borderColor: 'white'
-    };
-  }
-  return {
-    backgroundColor: 'transparent',
-    borderColor: 'white'
-  };
-});
-
 // Fixed size for inner color dot (in pixels)
-const innerColorDotSize = 4;
+const innerColorDotSize = 10;
 
 </script>
 
@@ -362,16 +344,18 @@ const innerColorDotSize = 4;
           >
           </div>
 
-          <!-- Color dot - shows answer color -->
+          <!-- Color dot - now hollow with border -->
           <div
             v-if="showTargetCircle && imageLoaded && !imageProcessing && getTargetRegion?.x !== undefined"
-            class="absolute rounded-full border-2 pointer-events-none"
+            class="absolute rounded-full pointer-events-none"
             :style="{
               width: `${innerColorDotSize}px`,
               height: `${innerColorDotSize}px`,
               top: `${getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).y - innerColorDotSize/2}px`,
               left: `${getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).x - innerColorDotSize/2}px`,
-              ...answerColorStyle
+              backgroundColor: 'transparent',
+              borderColor: 'white',
+              borderWidth: '2px',
             }"
           ></div>
         </div>
