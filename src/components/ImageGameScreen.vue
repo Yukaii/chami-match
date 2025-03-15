@@ -54,30 +54,29 @@ const getTargetRegion = computed(() => {
   return state.currentModeState.targetRegion;
 });
 
+// Add a computed property to properly handle color options display
+const hasColorOptions = computed(() => {
+  return state.colorOptions && state.colorOptions.length > 0;
+});
+
 // Calculate adjusted position for target circle and magnifier with null checks
 function getAdjustedPosition(x, y) {
-  if (x === undefined || y === undefined ||
-      !imageElement.value || !imageContainerRef.value ||
-      !getTargetRegion.value) {
+  if (!imageElement.value || !imageContainerRef.value ||
+      typeof x !== 'number' || typeof y !== 'number') {
     return { x: 0, y: 0 };
   }
 
   try {
-    // Get the image bounds
     const imageRect = imageElement.value.getBoundingClientRect();
-    const containerRect = imageContainerRef.value.getBoundingClientRect();
+    const scale = imageElement.value.naturalWidth / imageRect.width;
 
-    // Calculate the actual position based on image scale and position
-    const scaledX = x * imageScaleFactor.value.x;
-    const scaledY = y * imageScaleFactor.value.y;
-
-    // Adjust for any offset of the image within its container
-    const offsetX = imageRect.left - containerRect.left;
-    const offsetY = imageRect.top - containerRect.top;
+    // Calculate the scaled position
+    const scaledX = (x / scale);
+    const scaledY = (y / scale);
 
     return {
-      x: scaledX + offsetX,
-      y: scaledY + offsetY
+      x: scaledX,
+      y: scaledY
     };
   } catch (error) {
     console.error("Error calculating adjusted position:", error);
@@ -243,7 +242,14 @@ watch(
 );
 
 function selectColor(color, index) {
+  if (!color) return;
+
   selectedColorIndex.value = index;
+  if (imageMode.value) {
+    imageMode.value.state.userColor.h = color.h;
+    imageMode.value.state.userColor.s = color.s;
+    imageMode.value.state.userColor.v = color.v;
+  }
   state.updateUserColor(color.h, color.s, color.v);
   state.checkGuess();
 }
@@ -320,8 +326,8 @@ function toggleMagnifier() {
               :src="state.currentModeState.imageUrl"
               class="absolute"
               :style="{
-                width: `${displayedImageWidth.value}px`,
-                height: `${displayedImageHeight.value}px`,
+                width: `${imageElement?.width || 0}px`,
+                height: `${imageElement?.height || 0}px`,
                 top: `${-(getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).y - (magnifierSize/2))}px`,
                 left: `${-(getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).x - (magnifierSize/2))}px`
               }"
@@ -354,36 +360,33 @@ function toggleMagnifier() {
         </button>
       </div>
 
-      <!-- Color selection options with improved visibility -->
+      <!-- Color selection options - Simplified to show only one grid -->
       <div class="relative mt-4 w-full flex flex-col">
         <h3 class="mb-2 text-center text-lg font-bold">
           {{ $t('gameModes.image.selectPrompt') }}
         </h3>
-        <!-- Debug info to check if options exist -->
-        <p v-if="!state.colorOptions || state.colorOptions.length === 0" class="text-center text-sm text-red-500">
-          Loading color options...
-        </p>
+
         <div class="grid min-h-24 w-full grid-cols-3 gap-3 color-grid">
-          <button
-            v-for="(color, index) in state.colorOptions || []"
-            :key="index"
-            class="min-h-16 rounded-lg transition-transform hover:scale-105 color-button"
-            :class="{
-              'border-2 border-transparent hover:border-white': selectedColorIndex !== index,
-              'border-4 border-white ring-2 ring-offset-2 selected': selectedColorIndex === index
-            }"
-            :style="`background-color: hsl(${color?.h || 0}, ${color?.s || 0}%, ${color?.v || 0}%);`"
-            @click="color && selectColor(color, index)"
-          />
-        </div>
-        <!-- Fallback buttons if no options are available -->
-        <div v-if="(!state.colorOptions || state.colorOptions.length === 0) && imageLoaded" class="grid min-h-24 w-full grid-cols-3 gap-3 color-grid">
-          <button
-            v-for="index in 6"
-            :key="index"
-            class="min-h-16 rounded-lg bg-gray-300 dark:bg-gray-600 color-button"
-            disabled
-          ></button>
+          <template v-if="hasColorOptions">
+            <button
+              v-for="(color, index) in state.colorOptions"
+              :key="index"
+              class="min-h-16 rounded-lg transition-transform hover:scale-105 color-button"
+              :class="{
+                'border-2 border-transparent hover:border-white': selectedColorIndex !== index,
+                'border-4 border-white ring-2 ring-offset-2 selected': selectedColorIndex === index
+              }"
+              :style="`background-color: hsl(${color?.h || 0}, ${color?.s || 0}%, ${color?.v || 0}%);`"
+              @click="selectColor(color, index)"
+            />
+          </template>
+          <template v-else>
+            <div
+              v-for="index in 6"
+              :key="index"
+              class="min-h-16 rounded-lg bg-gray-300 dark:bg-gray-600"
+            />
+          </template>
         </div>
       </div>
     </div>
@@ -403,16 +406,19 @@ function toggleMagnifier() {
   aspect-ratio: 1/1;
   min-height: 3rem;
   border-radius: 0.5rem;
-  transition: transform 0.2s ease;
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .color-button:hover {
   transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .color-button.selected {
   border: 4px solid white;
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5);
+  transform: scale(1.05);
 }
 
 .image-container {

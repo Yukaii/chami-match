@@ -1,5 +1,7 @@
 import { reactive } from "vue";
 import { ContextualMode } from "./ContextualMode";
+import { generateFallbackColor, rgbToHsv } from "../../utils/colorUtils";  // Add rgbToHsv import
+import { findSuitableColorRegion } from "../../utils/imageUtils";
 import { preloadImage } from "../../utils/imageLoader";
 
 export class ImageMode extends ContextualMode {
@@ -76,77 +78,53 @@ export class ImageMode extends ContextualMode {
 			(imageElement.naturalWidth === 0 && imageElement.width === 0) ||
 			(imageElement.naturalHeight === 0 && imageElement.height === 0)) {
 			console.error("Invalid image element provided to selectRandomColorFromImage");
-			// Return a fallback color
-			return {
-				h: Math.floor(Math.random() * 360),
-				s: Math.floor(Math.random() * 70) + 30,
-				v: Math.floor(Math.random() * 70) + 30
-			};
+			return generateFallbackColor();
 		}
 
 		try {
-			// Use natural dimensions if available, otherwise fallback to display dimensions
 			const width = imageElement.naturalWidth || imageElement.width;
 			const height = imageElement.naturalHeight || imageElement.height;
 
 			console.log(`Successfully loaded image with dimensions: ${width}x${height}`);
 
-			// Create a canvas to analyze the image
 			const canvas = document.createElement("canvas");
 			const ctx = canvas.getContext("2d");
 
-			// Set canvas dimensions to match image
 			canvas.width = width;
 			canvas.height = height;
 
-			// Draw image onto canvas with error handling
 			try {
 				ctx.drawImage(imageElement, 0, 0, width, height);
 			} catch (e) {
 				console.error("Error drawing image to canvas:", e);
-				throw e;
+				return generateFallbackColor();
 			}
 
-			// Make sure the canvas contains data
 			let hasData = false;
 			try {
-				// Try to get a pixel to see if canvas has data
 				const testData = ctx.getImageData(width / 2, height / 2, 1, 1);
 				hasData = testData && testData.data && testData.data.length >= 4;
 			} catch (e) {
 				console.error("CORS issue detected when reading canvas data:", e);
-				// This is likely a CORS issue
 			}
 
 			if (!hasData) {
-				console.warn("Canvas appears to be empty or has CORS issues, using fallback color");
-				return {
-					h: Math.floor(Math.random() * 360),
-					s: Math.floor(Math.random() * 70) + 30,
-					v: Math.floor(Math.random() * 70) + 30
-				};
+				console.warn("Canvas appears to be empty or has CORS issues");
+				return generateFallbackColor();
 			}
 
-			// Find a region with enough color consistency
-			const { x, y, color } = this.findSuitableColorRegion(ctx, width, height);
+			const { x, y, color } = findSuitableColorRegion(ctx, width, height);
 
-			// Store target region for magnifying
 			this.state.targetRegion = {
 				x,
 				y,
 				radius: 20,
 			};
 
-			// Return the selected color
 			return color;
 		} catch (error) {
 			console.error("Error in selectRandomColorFromImage:", error);
-			// Return a fallback color
-			return {
-				h: Math.floor(Math.random() * 360),
-				s: Math.floor(Math.random() * 70) + 30,
-				v: Math.floor(Math.random() * 70) + 30
-			};
+			return generateFallbackColor();
 		}
 	}
 
@@ -167,7 +145,7 @@ export class ImageMode extends ContextualMode {
 				const centerColor = this.getPixelColorFromImageData(regionData, radius, radius);
 
 				// Convert RGB to HSV for our game state
-				const { h, s, v } = this.rgbToHsv(centerColor.r, centerColor.g, centerColor.b);
+				const { h, s, v } = rgbToHsv(centerColor.r, centerColor.g, centerColor.b);
 
 				// Set the flag when we have valid coordinates
 				this.state.targetRegionReady = true;
@@ -209,42 +187,6 @@ export class ImageMode extends ContextualMode {
 			g: imageData.data[index + 1],
 			b: imageData.data[index + 2],
 			a: imageData.data[index + 3]
-		};
-	}
-
-	rgbToHsv(r, g, b) {
-		r /= 255;
-		g /= 255;
-		b /= 255;
-
-		const max = Math.max(r, g, b);
-		const min = Math.min(r, g, b);
-		let h, s, v = max;
-
-		const d = max - min;
-		s = max === 0 ? 0 : d / max;
-
-		if (max === min) {
-			h = 0; // achromatic
-		} else {
-			switch (max) {
-				case r:
-					h = (g - b) / d + (g < b ? 6 : 0);
-					break;
-				case g:
-					h = (b - r) / d + 2;
-					break;
-				case b:
-					h = (r - g) / d + 4;
-					break;
-			}
-			h /= 6;
-		}
-
-		return {
-			h: Math.round(h * 360),
-			s: Math.round(s * 100),
-			v: Math.round(v * 100)
 		};
 	}
 
