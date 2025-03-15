@@ -285,7 +285,6 @@ const isDevMode = ref(import.meta.env.DEV);
 
 // Fixed size for inner color dot (in pixels)
 const innerColorDotSize = 10;
-
 </script>
 
 <template>

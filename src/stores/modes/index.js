@@ -1,5 +1,5 @@
-import { ImageMode } from "./ImageMode";
 import { ContextualMode } from "./ContextualMode";
+import { ImageMode } from "./ImageMode";
 import { RelativeMode } from "./RelativeMode";
 import { StandardMode } from "./StandardMode";
 

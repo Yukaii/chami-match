@@ -174,16 +174,18 @@ export class ImageMode extends ContextualMode {
 				prefetchPromises.push(
 					preloadImage(url)
 						.then(() => url)
-						.catch(() => null)
+						.catch(() => null),
 				);
 			}
 
 			// Wait for all images to load and filter out any failed loads
 			const results = await Promise.all(prefetchPromises);
-			const successfulUrls = results.filter(url => url !== null);
+			const successfulUrls = results.filter((url) => url !== null);
 			this.prefetchedImages.push(...successfulUrls);
 
-			console.log(`Prefetched ${successfulUrls.length} images. Queue size: ${this.prefetchedImages.length}`);
+			console.log(
+				`Prefetched ${successfulUrls.length} images. Queue size: ${this.prefetchedImages.length}`,
+			);
 		} catch (error) {
 			console.error("Error during batch prefetch:", error);
 		} finally {
@@ -329,7 +331,7 @@ export class ImageMode extends ContextualMode {
 			this.state.userColor = reactive({
 				h: 0,
 				s: 0,
-				v: 0
+				v: 0,
 			});
 		} else {
 			// Update existing userColor object
@@ -420,7 +422,7 @@ export class ImageMode extends ContextualMode {
 
 	async startRound() {
 		try {
-				// Make sure we have prefetched images before starting the round
+			// Make sure we have prefetched images before starting the round
 			if (this.prefetchedImages.length === 0 && !this.prefetchInProgress) {
 				console.log("No prefetched images available, starting batch prefetch");
 				await this.prefetchImageBatch();
