@@ -12,6 +12,7 @@
 | 標準モード         | <img src="./docs/screenshots/ja/light/mobile/game.png" width="400">     |
 | コンテキストモード | <img src="./docs/screenshots/ja/light/mobile/context-game.png" width="400"> |
 | 明度差モード       | <img src="./docs/screenshots/ja/light/mobile/relative-game.png" width="400"> |
+| 画像モード         | <img src="./docs/screenshots/ja/light/mobile/image-game.png" width="400">    |
 
 ### ダークモード
 
@@ -21,6 +22,7 @@
 | 標準モード         | <img src="./docs/screenshots/ja/dark/mobile/game.png" width="400">     |
 | コンテキストモード | <img src="./docs/screenshots/ja/dark/mobile/context-game.png" width="400"> |
 | 明度差モード       | <img src="./docs/screenshots/ja/dark/mobile/relative-game.png" width="400"> |
+| 画像モード         | <img src="./docs/screenshots/ja/dark/mobile/image-game.png" width="400">    |
 
 ## クレジット
 
