@@ -275,7 +275,8 @@ function resetSelection() {
 }
 
 // Development mode flag
-const isDevMode = ref(import.meta.env.DEV);
+// const isDevMode = ref(import.meta.env.DEV);
+const isDevMode = ref(false);
 
 // Fixed size for inner color dot (in pixels)
 const innerColorDotSize = 10;
