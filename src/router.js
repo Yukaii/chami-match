@@ -24,7 +24,7 @@ const routes = [
 		component: RelativeGameScreen,
 	},
 	{
-		path: "/color-game",
+		path: "/image-game",
 		component: ColorGameScreen,
 	},
 ];
