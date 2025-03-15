@@ -177,7 +177,7 @@ async function initializeImageMode() {
 
 // Initialize when component mounts
 onMounted(async () => {
-	console.log("ColorGameScreen mounted, initializing");
+	console.log("ImageGameScreen mounted, initializing");
 	await initializeImageMode();
 
 	// Add resize listener
