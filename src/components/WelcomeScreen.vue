@@ -25,7 +25,7 @@ function startRelativeGame() {
 }
 
 function startColorGame() {
-	store.updateGameType("color");
+	store.updateGameType("image");
 	store.startOver(); // Initialize a new game
 	router.push("/color-game");
 }

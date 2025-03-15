@@ -125,10 +125,10 @@ async function preloadImage(url) {
 	});
 }
 
-export class ColorMode extends ContextualMode {
+export class ImageMode extends ContextualMode {
 	constructor(options = {}) {
 		super(options);
-		this.type = "color";
+		this.type = "image";
 		this.viewCallbacks = {};
 	}
 

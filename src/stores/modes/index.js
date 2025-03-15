@@ -1,4 +1,4 @@
-import { ColorMode } from "./ColorMode";
+import { ImageMode } from "./ImageMode";
 import { ContextualMode } from "./ContextualMode";
 import { RelativeMode } from "./RelativeMode";
 import { StandardMode } from "./StandardMode";
@@ -11,12 +11,12 @@ export function createGameMode(type, options = {}) {
 			return new ContextualMode(options);
 		case "relative":
 			return new RelativeMode(options);
-		case "color":
-			return new ColorMode(options);
+		case "image":
+			return new ImageMode(options);
 		default:
 			console.warn(`Unknown game mode: ${type}, defaulting to standard`);
 			return new StandardMode(options);
 	}
 }
 
-export { StandardMode, ContextualMode, RelativeMode, ColorMode };
+export { StandardMode, ContextualMode, RelativeMode, ImageMode };

@@ -8,7 +8,7 @@ import {
 	watch,
 } from "vue";
 import { useGameStore } from "../stores/game";
-import { ColorMode } from "../stores/modes/ColorMode";
+import { ImageMode } from "../stores/modes/ImageMode";
 import GameNavBar from "./GameNavBar.vue";
 import HealthBar from "./HealthBar.vue";
 import Toolbar from "./Toolbar.vue";
@@ -132,14 +132,14 @@ function updateImageDimensions() {
 }
 
 // Initialize the ColorMode
-async function initializeColorMode() {
-	console.log("Initializing color mode, current state:", {
+async function initializeImageMode() {
+	console.log("Initializing image mode, current state:", {
 		gameType: store.gameType,
 		hasGameMode: !!store.currentGameMode,
 	});
 
 	// Force the game type to color
-	store.updateGameType("color");
+	store.updateGameType("image");
 
 	// Create a fresh start
 	await new Promise((resolve) => setTimeout(resolve, 50));
@@ -147,9 +147,9 @@ async function initializeColorMode() {
 	await new Promise((resolve) => setTimeout(resolve, 100));
 
 	// Create new ColorMode instance if needed
-	if (!store.currentGameMode || store.currentGameMode.type !== "color") {
-		console.log("Creating ColorMode instance");
-		colorMode.value = new ColorMode({
+	if (!store.currentGameMode || store.currentGameMode.type !== "image") {
+		console.log("Creating ImageMode instance");
+		colorMode.value = new ImageMode({
 			colorMode: store.mode,
 			precision: store.precision,
 			realtimePreview: store.realtimePreview,
@@ -177,7 +177,7 @@ async function initializeColorMode() {
 // Initialize when component mounts
 onMounted(async () => {
 	console.log("ColorGameScreen mounted, initializing");
-	await initializeColorMode();
+	await initializeImageMode();
 
 	// Add resize listener
 	window.addEventListener("resize", updateImageDimensions);
@@ -199,7 +199,7 @@ async function handleImageLoad() {
 		// Ensure colorMode is initialized
 		if (!colorMode.value?.state) {
 			console.log("Reinitializing color mode state");
-			await initializeColorMode();
+			await initializeImageMode();
 		}
 
 		const extractedColor = await colorMode.value.selectRandomColorFromImage(
