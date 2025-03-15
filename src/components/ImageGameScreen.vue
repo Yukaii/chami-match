@@ -72,6 +72,7 @@ const currentColorOptions = computed(() => {
 function getAdjustedPosition(x, y) {
   if (!imageElement.value || !imageContainerRef.value ||
       typeof x !== 'number' || typeof y !== 'number') {
+    console.log('Invalid inputs for position adjustment:', { x, y, imageElement: !!imageElement.value });
     return { x: 0, y: 0 };
   }
 
@@ -90,6 +91,15 @@ function getAdjustedPosition(x, y) {
     // Apply scaling to the coordinates
     const scaledX = x * scaleX + imageOffsetX;
     const scaledY = y * scaleY + imageOffsetY;
+
+    console.log('Position calculation:', {
+      original: { x, y },
+      scaled: { x: scaledX, y: scaledY },
+      scale: { x: scaleX, y: scaleY },
+      offset: { x: imageOffsetX, y: imageOffsetY },
+      imageRect,
+      containerRect
+    });
 
     return {
       x: scaledX,
@@ -256,6 +266,9 @@ function resetSelection() {
 function toggleMagnifier() {
   showMagnifier.value = !showMagnifier.value;
 }
+
+// Remove the isDev computed property and add isDevMode ref
+const isDevMode = ref(import.meta.env.DEV);
 </script>
 
 <template>
@@ -315,6 +328,10 @@ function toggleMagnifier() {
               transformOrigin: 'center',
               zIndex: 10
             }"
+            @vue:mounted="() => console.log('Magnifier mounted with position:', {
+              x: getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).x,
+              y: getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).y
+            })"
           >
             <img
               :src="state.currentModeState.imageUrl"
@@ -352,6 +369,18 @@ function toggleMagnifier() {
           <span v-if="showMagnifier">{{ $t('gameModes.image.toggleMagnifier.hide') }}</span>
           <span v-else>{{ $t('gameModes.image.toggleMagnifier.show') }}</span>
         </button>
+
+        <!-- Add debug overlay -->
+        <div
+          v-if="isDevMode && imageLoaded && !imageProcessing && getTargetRegion"
+          class="absolute top-0 left-0 bg-black/50 text-white p-2 text-xs"
+        >
+          <div>Target: {{ getTargetRegion.x }}, {{ getTargetRegion.y }}</div>
+          <div>Adjusted: {{ getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).x }},
+               {{ getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).y }}</div>
+          <div>Scale: {{ imageScaleFactor.x }}, {{ imageScaleFactor.y }}</div>
+          <div>Image: {{ displayedImageWidth }}x{{ displayedImageHeight }}</div>
+        </div>
       </div>
 
       <!-- Color selection options - Simplified to show only one grid -->
