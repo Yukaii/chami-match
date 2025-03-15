@@ -42,34 +42,26 @@ export class ImageMode extends ContextualMode {
 		this.state.userColor.v = 0;
 	}
 
+	// Simplified fetchRandomImage method:
 	async fetchRandomImage() {
-		// Clear previous state first
 		this.state.imageLoading = true;
+		// Clear previous image and target region
 		this.state.imageUrl = null;
-		this.state.targetRegion = {
-			x: 0, y: 0,
-			radius: 20,
-			targetRegionReady: false
-		};
-
+		Object.assign(this.state.targetRegion, { x: 0, y: 0, radius: 20, targetRegionReady: false });
 		try {
 			const reliableImageIds = [237, 24, 36, 37, 43, 76, 101, 133, 164, 197, 219, 230, 301, 334, 338, 396,
-									25, 27, 29, 30, 33, 42, 60, 67, 100, 151, 200];
+				25, 27, 29, 30, 33, 42, 60, 67, 100, 151, 200];
 			const randomId = reliableImageIds[Math.floor(Math.random() * reliableImageIds.length)];
 			const size = 600;
 			const url = `https://picsum.photos/id/${randomId}/${size}/${size}`;
-
-			// Ensure image is fully loaded before setting URL
-			await preloadImage(url);
-
-			console.log("Image preloaded successfully:", url);
+			// Attempt preloading but continue even if it fails.
+			await preloadImage(url).catch(e => console.warn("Preload failed; using URL:", url, e));
 			this.state.imageUrl = url;
 			return url;
 		} catch (error) {
 			console.error("Error fetching random image:", error);
-			const fallbackUrl = "https://picsum.photos/id/237/600/600";
-			this.state.imageUrl = fallbackUrl;
-			return fallbackUrl;
+			this.state.imageUrl = "https://picsum.photos/600/600";
+			return this.state.imageUrl;
 		} finally {
 			this.state.imageLoading = false;
 		}
@@ -212,37 +204,18 @@ export class ImageMode extends ContextualMode {
 		};
 	}
 
+	// Simplified startRound method:
 	async startRound() {
 		try {
-				// Initialize target region with default values
-				this.state.targetRegion = {
-					x: 0,
-					y: 0,
-					radius: 20,
-				};
-
-				// Start by fetching a new image URL
-				const imageUrl = await this.fetchRandomImage();
-
-				// Try to preload the image
-				try {
-					const preloadedImage = await preloadImage(imageUrl);
-					console.log("Image preloaded successfully, dimensions:",
-						preloadedImage.width, "x", preloadedImage.height);
-				} catch (err) {
-					console.warn("Image preloading failed, will still continue with URL:", imageUrl);
-				}
-
-				// Reset user color
-				this.resetUserInput();
-
-				// Call the onNewRound callback if registered
-				if (this.viewCallbacks && typeof this.viewCallbacks.onNewRound === "function") {
-					this.viewCallbacks.onNewRound();
-				}
-			} catch (error) {
-				console.error("Error in startRound:", error);
+			// Fetch new image and update state.
+			await this.fetchRandomImage();
+			this.resetUserInput();
+			if (this.viewCallbacks && typeof this.viewCallbacks.onNewRound === "function") {
+				this.viewCallbacks.onNewRound();
 			}
+		} catch (error) {
+			console.error("Error in startRound:", error);
+		}
 	}
 
 	// Set target color from analyzed image and generate options with better error handling
@@ -327,5 +300,17 @@ export class ImageMode extends ContextualMode {
 			console.error("Error generating color options:", error);
 			return Array(6).fill().map(() => generateFallbackColor());
 		}
+	}
+
+  checkGuess() {
+		const precision = this.options.precision || 10;
+		const hIsGood =
+			Math.abs(this.state.randomColor.h - this.state.userColor.h) <= precision;
+		const sIsGood =
+			Math.abs(this.state.randomColor.s - this.state.userColor.s) <= precision;
+		const vIsGood =
+			Math.abs(this.state.randomColor.v - this.state.userColor.v) <= precision;
+
+		return hIsGood && sIsGood && vIsGood;
 	}
 }

@@ -394,6 +394,7 @@ watch([displayedImageWidth, displayedImageHeight], ([width, height]) => {
         <div class="relative w-full h-full flex items-center justify-center">
           <img
             v-if="state.currentModeState?.imageUrl"
+            :key="state.currentModeState.imageUrl"
             ref="imageElement"
             :src="state.currentModeState.imageUrl"
             alt="Random image for color matching"

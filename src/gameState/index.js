@@ -454,18 +454,24 @@ export const useGlobalGameState = createGlobalState(() => {
 		return lastTriesOfEachRound.value;
 	}
 
-	// Initialize without starting a game
-	if (!currentSession.value) {
-		const session = createSession({
-			maxLife: maxLife.value,
-			precision: precision.value,
-			mode: mode.value,
-			gameType: gameType.value,
-		});
-		currentSession.value = session;
-		sessions.value.push(session);
-		initGameMode();
-	}
+// Before initializing a session, force new session for image mode
+if (gameType.value === "image") {
+	// Clear any persisted session for image mode
+	currentSession.value = null;
+}
+
+// Initialize without starting a game
+if (!currentSession.value) {
+	const session = createSession({
+		maxLife: maxLife.value,
+		precision: precision.value,
+		mode: mode.value,
+		gameType: gameType.value,
+	});
+	currentSession.value = session;
+	sessions.value.push(session);
+	initGameMode();
+}
 
 	function updateModeState(newState) {
 		if (!currentGameMode.value?.state) {
