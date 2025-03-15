@@ -174,7 +174,7 @@ export class ColorMode extends ContextualMode {
 		try {
 			// Use completely random images instead of predefined IDs
 			const size = 600;
-			const url = `https://picsum.photos/${size}/${size}`;
+			const url = `https://picsum.photos/${size}/${size}?_=${Date.now()}`;
 
 			// Attempt preloading but continue even if it fails
 			await preloadImage(url).catch((e) =>
@@ -184,7 +184,7 @@ export class ColorMode extends ContextualMode {
 			return url;
 		} catch (error) {
 			console.error("Error fetching random image:", error);
-			this.state.imageUrl = "https://picsum.photos/600/600";
+			this.state.imageUrl = url;
 			return this.state.imageUrl;
 		} finally {
 			this.state.imageLoading = false;
