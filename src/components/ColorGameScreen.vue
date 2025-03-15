@@ -23,10 +23,10 @@ const imageElement = ref(null);
 // Track selected color index
 const selectedColorIndex = ref(-1);
 
-// Magnifier properties
-const magnifierSize = ref(40); // Reduced from 100 to 80
-const magnifierZoom = ref(2);
-const showMagnifier = ref(true);
+// Target circle properties (renamed from magnifier)
+const targetCircleSize = ref(40);
+const targetCircleZoom = ref(2);
+const showTargetCircle = ref(true);
 
 // Direct reference to ColorMode implementation
 const colorMode = ref(null);
@@ -274,9 +274,9 @@ function resetSelection() {
 	}
 }
 
-// Toggle magnifier
-function toggleMagnifier() {
-	showMagnifier.value = !showMagnifier.value;
+// Toggle target circle visibility (renamed from toggleMagnifier)
+function toggleTargetCircle() {
+	showTargetCircle.value = !showTargetCircle.value;
 }
 
 // Development mode flag
@@ -300,8 +300,8 @@ const answerColorStyle = computed(() => {
   };
 });
 
-// Fixed size for target circle (in pixels)
-const targetCircleSize = 4;
+// Fixed size for inner color dot (in pixels)
+const innerColorDotSize = 4;
 
 </script>
 
@@ -331,7 +331,7 @@ const targetCircleSize = 4;
           <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pink-500"></div>
         </div>
 
-        <!-- Image with magnifier -->
+        <!-- Image with target circle -->
         <div class="relative w-full h-full flex items-center justify-center">
           <img
             v-if="store.currentModeState?.imageUrl"
@@ -345,44 +345,44 @@ const targetCircleSize = 4;
             @error="console.error('Image failed to load:', store.currentModeState.imageUrl)"
           />
 
-          <!-- Magnifier overlay -->
+          <!-- Target circle overlay (formerly magnifier) -->
           <div
-            v-if="showMagnifier && imageLoaded && !imageProcessing &&
+            v-if="showTargetCircle && imageLoaded && !imageProcessing &&
                   getTargetRegion?.x !== undefined"
             class="absolute pointer-events-none border-2 border-white shadow-lg overflow-hidden rounded-full"
             :style="{
-              width: `${magnifierSize}px`,
-              height: `${magnifierSize}px`,
-              top: `${getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).y - magnifierSize/2}px`,
-              left: `${getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).x - magnifierSize/2}px`,
-              transform: `scale(${magnifierZoom})`,
+              width: `${targetCircleSize}px`,
+              height: `${targetCircleSize}px`,
+              top: `${getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).y - targetCircleSize/2}px`,
+              left: `${getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).x - targetCircleSize/2}px`,
+              transform: `scale(${targetCircleZoom})`,
               transformOrigin: 'center',
               zIndex: 10
             }"
           >
           </div>
 
-          <!-- Target circle - now with answer color and fixed size -->
+          <!-- Color dot - shows answer color -->
           <div
-            v-if="showMagnifier && imageLoaded && !imageProcessing && getTargetRegion?.x !== undefined"
+            v-if="showTargetCircle && imageLoaded && !imageProcessing && getTargetRegion?.x !== undefined"
             class="absolute rounded-full border-2 pointer-events-none"
             :style="{
-              width: `${targetCircleSize}px`,
-              height: `${targetCircleSize}px`,
-              top: `${getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).y - targetCircleSize/2}px`,
-              left: `${getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).x - targetCircleSize/2}px`,
+              width: `${innerColorDotSize}px`,
+              height: `${innerColorDotSize}px`,
+              top: `${getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).y - innerColorDotSize/2}px`,
+              left: `${getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).x - innerColorDotSize/2}px`,
               ...answerColorStyle
             }"
           ></div>
         </div>
 
-        <!-- Toggle magnifier button -->
+        <!-- Toggle target circle button (renamed from magnifier) -->
         <button
           v-if="imageLoaded && !imageProcessing"
           class="absolute top-2 right-2 bg-white dark:bg-gray-700 p-2 rounded-full shadow-md text-sm"
-          @click="toggleMagnifier"
+          @click="toggleTargetCircle"
         >
-          <span v-if="showMagnifier">{{ $t('gameModes.color.toggleMagnifier.hide') }}</span>
+          <span v-if="showTargetCircle">{{ $t('gameModes.color.toggleMagnifier.hide') }}</span>
           <span v-else>{{ $t('gameModes.color.toggleMagnifier.show') }}</span>
         </button>
 
@@ -479,12 +479,13 @@ const targetCircleSize = 4;
   image-rendering: -webkit-optimize-contrast;
 }
 
-.magnifier {
+/* Renamed class from magnifier to target-circle */
+.target-circle {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
 
-.magnifier img {
+.target-circle img {
   object-fit: cover;
   image-rendering: pixelated;
   image-rendering: -webkit-optimize-contrast;
