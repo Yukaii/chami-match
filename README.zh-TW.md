@@ -12,6 +12,7 @@
 | 標準模式         | <img src="./docs/screenshots/zh-TW/light/mobile/game.png" width="400">    |
 | 情境模式         | <img src="./docs/screenshots/zh-TW/light/mobile/context-game.png" width="400"> |
 | 亮度差異模式     | <img src="./docs/screenshots/zh-TW/light/mobile/relative-game.png" width="400"> |
+| 圖片模式         | <img src="./docs/screenshots/zh-TW/light/mobile/image-game.png" width="400">    |
 
 ### 暗黑模式
 
@@ -21,6 +22,7 @@
 | 標準模式         | <img src="./docs/screenshots/zh-TW/dark/mobile/game.png" width="400">    |
 | 情境模式         | <img src="./docs/screenshots/zh-TW/dark/mobile/context-game.png" width="400"> |
 | 亮度差異模式     | <img src="./docs/screenshots/zh-TW/dark/mobile/relative-game.png" width="400"> |
+| 圖片模式         | <img src="./docs/screenshots/zh-TW/dark/mobile/image-game.png" width="400">    |
 
 ## 致謝
 
