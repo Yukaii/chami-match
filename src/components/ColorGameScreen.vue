@@ -12,6 +12,7 @@ import { ImageMode } from "../stores/modes/ImageMode";
 import GameNavBar from "./GameNavBar.vue";
 import HealthBar from "./HealthBar.vue";
 import Toolbar from "./Toolbar.vue";
+import BaseButton from "./base/BaseButton.vue"; // Add BaseButton import
 
 const store = useGameStore();
 
@@ -360,15 +361,17 @@ const innerColorDotSize = 10;
           ></div>
         </div>
 
-        <!-- Toggle target circle button -->
-        <button
+        <!-- Toggle target circle button - replaced with BaseButton -->
+        <BaseButton
           v-if="imageLoaded && !imageProcessing"
-          class="absolute top-2 right-2 bg-white dark:bg-gray-700 p-2 rounded-full shadow-md text-sm"
+          variant="secondary"
+          size="sm"
+          class="absolute top-2 right-2"
           @click="toggleTargetCircle"
         >
           <span v-if="showTargetCircle">{{ $t('gameModes.color.toggleTargetCircle.hide') }}</span>
           <span v-else>{{ $t('gameModes.color.toggleTargetCircle.show') }}</span>
-        </button>
+        </BaseButton>
 
         <!-- Debug overlay for development -->
         <div
