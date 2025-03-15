@@ -24,7 +24,7 @@ const imageElement = ref(null);
 const selectedColorIndex = ref(-1);
 
 // Magnifier properties
-const magnifierSize = ref(100);
+const magnifierSize = ref(40); // Reduced from 100 to 80
 const magnifierZoom = ref(2);
 const showMagnifier = ref(true);
 
@@ -282,23 +282,27 @@ function toggleMagnifier() {
 // Development mode flag
 const isDevMode = ref(import.meta.env.DEV);
 
-// Watch for region updates
-watch(
-	() => getTargetRegion.value,
-	(newRegion) => {
-		if (newRegion && imageLoaded.value) {
-			getAdjustedPosition(newRegion.x, newRegion.y);
-		}
-	},
-	{ deep: true },
-);
+// Replace selectedColorStyle with answerColorStyle to show the correct answer color
+const answerColorStyle = computed(() => {
+  // Get the answer color from the game state
+  const answerColor = colorMode.value?.state?.randomColor ||
+                     store.currentModeState?.randomColor;
 
-// Watch for dimension changes
-watch([displayedImageWidth, displayedImageHeight], () => {
-	if (getTargetRegion.value) {
-		getAdjustedPosition(getTargetRegion.value.x, getTargetRegion.value.y);
-	}
+  if (answerColor) {
+    return {
+      backgroundColor: `hsla(${answerColor.h || 0}, ${answerColor.s || 0}%, ${answerColor.v || 0}%, 0.7)`,
+      borderColor: 'white'
+    };
+  }
+  return {
+    backgroundColor: 'transparent',
+    borderColor: 'white'
+  };
 });
+
+// Fixed size for target circle (in pixels)
+const targetCircleSize = 4;
+
 </script>
 
 <template>
@@ -345,7 +349,7 @@ watch([displayedImageWidth, displayedImageHeight], () => {
           <div
             v-if="showMagnifier && imageLoaded && !imageProcessing &&
                   getTargetRegion?.x !== undefined"
-            class="absolute pointer-events-none border-4 border-white shadow-lg overflow-hidden rounded-full"
+            class="absolute pointer-events-none border-2 border-white shadow-lg overflow-hidden rounded-full"
             :style="{
               width: `${magnifierSize}px`,
               height: `${magnifierSize}px`,
@@ -356,20 +360,18 @@ watch([displayedImageWidth, displayedImageHeight], () => {
               zIndex: 10
             }"
           >
-            <!-- Image overlay removed from here -->
           </div>
 
-          <!-- Target circle -->
+          <!-- Target circle - now with answer color and fixed size -->
           <div
-            v-if="imageLoaded && !imageProcessing && getTargetRegion?.x !== undefined"
-            class="absolute rounded-full border-2 border-white pointer-events-none"
+            v-if="showMagnifier && imageLoaded && !imageProcessing && getTargetRegion?.x !== undefined"
+            class="absolute rounded-full border-2 pointer-events-none"
             :style="{
-              width: `${(getTargetRegion.radius || 20) * 2 * imageScaleFactor.x}px`,
-              height: `${(getTargetRegion.radius || 20) * 2 * imageScaleFactor.y}px`,
-              top: `${getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).y -
-                    ((getTargetRegion.radius || 20) * imageScaleFactor.y)}px`,
-              left: `${getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).x -
-                    ((getTargetRegion.radius || 20) * imageScaleFactor.x)}px`
+              width: `${targetCircleSize}px`,
+              height: `${targetCircleSize}px`,
+              top: `${getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).y - targetCircleSize/2}px`,
+              left: `${getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).x - targetCircleSize/2}px`,
+              ...answerColorStyle
             }"
           ></div>
         </div>
