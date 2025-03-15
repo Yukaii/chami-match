@@ -112,7 +112,7 @@
 		"color": {
 			"name": "画像カラーモード",
 			"description": "実際の画像から色を一致させる - コンテキスト内での色知覚をテスト！",
-			"instructions": "画像内のハイライトされた領域に一致する色を選んでください",
+			"instructions": "画像内の円の中の色と一致する色を選んでください",
 			"selectPrompt": "一致する色を選択：",
 			"lastSelection": "前回の選択：",
 			"toggleMagnifier": {
