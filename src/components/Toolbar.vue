@@ -10,7 +10,7 @@
             :is3d="false"
           >
             <ph-arrows-clockwise :size="20" />
-            <span class="ml-2">{{ state.currentRound }}</span>
+            <span class="ml-2">{{ store.currentRound }}</span>
           </BaseButton>
           <template #tooltip>{{ $t('roundCount') }}</template>
         </BaseTooltip>
@@ -24,7 +24,7 @@
             :class="className"
           >
             <ph-hand-fist :size="20" />
-            <span class="ml-2">{{ state.winningStreak }}</span>
+            <span class="ml-2">{{ store.winningStreak }}</span>
           </BaseButton>
           <template #tooltip>{{ $t('comboCount') }}</template>
         </BaseTooltip>
@@ -37,7 +37,7 @@
             :is3d="false"
           >
             <ph-chart-line :size="20" />
-            <span class="ml-2">{{ state.winRate.value }}</span>
+            <span class="ml-2">{{ store.winRate }}</span>
           </BaseButton>
           <template #tooltip>{{ $t('winningRate') }}</template>
         </BaseTooltip>
@@ -47,7 +47,7 @@
     <div class="flex gap-2">
       <slot name="right">
         <BaseTooltip>
-          <BaseButton variant="primary" size="sm" @click="state.toggleRecordPopup(true)">
+          <BaseButton variant="primary" size="sm" @click="store.toggleRecordPopup()">
             <ph-clock-counter-clockwise :size="20" />
           </BaseButton>
           <template #tooltip>{{ $t('gameRecord.title') }}</template>
@@ -61,7 +61,7 @@
         </BaseTooltip>
 
         <BaseTooltip>
-          <BaseButton variant="primary" size="sm" @click="state.toggleAboutPopup(true)">
+          <BaseButton variant="primary" size="sm" @click="store.toggleAboutPopup()">
             <ph-question :size="20" />
           </BaseButton>
           <template #tooltip>{{ $t('about.title') }}</template>
@@ -80,24 +80,26 @@ import {
 	PhHandFist,
 	PhQuestion,
 } from "@phosphor-icons/vue";
-import { useGlobalGameState } from "../gameState";
+import { computed, ref, watch } from "vue";
+import { useGameStore } from "../stores/game";
 import { cn } from "../utils/index";
 
 import BaseButton from "./base/BaseButton.vue";
 import BaseTooltip from "./base/BaseTooltip.vue";
 
-const state = useGlobalGameState();
+const store = useGameStore();
 
 function openSettings() {
-	state.settingsMode = "game";
-	state.toggleSettingsPopup(true);
+	store.settingsMode = "game";
+	store.toggleSettingsPopup();
 }
 
 const isShaking = ref(false);
 const isFlipping = ref(false);
 
+// Fix: Watch the store getters directly with proper function
 watch(
-	[state.winningStreak, state.currentRound],
+	() => [store.winningStreak, store.currentRound],
 	([count, round], [prevCount, prevRound]) => {
 		if (round === 1) {
 			// round reset

@@ -1,32 +1,32 @@
 <script setup>
 import { useRouter } from "vue-router";
-import { useGlobalGameState } from "../gameState";
+import { useGameStore } from "../stores/game";
 import BaseButton from "./base/BaseButton.vue";
 
-const state = useGlobalGameState();
+const store = useGameStore();
 const router = useRouter();
 
 function startStandardGame() {
-	state.updateGameType("standard");
-	state.startOver(); // Initialize a new game
+	store.updateGameType("standard");
+	store.startOver(); // Initialize a new game
 	router.push("/game");
 }
 
 function startContextualGame() {
-	state.updateGameType("contextual");
-	state.startOver(); // Initialize a new game
+	store.updateGameType("contextual");
+	store.startOver(); // Initialize a new game
 	router.push("/context-game");
 }
 
 function startRelativeGame() {
-	state.updateGameType("relative");
-	state.startOver(); // Initialize a new game
+	store.updateGameType("relative");
+	store.startOver(); // Initialize a new game
 	router.push("/relative-game");
 }
 
 function openSettings() {
-	state.settingsMode = "global";
-	state.toggleSettingsPopup();
+	store.settingsMode = "global";
+	store.toggleSettingsPopup();
 }
 </script>
 
@@ -87,7 +87,7 @@ function openSettings() {
       <BaseButton
         variant="secondary"
         full-width
-        @click="state.toggleAboutPopup()"
+        @click="store.toggleAboutPopup()"
       >
         {{ $t('about.title') }}
       </BaseButton>

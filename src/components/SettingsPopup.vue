@@ -1,5 +1,5 @@
 <template>
-  <Modal size="medium" :is-open="settingsPopupOpen" @on-close="onClose">
+  <Modal size="medium" :is-open="store.settingsPopupOpen" @on-close="onClose">
     <div class="mb-4 text-center text-lg font-bold text-gray-900 dark:text-white">{{ $t('settings.title') }}</div>
 
     <!-- UI Options -->
@@ -64,12 +64,12 @@
     </div>
 
     <!-- Game Options - Only shown in game mode -->
-    <div v-if="state.settingsMode === 'game'">
+    <div v-if="store.settingsMode === 'game'">
       <div class="mb-2 text-xl font-bold text-gray-900 dark:text-white">{{ $t('settings.gameOptions') }}</div>
       <hr class="mb-4 border-gray-400" />
 
       <!-- Precision - Only shown when NOT in contextual mode -->
-      <div v-if="state.gameType.value !== 'contextual'" class="mb-4">
+      <div v-if="store.gameType.value !== 'contextual'" class="mb-4">
         <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.precision.label') }}</label>
         <div class="flex space-x-2">
           <BaseButton
@@ -103,7 +103,7 @@
       </div>
 
       <!-- Max Tries -->
-      <div v-if="state.gameType.value !== 'contextual'" class="mb-4">
+      <div v-if="store.gameType.value !== 'contextual'" class="mb-4">
         <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.maxTries.label') }}</label>
         <div class="flex space-x-2">
           <BaseButton
@@ -157,7 +157,7 @@
         variant="danger"
         fullWidth
         is3d
-        @click="state.toggleResetPopup(true)"
+        @click="store.toggleResetPopup(true)"
       >
         {{ $t('settings.resetGameData') }}
       </BaseButton>
@@ -169,12 +169,11 @@
 import { PhDeviceMobile, PhMoon, PhSun } from "@phosphor-icons/vue";
 import { onMounted, reactive, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { useGlobalGameState } from "../gameState";
+import { useGameStore } from "../stores/game";
 import BaseButton from "./base/BaseButton.vue";
 
 const { locale, t: $t } = useI18n();
-const state = useGlobalGameState();
-const settingsPopupOpen = state.settingsPopupOpen;
+const store = useGameStore();
 const languages = [
 	{ code: "zh-TW", label: "繁體中文" },
 	{ code: "en", label: "English" },
@@ -182,11 +181,11 @@ const languages = [
 ];
 const settings = reactive({
 	language: localStorage.getItem("lang") || navigator.language || "zh-TW",
-	precision: state.precision.value,
-	mode: state.mode.value,
-	maxTries: state.maxLife.value,
-	realtimePreview: state.realtimePreview.value,
-	enableConfetti: true, // Default to enabled
+	precision: store.precision,
+	mode: store.mode,
+	maxTries: store.maxLife,
+	realtimePreview: store.realtimePreview,
+	enableConfetti: store.preferences.enableConfetti || true,
 });
 
 // Theme handling
@@ -220,26 +219,30 @@ function setTheme(theme) {
 }
 
 const onClose = () => {
-	state.toggleSettingsPopup(false);
+	store.toggleSettingsPopup();
 };
 
-watch(state.settingsPopupOpen, () => {
-	if (state.settingsPopupOpen) {
-		settings.precision = state.precision.value;
-		settings.mode = state.mode.value;
-		settings.maxTries = state.maxLife.value;
-		settings.realtimePreview = state.realtimePreview.value;
-		settings.enableConfetti = state.preferences?.value?.enableConfetti ?? true;
-	}
-});
+// Fix: Watch the store property directly
+watch(
+	() => store.settingsPopupOpen,
+	(isOpen) => {
+		if (isOpen) {
+			settings.precision = store.precision;
+			settings.mode = store.mode;
+			settings.maxTries = store.maxLife;
+			settings.realtimePreview = store.realtimePreview;
+			settings.enableConfetti = store.preferences.enableConfetti ?? true;
+		}
+	},
+);
 
 const onApply = () => {
-	state.updatePrecision(settings.precision);
-	state.updateMode(settings.mode);
-	state.updateMaxLife(settings.maxTries);
-	state.updateRealtimePreview(settings.realtimePreview);
-	state.updateConfetti(settings.enableConfetti);
-	state.startOver();
+	store.updatePrecision(settings.precision);
+	store.updateMode(settings.mode);
+	store.updateMaxLife(settings.maxTries);
+	store.updateRealtimePreview(settings.realtimePreview);
+	store.updateConfetti(settings.enableConfetti);
+	store.startOver();
 	onClose();
 };
 
@@ -249,14 +252,12 @@ const handleChangeLanguage = (lang) => {
 	localStorage.setItem("lang", lang);
 
 	// Also save confetti setting when changing language
-	state.updateConfetti(settings.enableConfetti);
+	store.updateConfetti(settings.enableConfetti);
 };
 
 onMounted(() => {
-	if (currentTheme && ["system", "dark", "light"].includes(currentTheme)) {
-		currentTheme.value = savedTheme;
-	} else {
-		// Default to system theme if no preference is saved
+	// Ensure currentTheme.value has a valid value
+	if (!["system", "dark", "light"].includes(currentTheme.value)) {
 		currentTheme.value = "system";
 	}
 

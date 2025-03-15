@@ -1,5 +1,5 @@
 <template>
-  <Modal :is-open="resetPopupOpen" @on-close="onClose">
+  <Modal :is-open="store.resetPopupOpen" @on-close="onClose">
     <div class="mb-4 text-center text-lg font-bold text-white">{{ $t('reset.title') }}</div>
 
     <p class="mb-6 text-center text-white">{{ $t('reset.message') }}</p>
@@ -27,18 +27,17 @@
 </template>
 
 <script setup>
-import { resetGameData, useGlobalGameState } from "../gameState";
+import { useGameStore } from "../stores/game";
 import BaseButton from "./base/BaseButton.vue";
 
-const state = useGlobalGameState();
-const resetPopupOpen = state.resetPopupOpen;
+const store = useGameStore();
 
 const onClose = () => {
-	state.toggleResetPopup(false);
+	store.toggleResetPopup();
 };
 
 const confirmReset = () => {
-	resetGameData();
+	store.resetGameData();
 	onClose();
 };
 </script>

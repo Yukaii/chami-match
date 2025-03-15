@@ -1,16 +1,17 @@
 <script setup>
-import { useGlobalGameState } from "../gameState";
+import { computed, ref, watch } from "vue";
+import { useGameStore } from "../stores/game";
 import GameNavBar from "./GameNavBar.vue";
 import BaseButton from "./base/BaseButton.vue";
 import BaseSlider from "./base/BaseSlider.vue";
 
-const state = useGlobalGameState();
-const mode = state.mode;
-const realtimePreview = state.realtimePreview;
+const store = useGameStore();
+const mode = computed(() => store.mode);
+const realtimePreview = computed(() => store.realtimePreview);
 
-const userH = ref(state.userColor.h);
-const userS = ref(state.userColor.s);
-const userV = ref(state.userColor.v);
+const userH = ref(store.userColor?.h || 0);
+const userS = ref(store.userColor?.s || 0);
+const userV = ref(store.userColor?.v || 0);
 
 const hsv = computed(() => {
 	const hsv = [
@@ -26,13 +27,13 @@ const hsv = computed(() => {
 });
 
 const submit = () => {
-	state.updateUserColor(...hsv.value);
-	state.checkGuess();
+	store.updateUserColor(...hsv.value);
+	store.checkGuess();
 };
 
 watch([hsv, realtimePreview], () => {
 	if (realtimePreview.value) {
-		state.updateUserColor(...hsv.value);
+		store.updateUserColor(...hsv.value);
 	}
 });
 </script>
@@ -49,8 +50,8 @@ watch([hsv, realtimePreview], () => {
     </div>
 
     <div class="flex gap-2">
-      <ColorBlock :color="state.randomColor" />
-      <ColorBlock :color="state.userColor" />
+      <ColorBlock :color="store.randomColor" />
+      <ColorBlock :color="store.userColor" />
     </div>
 
     <!-- Sliders and Submit Button -->

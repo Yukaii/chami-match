@@ -1,5 +1,5 @@
 <template>
-  <Modal :is-open="recordPopupOpen" size="medium" @on-close="onClose">
+  <Modal :is-open="store.recordPopupOpen" size="medium" @on-close="onClose">
     <div class="mb-4 text-center text-lg font-bold text-white">{{ $t('gameRecord.title') }}</div>
 
     <div v-if="!hasRecords" class="py-8 text-center text-gray-400">
@@ -187,38 +187,22 @@
 
 <script setup>
 import { computed, onMounted, ref, watch } from "vue";
-import { useGlobalGameState } from "../gameState";
+import { useGameStore } from "../stores/game";
 
-const state = useGlobalGameState();
-const recordPopupOpen = state.recordPopupOpen;
+const store = useGameStore();
 const filterType = ref("all");
 const recordsPerPage = 10;
 const currentPage = ref(1);
 const recordsLoaded = ref(false);
 const rawRecords = ref([]);
 
-// Force extract records from the computed property
+// Function to extract records from the Pinia store
 function extractRecords() {
 	try {
-		console.log("Extracting records from state...");
-		// Try to access the actual array value directly
-		if (
-			state.lastTriesOfEachRound &&
-			Array.isArray(state.lastTriesOfEachRound.value)
-		) {
-			rawRecords.value = state.lastTriesOfEachRound.value;
-			console.log("Extracted records from .value:", rawRecords.value);
-		} else if (Array.isArray(state.lastTriesOfEachRound)) {
-			rawRecords.value = state.lastTriesOfEachRound;
-			console.log("Extracted records directly:", rawRecords.value);
-		} else {
-			console.warn(
-				"Could not extract records, invalid format:",
-				state.lastTriesOfEachRound,
-			);
-			rawRecords.value = [];
-		}
-
+		console.log("Extracting records from store...");
+		// Get records directly from the store's getter
+		rawRecords.value = store.lastTriesOfEachRound || [];
+		console.log("Extracted records:", rawRecords.value);
 		recordsLoaded.value = true;
 		return rawRecords.value;
 	} catch (error) {
@@ -265,7 +249,7 @@ const availableSessions = computed(() => {
 	return Object.entries(sessions).map(([id, session]) => ({
 		id,
 		name: formatSessionDate(session.startedAt),
-		isCurrent: id === state.currentSession?.id,
+		isCurrent: id === store.currentSession?.id,
 	}));
 });
 
@@ -315,23 +299,27 @@ const filteredRecords = computed(() => {
 });
 
 // Watch for popup opening and refresh data
-watch(recordPopupOpen, (isOpen) => {
-	if (isOpen) {
-		console.log("RecordPopup opened - forcing record refresh");
-		// Force records to refresh when popup opens
-		setTimeout(() => {
-			extractRecords();
-		}, 100); // Small delay to ensure state is updated
+watch(
+	() => store.recordPopupOpen,
+	(isOpen) => {
+		if (isOpen) {
+			console.log("RecordPopup opened - forcing record refresh");
+			// Force records to refresh when popup opens
+			setTimeout(() => {
+				extractRecords();
+			}, 100); // Small delay to ensure store is updated
 
-		// Reset filter values when opening the popup to maintain consistent state
-		sessionFilter.value = "all";
-		filterType.value = "all";
-	}
-});
+			// Reset filter values when opening the popup to maintain consistent state
+			sessionFilter.value = "all";
+			filterType.value = "all";
+		}
+	},
+);
 
 // Debug function to manually reload data
 function forceRefreshData() {
 	console.log("Manual refresh triggered");
+	store.refreshGameRecords(); // Use the store's refresh method
 	extractRecords();
 }
 
@@ -381,7 +369,7 @@ function loadMoreRecords() {
 }
 
 const onClose = () => {
-	state.toggleRecordPopup(false);
+	store.toggleRecordPopup();
 	// Reset pagination when closing the popup
 	currentPage.value = 1;
 	// Don't reset filter values here to make them sticky between sessions
