@@ -253,12 +253,10 @@ const handleChangeLanguage = (lang) => {
 };
 
 onMounted(() => {
-	if (currentTheme && ["system", "dark", "light"].includes(currentTheme)) {
-		currentTheme.value = savedTheme;
-	} else {
-		// Default to system theme if no preference is saved
-		currentTheme.value = "system";
-	}
+  // Ensure currentTheme.value has a valid value
+  if (!["system", "dark", "light"].includes(currentTheme.value)) {
+    currentTheme.value = "system";
+  }
 
 	// Apply the theme
 	applyTheme(currentTheme.value);
