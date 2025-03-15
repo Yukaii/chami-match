@@ -118,6 +118,10 @@
 			"toggleMagnifier": {
 				"show": "拡大鏡を表示",
 				"hide": "拡大鏡を非表示"
+			},
+			"toggleTargetCircle": {
+				"show": "ターゲットサークルを表示",
+				"hide": "ターゲットサークルを非表示"
 			}
 		}
 	}

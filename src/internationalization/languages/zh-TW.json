@@ -110,6 +110,10 @@
 			"toggleMagnifier": {
 				"show": "顯示放大鏡",
 				"hide": "隱藏放大鏡"
+			},
+			"toggleTargetCircle": {
+				"show": "顯示目標圓圈",
+				"hide": "隱藏目標圓圈"
 			}
 		}
 	},

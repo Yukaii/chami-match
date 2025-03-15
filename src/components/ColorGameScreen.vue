@@ -376,14 +376,14 @@ const innerColorDotSize = 4;
           ></div>
         </div>
 
-        <!-- Toggle target circle button (renamed from magnifier) -->
+        <!-- Toggle target circle button -->
         <button
           v-if="imageLoaded && !imageProcessing"
           class="absolute top-2 right-2 bg-white dark:bg-gray-700 p-2 rounded-full shadow-md text-sm"
           @click="toggleTargetCircle"
         >
-          <span v-if="showTargetCircle">{{ $t('gameModes.color.toggleMagnifier.hide') }}</span>
-          <span v-else>{{ $t('gameModes.color.toggleMagnifier.show') }}</span>
+          <span v-if="showTargetCircle">{{ $t('gameModes.color.toggleTargetCircle.hide') }}</span>
+          <span v-else>{{ $t('gameModes.color.toggleTargetCircle.show') }}</span>
         </button>
 
         <!-- Debug overlay for development -->
