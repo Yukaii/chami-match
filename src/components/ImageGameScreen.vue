@@ -125,26 +125,26 @@ function getAdjustedPosition(x, y) {
 
 // Add debounce function
 function debounce(fn, delay) {
-  let timeoutId;
-  return function(...args) {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => fn.apply(this, args), delay);
-  };
+	let timeoutId;
+	return function (...args) {
+		clearTimeout(timeoutId);
+		timeoutId = setTimeout(() => fn.apply(this, args), delay);
+	};
 }
 
 // Debounced version of updateImageDimensions
 const debouncedUpdateDimensions = debounce(() => {
-  updateImageDimensions();
+	updateImageDimensions();
 }, 100);
 
 // Update the image dimensions
 function updateImageDimensions() {
 	if (imageElement.value) {
-    const imageRect = imageElement.value.getBoundingClientRect();
+		const imageRect = imageElement.value.getBoundingClientRect();
 		displayedImageWidth.value = imageRect.width;
 		displayedImageHeight.value = imageRect.height;
-    // Force position update when dimensions change
-    positionUpdateTrigger.value++;
+		// Force position update when dimensions change
+		positionUpdateTrigger.value++;
 	}
 }
 
@@ -204,26 +204,26 @@ onMounted(async () => {
 		updateImageDimensions();
 	});
 
-  // Setup ResizeObserver for more reliable size change detection
-  if (window.ResizeObserver) {
-    resizeObserver = new ResizeObserver(debouncedUpdateDimensions);
+	// Setup ResizeObserver for more reliable size change detection
+	if (window.ResizeObserver) {
+		resizeObserver = new ResizeObserver(debouncedUpdateDimensions);
 
-    // Observe both the wrapper and the image
-    if (imageWrapperRef.value) {
-      resizeObserver.observe(imageWrapperRef.value);
-    }
-    if (imageElement.value) {
-      resizeObserver.observe(imageElement.value);
-    }
-  }
+		// Observe both the wrapper and the image
+		if (imageWrapperRef.value) {
+			resizeObserver.observe(imageWrapperRef.value);
+		}
+		if (imageElement.value) {
+			resizeObserver.observe(imageElement.value);
+		}
+	}
 });
 
 // Clean up event listeners and observers
 onBeforeUnmount(() => {
 	window.removeEventListener("resize", debouncedUpdateDimensions);
-  if (resizeObserver) {
-    resizeObserver.disconnect();
-  }
+	if (resizeObserver) {
+		resizeObserver.disconnect();
+	}
 });
 
 // Handle image load
@@ -328,17 +328,17 @@ watch(
 		() => imageElement.value?.naturalHeight,
 		() => imageWrapperRef.value?.clientWidth,
 		() => imageWrapperRef.value?.clientHeight,
-		imageLoaded
+		imageLoaded,
 	],
 	() => {
 		if (imageLoaded.value && !imageProcessing.value) {
 			nextTick(() => {
-        updateImageDimensions();
-        // Force position update
-        positionUpdateTrigger.value++;
-      });
+				updateImageDimensions();
+				// Force position update
+				positionUpdateTrigger.value++;
+			});
 		}
-	}
+	},
 );
 
 // Add a reactive counter to force position updates
@@ -346,12 +346,12 @@ const positionUpdateTrigger = ref(0);
 
 // Create a reactive computed property for the adjusted position
 const adjustedTargetPosition = computed(() => {
-  // Including positionUpdateTrigger in the computation makes this reactive
-  positionUpdateTrigger.value;
-  if (!getTargetRegion.value || getTargetRegion.value.x === undefined) {
-    return { x: 0, y: 0 };
-  }
-  return getAdjustedPosition(getTargetRegion.value.x, getTargetRegion.value.y);
+	// Including positionUpdateTrigger in the computation makes this reactive
+	positionUpdateTrigger.value;
+	if (!getTargetRegion.value || getTargetRegion.value.x === undefined) {
+		return { x: 0, y: 0 };
+	}
+	return getAdjustedPosition(getTargetRegion.value.x, getTargetRegion.value.y);
 });
 
 // Track resize observer
@@ -359,16 +359,16 @@ let resizeObserver = null;
 
 // Update observer targets when refs change
 watch([imageWrapperRef, imageElement], ([newWrapper, newImage]) => {
-  if (resizeObserver) {
-    resizeObserver.disconnect();
+	if (resizeObserver) {
+		resizeObserver.disconnect();
 
-    if (newWrapper) {
-      resizeObserver.observe(newWrapper);
-    }
-    if (newImage) {
-      resizeObserver.observe(newImage);
-    }
-  }
+		if (newWrapper) {
+			resizeObserver.observe(newWrapper);
+		}
+		if (newImage) {
+			resizeObserver.observe(newImage);
+		}
+	}
 });
 </script>
 
