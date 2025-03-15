@@ -1,8 +1,8 @@
 import { createHead } from "@unhead/vue";
+import { createPinia } from "pinia";
 import { createApp } from "vue";
 import VueGtag from "vue-gtag";
-import { createPinia } from 'pinia';
-import { initializeStores } from './stores';
+import { initializeStores } from "./stores";
 
 import "./style.css";
 import App from "./App.vue";

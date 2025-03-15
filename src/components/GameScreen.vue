@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { useGameStore } from "../stores/game";
 import GameNavBar from "./GameNavBar.vue";
 import BaseButton from "./base/BaseButton.vue";

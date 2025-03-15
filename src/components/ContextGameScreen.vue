@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, reactive, ref, watch, computed } from "vue";
+import { computed, onMounted, reactive, ref, watch } from "vue";
 import { useGameStore } from "../stores/game";
 import GameNavBar from "./GameNavBar.vue";
 

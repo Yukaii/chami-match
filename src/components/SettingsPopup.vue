@@ -223,15 +223,18 @@ const onClose = () => {
 };
 
 // Fix: Watch the store property directly
-watch(() => store.settingsPopupOpen, (isOpen) => {
-	if (isOpen) {
-		settings.precision = store.precision;
-		settings.mode = store.mode;
-		settings.maxTries = store.maxLife;
-		settings.realtimePreview = store.realtimePreview;
-		settings.enableConfetti = store.preferences.enableConfetti ?? true;
-	}
-});
+watch(
+	() => store.settingsPopupOpen,
+	(isOpen) => {
+		if (isOpen) {
+			settings.precision = store.precision;
+			settings.mode = store.mode;
+			settings.maxTries = store.maxLife;
+			settings.realtimePreview = store.realtimePreview;
+			settings.enableConfetti = store.preferences.enableConfetti ?? true;
+		}
+	},
+);
 
 const onApply = () => {
 	store.updatePrecision(settings.precision);
@@ -253,10 +256,10 @@ const handleChangeLanguage = (lang) => {
 };
 
 onMounted(() => {
-  // Ensure currentTheme.value has a valid value
-  if (!["system", "dark", "light"].includes(currentTheme.value)) {
-    currentTheme.value = "system";
-  }
+	// Ensure currentTheme.value has a valid value
+	if (!["system", "dark", "light"].includes(currentTheme.value)) {
+		currentTheme.value = "system";
+	}
 
 	// Apply the theme
 	applyTheme(currentTheme.value);
