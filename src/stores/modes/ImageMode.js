@@ -92,7 +92,7 @@ function findSuitableColorRegion(ctx, width, height) {
 					x,
 					y,
 					color,
-					score: totalScore
+					score: totalScore,
 				};
 			}
 		}
@@ -132,7 +132,7 @@ function analyzeColorRegion(imageData) {
 	const centerRGB = {
 		r: data[centerIdx],
 		g: data[centerIdx + 1],
-		b: data[centerIdx + 2]
+		b: data[centerIdx + 2],
 	};
 
 	// Convert center RGB to HSV for later use in the returned value
@@ -166,7 +166,9 @@ function analyzeColorRegion(imageData) {
 			const bDiff = b - centerRGB.b;
 
 			// Euclidean distance in RGB space
-			const rgbDistance = Math.sqrt(rDiff*rDiff + gDiff*gDiff + bDiff*bDiff);
+			const rgbDistance = Math.sqrt(
+				rDiff * rDiff + gDiff * gDiff + bDiff * bDiff,
+			);
 
 			// Check if this pixel is similar to the center
 			if (rgbDistance <= rgbTolerance) {
@@ -201,7 +203,7 @@ function analyzeColorRegion(imageData) {
 	return {
 		color: finalColor,
 		consistency: consistency,
-		area: area
+		area: area,
 	};
 }
 

@@ -94,7 +94,7 @@ const currentColorOptions = computed(() => {
 function getAdjustedPosition(x, y) {
 	if (
 		!imageElement.value ||
-		!imageWrapperRef.value ||  // Use wrapper ref instead of container
+		!imageWrapperRef.value || // Use wrapper ref instead of container
 		typeof x !== "number" ||
 		typeof y !== "number"
 	) {
@@ -105,17 +105,19 @@ function getAdjustedPosition(x, y) {
 		const imageRect = imageElement.value.getBoundingClientRect();
 
 		// Calculate scaling of the image
-		const scaleX = imageElement.value.clientWidth / imageElement.value.naturalWidth;
-		const scaleY = imageElement.value.clientHeight / imageElement.value.naturalHeight;
+		const scaleX =
+			imageElement.value.clientWidth / imageElement.value.naturalWidth;
+		const scaleY =
+			imageElement.value.clientHeight / imageElement.value.naturalHeight;
 
 		// Calculate the position within the image element itself
 		const scaledX = x * scaleX;
 		const scaledY = y * scaleY;
 
-			// No additional offsets needed when using the wrapper
+		// No additional offsets needed when using the wrapper
 		return {
 			x: scaledX,
-			y: scaledY
+			y: scaledY,
 		};
 	} catch (error) {
 		console.error("Error calculating position:", error);
