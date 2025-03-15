@@ -42,30 +42,33 @@ export class ImageMode extends ContextualMode {
 	}
 
 	async fetchRandomImage() {
+		// Clear previous state first
 		this.state.imageLoading = true;
-
-		// List of reliable image IDs known to work with more options
-		const reliableImageIds = [237, 24, 36, 37, 43, 76, 101, 133, 164, 197, 219, 230, 301, 334, 338, 396,
-								25, 27, 29, 30, 33, 42, 60, 67, 100, 151, 200];
+		this.state.imageUrl = null;
+		this.state.targetRegion = {
+			x: 0, y: 0,
+			radius: 20,
+			targetRegionReady: false
+		};
 
 		try {
-			// Select a random ID from our reliable list
+			const reliableImageIds = [237, 24, 36, 37, 43, 76, 101, 133, 164, 197, 219, 230, 301, 334, 338, 396,
+									25, 27, 29, 30, 33, 42, 60, 67, 100, 151, 200];
 			const randomId = reliableImageIds[Math.floor(Math.random() * reliableImageIds.length)];
-
-			// Fixed size to ensure consistency
 			const size = 600;
-
-			// Try direct Picsum URL format that might work better with CORS
 			const url = `https://picsum.photos/id/${randomId}/${size}/${size}`;
-			console.log("Fetching image from:", url);
-			this.state.imageUrl = url;
 
+			// Ensure image is fully loaded before setting URL
+			await preloadImage(url);
+
+			console.log("Image preloaded successfully:", url);
+			this.state.imageUrl = url;
 			return url;
 		} catch (error) {
 			console.error("Error fetching random image:", error);
-			// Fallback to a default image
-			this.state.imageUrl = "https://picsum.photos/id/237/600/600";
-			return this.state.imageUrl;
+			const fallbackUrl = "https://picsum.photos/id/237/600/600";
+			this.state.imageUrl = fallbackUrl;
+			return fallbackUrl;
 		} finally {
 			this.state.imageLoading = false;
 		}
@@ -240,7 +243,7 @@ export class ImageMode extends ContextualMode {
 		try {
 			if (!this.state) {
 				this.state = this.initState();
-			}
+				}
 
 				// Validate and set the target color
 				if (!color || typeof color.h !== 'number') {
@@ -250,19 +253,42 @@ export class ImageMode extends ContextualMode {
 				// Set the target color
 				this.state.randomColor = { ...color };
 
-				// Generate and set color options
-				const options = this.generateColorOptions();
-				this.state.colorOptions = options;
+					// Initialize userColor if not set
+					if (!this.state.userColor) {
+						this.state.userColor = { h: 0, s: 0, v: 0 };
+					}
 
-				console.log("Set color options:", this.state.colorOptions?.length);
-				return this.state.colorOptions;
-			} catch (error) {
-				console.error("Error in setTargetColorAndGenerateOptions:", error);
-				const fallbackOptions = Array(6).fill().map(() => generateFallbackColor());
-				this.state.colorOptions = fallbackOptions;
-				return fallbackOptions;
+					// Generate color options array first
+					const options = [];
+
+					// Add the target color
+					options.push({ ...color });
+
+					// Generate variations
+					for (let i = 0; i < 5; i++) {
+						const hVariation = Math.floor(Math.random() * 60 - 30);
+						const sVariation = Math.floor(Math.random() * 40 - 20);
+						const vVariation = Math.floor(Math.random() * 40 - 20);
+
+						options.push({
+							h: (color.h + hVariation + 360) % 360,
+							s: Math.max(10, Math.min(100, color.s + sVariation)),
+							v: Math.max(10, Math.min(100, color.v + vVariation))
+						});
+					}
+
+					// Shuffle the options
+					this.state.colorOptions = options.sort(() => Math.random() - 0.5);
+
+					console.log("Generated color options:", this.state.colorOptions.length);
+					return this.state.colorOptions;
+				} catch (error) {
+					console.error("Error in setTargetColorAndGenerateOptions:", error);
+					const fallbackOptions = Array(6).fill().map(() => generateFallbackColor());
+					this.state.colorOptions = fallbackOptions;
+					return fallbackOptions;
+				}
 			}
-		}
 
 	// Override generateColorOptions to ensure we create good options for image colors
 	generateColorOptions() {

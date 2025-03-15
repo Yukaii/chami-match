@@ -467,6 +467,16 @@ export const useGlobalGameState = createGlobalState(() => {
 		initGameMode();
 	}
 
+	function updateModeState(newState) {
+		if (!currentGameMode.value?.state) {
+			console.warn('No current mode state to update');
+			return;
+		}
+
+		// Update individual properties instead of replacing the whole object
+		Object.assign(currentGameMode.value.state, newState);
+	}
+
 	// Export all needed state and methods
 	return {
 		// Session data
@@ -567,5 +577,6 @@ export const useGlobalGameState = createGlobalState(() => {
 			// Return the new instance
 			return imageMode;
 		},
+		updateModeState,
 	};
 });

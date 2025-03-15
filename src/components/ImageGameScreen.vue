@@ -54,9 +54,18 @@ const getTargetRegion = computed(() => {
   return state.currentModeState.targetRegion;
 });
 
-// Add safety checks for state.colorOptions
+// Update the hasColorOptions computed property
 const hasColorOptions = computed(() => {
-  return state.colorOptions && Array.isArray(state.colorOptions) && state.colorOptions.length > 0;
+  const imgModeOptions = imageMode.value?.state?.colorOptions;
+  const stateOptions = state.currentModeState?.colorOptions;
+  return (Array.isArray(imgModeOptions) && imgModeOptions.length > 0) ||
+         (Array.isArray(stateOptions) && stateOptions.length > 0);
+});
+
+const currentColorOptions = computed(() => {
+  return imageMode.value?.state?.colorOptions ||
+         state.currentModeState?.colorOptions ||
+         [];
 });
 
 // Calculate adjusted position for target circle and magnifier with null checks
@@ -68,11 +77,19 @@ function getAdjustedPosition(x, y) {
 
   try {
     const imageRect = imageElement.value.getBoundingClientRect();
-    const scale = imageElement.value.naturalWidth / imageRect.width;
+    const containerRect = imageContainerRef.value.getBoundingClientRect();
 
-    // Calculate the scaled position
-    const scaledX = (x / scale);
-    const scaledY = (y / scale);
+    // Calculate the actual scaling of the image
+    const scaleX = imageRect.width / imageElement.value.naturalWidth;
+    const scaleY = imageRect.height / imageElement.value.naturalHeight;
+
+    // Calculate image position within container
+    const imageOffsetX = (containerRect.width - imageRect.width) / 2;
+    const imageOffsetY = (containerRect.height - imageRect.height) / 2;
+
+    // Apply scaling to the coordinates
+    const scaledX = x * scaleX + imageOffsetX;
+    const scaledY = y * scaleY + imageOffsetY;
 
     return {
       x: scaledX,
@@ -164,13 +181,19 @@ async function handleImageLoad() {
 
   console.log("Image loaded, processing...");
   imageProcessing.value = true;
-  imageLoaded.value = true;
-
-  updateImageDimensions();
 
   try {
+    // Ensure imageMode is initialized
+    if (!imageMode.value?.state) {
+      console.log("Reinitializing image mode state");
+      await initializeImageMode();
+    }
+
     const extractedColor = await imageMode.value.selectRandomColorFromImage(imageElement.value);
     console.log("Extracted color:", extractedColor);
+
+    imageLoaded.value = true;
+    updateImageDimensions();
 
     // Update image mode first
     imageMode.value.setTargetColorAndGenerateOptions(extractedColor);
@@ -178,44 +201,24 @@ async function handleImageLoad() {
     // Set the current game mode
     state.currentGameMode = imageMode.value;
 
-    // Initialize or update currentModeState if needed
-    if (!state.currentModeState) {
-      state.currentModeState = reactive({
+    // Update the game mode state directly with safety check
+    if (imageMode.value?.state) {
+      const newState = {
         targetRegion: {
-          x: 0,
-          y: 0,
-          radius: 20,
-          targetRegionReady: false
+          ...imageMode.value.state.targetRegion,
+          targetRegionReady: true
         },
-        colorOptions: [],
-        imageUrl: null
-      });
+        colorOptions: [...(imageMode.value.state.colorOptions || [])],
+        imageUrl: imageMode.value.state.imageUrl
+      };
+
+      Object.assign(imageMode.value.state, newState);
+      console.log("Updated state with color options:", newState.colorOptions?.length);
     }
 
-    // Update mode state properties
-    state.currentModeState.targetRegion = {
-      ...imageMode.value.state.targetRegion,
-      targetRegionReady: true
-    };
-    state.currentModeState.colorOptions = [...imageMode.value.state.colorOptions];
-    state.currentModeState.imageUrl = imageMode.value.state.imageUrl;
-
-    console.log("Updated state:", {
-      targetRegion: state.currentModeState.targetRegion,
-      modeColorOptions: state.currentModeState.colorOptions?.length,
-      imageUrl: state.currentModeState.imageUrl
-    });
   } catch (error) {
     console.error("Error processing image:", error);
-    // Set fallback values
-    if (state.currentModeState) {
-      state.currentModeState.targetRegion = {
-        x: 0,
-        y: 0,
-        radius: 20,
-        targetRegionReady: true
-      };
-    }
+    imageLoaded.value = false;
   } finally {
     imageProcessing.value = false;
   }
@@ -225,9 +228,9 @@ async function handleImageLoad() {
 watch(
   [() => state.randomColor, () => currentRound.value],
   () => {
-    // Reset selection when random color changes (new round starts)
-    selectedColorIndex.value = -1;
     imageLoaded.value = false;
+    imageProcessing.value = false;
+    selectedColorIndex.value = -1;
   },
   { deep: true },
 );
@@ -306,10 +309,10 @@ function toggleMagnifier() {
             :style="{
               width: `${magnifierSize}px`,
               height: `${magnifierSize}px`,
-              top: `${getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).y - (magnifierSize/2)}px`,
-              left: `${getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).x - (magnifierSize/2)}px`,
+              top: `${getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).y - magnifierSize/2}px`,
+              left: `${getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).x - magnifierSize/2}px`,
               transform: `scale(${magnifierZoom})`,
-              transformOrigin: 'center center',
+              transformOrigin: 'center',
               zIndex: 10
             }"
           >
@@ -317,10 +320,10 @@ function toggleMagnifier() {
               :src="state.currentModeState.imageUrl"
               class="absolute"
               :style="{
-                width: `${imageElement?.width || 0}px`,
-                height: `${imageElement?.height || 0}px`,
-                top: `${-(getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).y - (magnifierSize/2))}px`,
-                left: `${-(getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).x - (magnifierSize/2))}px`
+                width: `${displayedImageWidth}px`,
+                height: `${displayedImageHeight}px`,
+                top: `${-(getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).y - magnifierSize/2)}px`,
+                left: `${-(getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).x - magnifierSize/2)}px`
               }"
             />
           </div>
@@ -360,7 +363,7 @@ function toggleMagnifier() {
         <div class="grid min-h-24 w-full grid-cols-3 gap-3 color-grid">
           <template v-if="hasColorOptions">
             <button
-              v-for="(color, index) in state.colorOptions"
+              v-for="(color, index) in currentColorOptions"
               :key="index"
               class="min-h-16 rounded-lg transition-transform hover:scale-105 color-button"
               :class="{
