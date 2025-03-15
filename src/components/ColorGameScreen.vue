@@ -25,7 +25,7 @@ const imageElement = ref(null);
 const selectedColorIndex = ref(-1);
 
 // Target circle properties (renamed from magnifier)
-const targetCircleSize = ref(40);
+const targetCircleSize = ref(15);
 const targetCircleZoom = ref(2);
 const showTargetCircle = ref(true);
 
@@ -344,21 +344,6 @@ const innerColorDotSize = 10;
             }"
           >
           </div>
-
-          <!-- Color dot - now hollow with border -->
-          <div
-            v-if="showTargetCircle && imageLoaded && !imageProcessing && getTargetRegion?.x !== undefined"
-            class="absolute rounded-full pointer-events-none"
-            :style="{
-              width: `${innerColorDotSize}px`,
-              height: `${innerColorDotSize}px`,
-              top: `${getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).y - innerColorDotSize/2}px`,
-              left: `${getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).x - innerColorDotSize/2}px`,
-              backgroundColor: 'transparent',
-              borderColor: 'white',
-              borderWidth: '2px',
-            }"
-          ></div>
         </div>
 
         <!-- Toggle target circle button - replaced with BaseButton -->
