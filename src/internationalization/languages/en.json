@@ -4,6 +4,7 @@
 	"startStandardGame": "Standard Mode",
 	"startContextualGame": "Contextual Mode",
 	"startRelativeGame": "Value Difference Mode",
+	"startColorGame": "Image Color Mode",
 	"startGame": "Start Game",
 	"startOver": "Start Over",
 	"home": "Home",
@@ -98,6 +99,17 @@
 			"instructions": "Use the slider to indicate how different the brightness of these colors is (1-100)",
 			"valueDifference": "Value Difference",
 			"yourGuess": "Your guess:"
+		},
+		"color": {
+			"name": "Image Color Mode",
+			"description": "Match colors from real images - test your color perception in context!",
+			"instructions": "Choose the color that matches the highlighted region in the image",
+			"selectPrompt": "Select the matching color:",
+			"lastSelection": "Your last selection:",
+			"toggleMagnifier": {
+				"show": "Show Magnifier",
+				"hide": "Hide Magnifier"
+			}
 		}
 	},
 	"colorDifferences": "Color Differences",
