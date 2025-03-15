@@ -53,9 +53,13 @@ function rgbToHsv(r, g, b) {
 // Find a suitable color region in an image
 function findSuitableColorRegion(ctx, width, height) {
 	try {
-		// Try up to 10 random spots to find a good color region
-		let result = null;
-		for (let attempt = 0; attempt < 10; attempt++) {
+		// Try several random spots to find a good color region
+		let bestRegion = null;
+		let bestScore = -1;
+		const attempts = 15; // Increased from 10 to get more candidate regions
+		const radius = 20;
+
+		for (let attempt = 0; attempt < attempts; attempt++) {
 			// Avoid edges by 10% of dimensions
 			const margin = 0.1;
 			const x =
@@ -64,8 +68,7 @@ function findSuitableColorRegion(ctx, width, height) {
 				Math.floor(Math.random() * (height * (1 - 2 * margin))) +
 				height * margin;
 
-			// Sample a region to see if it has consistent color
-			const radius = 20;
+			// Sample a region to analyze color consistency
 			const regionData = ctx.getImageData(
 				x - radius,
 				y - radius,
@@ -73,29 +76,30 @@ function findSuitableColorRegion(ctx, width, height) {
 				radius * 2,
 			);
 
-			// Get center pixel color
-			const index = (radius * regionData.width + radius) * 4;
-			const centerColor = {
-				r: regionData.data[index],
-				g: regionData.data[index + 1],
-				b: regionData.data[index + 2],
-			};
+			// Analyze the region for color consistency
+			const { color, consistency, area } = analyzeColorRegion(regionData);
 
-			// Convert RGB to HSV for our game state
-			const { h, s, v } = rgbToHsv(centerColor.r, centerColor.g, centerColor.b);
+			// Calculate a suitability score based on color quality and consistency
+			const saturationScore = color.s * 0.5; // Prefer more saturated colors
+			const consistencyScore = consistency * 100; // Higher consistency is better
+			const areaScore = area * 0.5; // Prefer regions with more similar pixels
 
-			// Check a simple condition for suitability (e.g., sufficient saturation)
-			if (s > 20) {
-				result = {
+			const totalScore = saturationScore + consistencyScore + areaScore;
+
+			if (totalScore > bestScore && color.s > 15) {
+				bestScore = totalScore;
+				bestRegion = {
 					x,
 					y,
-					color: { h, s, v },
+					color,
+					score: totalScore,
 				};
-				break;
 			}
 		}
-		if (result) {
-			return result;
+
+		if (bestRegion) {
+			console.log("Found region with score:", bestRegion.score);
+			return bestRegion;
 		}
 
 		// Fallback to a random color if we couldn't find a suitable region
@@ -112,6 +116,95 @@ function findSuitableColorRegion(ctx, width, height) {
 			color: generateFallbackColor(),
 		};
 	}
+}
+
+// Analyze a region for color consistency and quality
+function analyzeColorRegion(imageData) {
+	const width = imageData.width;
+	const height = imageData.height;
+	const data = imageData.data;
+
+	// Get center pixel as reference color
+	const centerX = Math.floor(width / 2);
+	const centerY = Math.floor(height / 2);
+	const centerIdx = (centerY * width + centerX) * 4;
+
+	const centerRGB = {
+		r: data[centerIdx],
+		g: data[centerIdx + 1],
+		b: data[centerIdx + 2],
+	};
+
+	// Convert center RGB to HSV for later use in the returned value
+	const centerHSV = rgbToHsv(centerRGB.r, centerRGB.g, centerRGB.b);
+
+	// Count similar pixels and calculate variance
+	let similarPixels = 0;
+	const totalPixels = width * height;
+
+	// Track the RGB sums for averaging
+	let sumR = 0;
+	let sumG = 0;
+	let sumB = 0;
+	let colorCount = 0;
+
+	// Threshold for considering pixels "similar" in RGB space
+	const rgbTolerance = 30; // RGB distance threshold for similarity
+
+	for (let y = 0; y < height; y++) {
+		for (let x = 0; x < width; x++) {
+			const idx = (y * width + x) * 4;
+			if (data[idx + 3] < 128) continue; // Skip transparent pixels
+
+			const r = data[idx];
+			const g = data[idx + 1];
+			const b = data[idx + 2];
+
+			// Calculate RGB color distance
+			const rDiff = r - centerRGB.r;
+			const gDiff = g - centerRGB.g;
+			const bDiff = b - centerRGB.b;
+
+			// Euclidean distance in RGB space
+			const rgbDistance = Math.sqrt(
+				rDiff * rDiff + gDiff * gDiff + bDiff * bDiff,
+			);
+
+			// Check if this pixel is similar to the center
+			if (rgbDistance <= rgbTolerance) {
+				similarPixels++;
+
+				// Add to RGB averages
+				sumR += r;
+				sumG += g;
+				sumB += b;
+				colorCount++;
+			}
+		}
+	}
+
+	// Calculate final metrics
+	const consistency = similarPixels / totalPixels; // 0 to 1, higher is better
+	const area = similarPixels / (width * height); // 0 to 1, portion of region with similar colors
+
+	// Calculate average RGB of similar pixels
+	let finalColor;
+	if (colorCount > 0) {
+		const avgR = Math.round(sumR / colorCount);
+		const avgG = Math.round(sumG / colorCount);
+		const avgB = Math.round(sumB / colorCount);
+		// Convert to HSV for the game's color format
+		finalColor = rgbToHsv(avgR, avgG, avgB);
+	} else {
+		// Use center HSV as fallback
+		finalColor = centerHSV;
+	}
+
+	return {
+		color: finalColor,
+		consistency: consistency,
+		area: area,
+	};
 }
 
 // Preload an image to ensure it's available

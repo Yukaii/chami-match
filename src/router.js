@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
-import ColorGameScreen from "./components/ColorGameScreen.vue";
 import ContextGameScreen from "./components/ContextGameScreen.vue";
 import GameScreen from "./components/GameScreen.vue";
+import ImageGameScreen from "./components/ImageGameScreen.vue";
 import RelativeGameScreen from "./components/RelativeGameScreen.vue";
 import WelcomeScreen from "./components/WelcomeScreen.vue";
 
@@ -25,7 +25,7 @@ const routes = [
 	},
 	{
 		path: "/image-game",
-		component: ColorGameScreen,
+		component: ImageGameScreen,
 	},
 ];
 

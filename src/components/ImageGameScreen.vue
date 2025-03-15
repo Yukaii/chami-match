@@ -26,8 +26,7 @@ const selectedColorIndex = ref(-1);
 
 // Target circle properties (renamed from magnifier)
 const targetCircleSize = ref(15);
-const targetCircleZoom = ref(2);
-const showTargetCircle = ref(true);
+// Remove targetCircleZoom
 
 // Direct reference to ColorMode implementation
 const colorMode = ref(null);
@@ -39,6 +38,7 @@ const imageReady = ref(false);
 const displayedImageWidth = ref(0);
 const displayedImageHeight = ref(0);
 const imageContainerRef = ref(null);
+const imageWrapperRef = ref(null); // Add ref for image wrapper
 
 // Calculate scale factors for the image
 const imageScaleFactor = computed(() => {
@@ -94,7 +94,7 @@ const currentColorOptions = computed(() => {
 function getAdjustedPosition(x, y) {
 	if (
 		!imageElement.value ||
-		!imageContainerRef.value ||
+		!imageWrapperRef.value ||
 		typeof x !== "number" ||
 		typeof y !== "number"
 	) {
@@ -102,33 +102,49 @@ function getAdjustedPosition(x, y) {
 	}
 
 	try {
+		// Get the actual dimensions of the image as displayed
 		const imageRect = imageElement.value.getBoundingClientRect();
-		const containerRect = imageContainerRef.value.getBoundingClientRect();
 
-		// Calculate scaling of the image
+		// Calculate scaling of the image based on natural vs displayed size
 		const scaleX = imageRect.width / imageElement.value.naturalWidth;
 		const scaleY = imageRect.height / imageElement.value.naturalHeight;
 
-		// Calculate image position within container
-		const imageOffsetX = (containerRect.width - imageRect.width) / 2;
-		const imageOffsetY = (containerRect.height - imageRect.height) / 2;
+		// Calculate the position within the image itself
+		const scaledX = x * scaleX;
+		const scaledY = y * scaleY;
 
-		// Apply scaling to the coordinates
-		const scaledX = x * scaleX + imageOffsetX;
-		const scaledY = y * scaleY + imageOffsetY;
-
-		return { x: scaledX, y: scaledY };
+		return {
+			x: scaledX,
+			y: scaledY,
+		};
 	} catch (error) {
 		console.error("Error calculating position:", error);
 		return { x: 0, y: 0 };
 	}
 }
 
+// Add debounce function
+function debounce(fn, delay) {
+	let timeoutId;
+	return function (...args) {
+		clearTimeout(timeoutId);
+		timeoutId = setTimeout(() => fn.apply(this, args), delay);
+	};
+}
+
+// Debounced version of updateImageDimensions
+const debouncedUpdateDimensions = debounce(() => {
+	updateImageDimensions();
+}, 100);
+
 // Update the image dimensions
 function updateImageDimensions() {
 	if (imageElement.value) {
-		displayedImageWidth.value = imageElement.value.clientWidth;
-		displayedImageHeight.value = imageElement.value.clientHeight;
+		const imageRect = imageElement.value.getBoundingClientRect();
+		displayedImageWidth.value = imageRect.width;
+		displayedImageHeight.value = imageRect.height;
+		// Force position update when dimensions change
+		positionUpdateTrigger.value++;
 	}
 }
 
@@ -177,16 +193,37 @@ async function initializeImageMode() {
 
 // Initialize when component mounts
 onMounted(async () => {
-	console.log("ColorGameScreen mounted, initializing");
+	console.log("ImageGameScreen mounted, initializing");
 	await initializeImageMode();
 
-	// Add resize listener
-	window.addEventListener("resize", updateImageDimensions);
+	// Add resize listener with the debounced function
+	window.addEventListener("resize", debouncedUpdateDimensions);
+
+	// Initial dimension update
+	nextTick(() => {
+		updateImageDimensions();
+	});
+
+	// Setup ResizeObserver for more reliable size change detection
+	if (window.ResizeObserver) {
+		resizeObserver = new ResizeObserver(debouncedUpdateDimensions);
+
+		// Observe both the wrapper and the image
+		if (imageWrapperRef.value) {
+			resizeObserver.observe(imageWrapperRef.value);
+		}
+		if (imageElement.value) {
+			resizeObserver.observe(imageElement.value);
+		}
+	}
 });
 
-// Clean up event listeners
+// Clean up event listeners and observers
 onBeforeUnmount(() => {
-	window.removeEventListener("resize", updateImageDimensions);
+	window.removeEventListener("resize", debouncedUpdateDimensions);
+	if (resizeObserver) {
+		resizeObserver.disconnect();
+	}
 });
 
 // Handle image load
@@ -237,6 +274,8 @@ async function handleImageLoad() {
 		imageLoaded.value = false;
 	} finally {
 		imageProcessing.value = false;
+		// Ensure dimensions are updated after processing completes
+		nextTick(() => updateImageDimensions());
 	}
 }
 
@@ -275,16 +314,62 @@ function resetSelection() {
 	}
 }
 
-// Toggle target circle visibility (renamed from toggleMagnifier)
-function toggleTargetCircle() {
-	showTargetCircle.value = !showTargetCircle.value;
-}
-
 // Development mode flag
-const isDevMode = ref(import.meta.env.DEV);
+// const isDevMode = ref(import.meta.env.DEV);
+const isDevMode = ref(false);
 
 // Fixed size for inner color dot (in pixels)
 const innerColorDotSize = 10;
+
+// Add a watcher to update dimensions when key properties change
+watch(
+	[
+		() => imageElement.value?.naturalWidth,
+		() => imageElement.value?.naturalHeight,
+		() => imageWrapperRef.value?.clientWidth,
+		() => imageWrapperRef.value?.clientHeight,
+		imageLoaded,
+	],
+	() => {
+		if (imageLoaded.value && !imageProcessing.value) {
+			nextTick(() => {
+				updateImageDimensions();
+				// Force position update
+				positionUpdateTrigger.value++;
+			});
+		}
+	},
+);
+
+// Add a reactive counter to force position updates
+const positionUpdateTrigger = ref(0);
+
+// Create a reactive computed property for the adjusted position
+const adjustedTargetPosition = computed(() => {
+	// Including positionUpdateTrigger in the computation makes this reactive
+	positionUpdateTrigger.value;
+	if (!getTargetRegion.value || getTargetRegion.value.x === undefined) {
+		return { x: 0, y: 0 };
+	}
+	return getAdjustedPosition(getTargetRegion.value.x, getTargetRegion.value.y);
+});
+
+// Track resize observer
+let resizeObserver = null;
+
+// Update observer targets when refs change
+watch([imageWrapperRef, imageElement], ([newWrapper, newImage]) => {
+	if (resizeObserver) {
+		resizeObserver.disconnect();
+
+		if (newWrapper) {
+			resizeObserver.observe(newWrapper);
+		}
+		if (newImage) {
+			resizeObserver.observe(newImage);
+		}
+	}
+});
 </script>
 
 <template>
@@ -315,47 +400,37 @@ const innerColorDotSize = 10;
 
         <!-- Image with target circle -->
         <div class="relative w-full h-full flex items-center justify-center">
-          <img
-            v-if="store.currentModeState?.imageUrl"
-            :key="store.currentModeState.imageUrl"
-            ref="imageElement"
-            :src="store.currentModeState.imageUrl"
-            alt="Random image for color matching"
-            class="object-contain rounded-lg game-image"
-            crossorigin="anonymous"
-            @load="handleImageLoad"
-            @error="console.error('Image failed to load:', store.currentModeState.imageUrl)"
-          />
+          <!-- Added wrapper around image and target circle -->
+          <div class="relative image-target-wrapper" ref="imageWrapperRef">
+            <img
+              v-if="store.currentModeState?.imageUrl"
+              :key="store.currentModeState.imageUrl"
+              ref="imageElement"
+              :src="store.currentModeState.imageUrl"
+              alt="Random image for color matching"
+              class="object-contain rounded-lg game-image"
+              crossorigin="anonymous"
+              @load="handleImageLoad"
+              @error="console.error('Image failed to load:', store.currentModeState.imageUrl)"
+            />
 
-          <!-- Target circle overlay (formerly magnifier) -->
-          <div
-            v-if="showTargetCircle && imageLoaded && !imageProcessing &&
-                  getTargetRegion?.x !== undefined"
-            class="absolute pointer-events-none border-2 border-white shadow-lg overflow-hidden rounded-full"
-            :style="{
-              width: `${targetCircleSize}px`,
-              height: `${targetCircleSize}px`,
-              top: `${getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).y - targetCircleSize/2}px`,
-              left: `${getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).x - targetCircleSize/2}px`,
-              transform: `scale(${targetCircleZoom})`,
-              transformOrigin: 'center',
-              zIndex: 10
-            }"
-          >
+            <!-- Target circle overlay - now using computed adjustedTargetPosition -->
+            <div
+              v-if="imageLoaded && !imageProcessing && getTargetRegion?.x !== undefined"
+              class="absolute pointer-events-none border-2 border-white shadow-lg overflow-hidden rounded-full"
+              :style="{
+                width: `${targetCircleSize}px`,
+                height: `${targetCircleSize}px`,
+                top: `${adjustedTargetPosition.y - targetCircleSize/2}px`,
+                left: `${adjustedTargetPosition.x - targetCircleSize/2}px`,
+                zIndex: 10
+              }"
+            >
+            </div>
           </div>
         </div>
 
-        <!-- Toggle target circle button - replaced with BaseButton -->
-        <BaseButton
-          v-if="imageLoaded && !imageProcessing"
-          variant="secondary"
-          size="sm"
-          class="absolute top-2 right-2"
-          @click="toggleTargetCircle"
-        >
-          <span v-if="showTargetCircle">{{ $t('gameModes.color.toggleTargetCircle.hide') }}</span>
-          <span v-else>{{ $t('gameModes.color.toggleTargetCircle.show') }}</span>
-        </BaseButton>
+        <!-- Toggle target circle button removed -->
 
         <!-- Debug overlay for development -->
         <div
@@ -376,12 +451,12 @@ const innerColorDotSize = 10;
           {{ $t('gameModes.color.selectPrompt') }}
         </h3>
 
-        <div class="grid min-h-24 w-full grid-cols-3 gap-3 color-grid">
+        <div class="grid min-h-15 w-full grid-cols-3 gap-3 color-grid">
           <template v-if="hasColorOptions">
             <button
               v-for="(color, index) in currentColorOptions"
               :key="index"
-              class="min-h-16 rounded-lg transition-transform hover:scale-105 color-button"
+              class="min-h-8 rounded-lg transition-transform hover:scale-105 color-button"
               :class="{
                 'border-2 border-transparent hover:border-white': selectedColorIndex !== index,
                 'border-4 border-white ring-2 ring-offset-2 selected': selectedColorIndex === index
@@ -394,7 +469,7 @@ const innerColorDotSize = 10;
             <div
               v-for="index in 6"
               :key="index"
-              class="min-h-16 rounded-lg bg-gray-300 dark:bg-gray-600"
+              class="min-h-8 rounded-lg bg-gray-300 dark:bg-gray-600"
             />
           </template>
         </div>
@@ -460,5 +535,10 @@ const innerColorDotSize = 10;
   object-fit: cover;
   image-rendering: pixelated;
   image-rendering: -webkit-optimize-contrast;
+}
+
+.image-target-wrapper {
+  position: relative;
+  display: inline-block;
 }
 </style>
