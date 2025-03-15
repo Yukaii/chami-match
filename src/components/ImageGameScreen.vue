@@ -323,6 +323,24 @@ function toggleMagnifier() {
 // Remove the isDev computed property and add isDevMode ref
 const isDevMode = ref(import.meta.env.DEV);
 
+// Add computed property for magnifier image position
+const magnifierImageStyle = computed(() => {
+  if (!getTargetRegion.value || !imageElement.value) return {};
+
+  const pos = getAdjustedPosition(getTargetRegion.value.x, getTargetRegion.value.y);
+  const scale = magnifierZoom.value;
+
+  return {
+    minWidth: '300px',
+    width: `${displayedImageWidth.value}px`,
+    height: `${displayedImageHeight.value}px`,
+    transform: `translate(
+      ${-(pos.x - imageElement.value.offsetLeft)}px,
+      ${-(pos.y - imageElement.value.offsetTop)}px
+    )`
+  };
+});
+
 // Add watchers for debugging position updates
 watch(() => getTargetRegion.value, (newRegion) => {
   console.log('Target region updated:', newRegion);
@@ -389,7 +407,7 @@ watch([displayedImageWidth, displayedImageHeight], ([width, height]) => {
           <div
             v-if="showMagnifier && imageLoaded && !imageProcessing &&
                   getTargetRegion?.x !== undefined"
-            class="absolute pointer-events-none border-4 border-white shadow-lg overflow-hidden rounded-full bg-white"
+            class="absolute pointer-events-none border-4 border-white shadow-lg overflow-hidden rounded-full"
             :style="{
               width: `${magnifierSize}px`,
               height: `${magnifierSize}px`,
@@ -402,13 +420,8 @@ watch([displayedImageWidth, displayedImageHeight], ([width, height]) => {
           >
             <img
               :src="state.currentModeState.imageUrl"
-              class="absolute"
-              :style="{
-                width: `${displayedImageWidth}px`,
-                height: `${displayedImageHeight}px`,
-                top: `${getTargetRegion ? -(getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).y - magnifierSize/2) : 0}px`,
-                left: `${getTargetRegion ? -(getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).x - magnifierSize/2) : 0}px`
-              }"
+              class="absolute select-none"
+              :style="magnifierImageStyle"
             />
           </div>
 
@@ -526,5 +539,19 @@ watch([displayedImageWidth, displayedImageHeight], ([width, height]) => {
   max-height: 300px;
   object-fit: contain;
   border-radius: 0.5rem;
+  image-rendering: pixelated;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* Add these new styles */
+.magnifier {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.magnifier img {
+  object-fit: cover;
+  image-rendering: pixelated;
+  image-rendering: -webkit-optimize-contrast;
 }
 </style>
