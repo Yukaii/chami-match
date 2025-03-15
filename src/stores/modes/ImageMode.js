@@ -264,7 +264,8 @@ export class ImageMode extends ContextualMode {
 			);
 
 			const canvas = document.createElement("canvas");
-			const ctx = canvas.getContext("2d");
+			// Set willReadFrequently to true to optimize for multiple getImageData() calls
+			const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
 			canvas.width = width;
 			canvas.height = height;
