@@ -103,9 +103,13 @@
 		"color": {
 			"name": "Image Color Mode",
 			"description": "Match colors from real images - test your color perception in context!",
-			"instructions": "Choose the color that matches the highlighted region in the image",
+			"instructions": "Choose the color that matches the circle in the image",
 			"selectPrompt": "Select the matching color:",
 			"lastSelection": "Your last selection:",
+			"toggleMagnifier": {
+				"show": "Show Magnifier",
+				"hide": "Hide Magnifier"
+			},
 			"toggleTargetCircle": {
 				"show": "Show Target Circle",
 				"hide": "Hide Target Circle"

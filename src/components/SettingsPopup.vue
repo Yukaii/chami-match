@@ -103,7 +103,7 @@
       </div>
 
       <!-- Max Tries -->
-      <div v-if="store.gameType !== 'contextual'" class="mb-4">
+      <div v-if="store.gameType !== 'contextual' && store.gameType !== 'image'" class="mb-4">
         <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.maxTries.label') }}</label>
         <div class="flex space-x-2">
           <BaseButton

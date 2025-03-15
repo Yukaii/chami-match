@@ -56,8 +56,8 @@ function findSuitableColorRegion(ctx, width, height) {
 		// Try several random spots to find a good color region
 		let bestRegion = null;
 		let bestScore = -1;
-		const attempts = 15; // Increased from 10 to get more candidate regions
-		const radius = 20;
+		const attempts = 500; // Increased from 10 to get more candidate regions
+		const radius = 30;
 
 		for (let attempt = 0; attempt < attempts; attempt++) {
 			// Avoid edges by 10% of dimensions
