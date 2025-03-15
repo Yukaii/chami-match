@@ -4,6 +4,7 @@
 	"startStandardGame": "標準モード",
 	"startContextualGame": "コンテキストモード",
 	"startRelativeGame": "明度差モード",
+	"startImageGame": "画像カラーマッチ",
 	"startGame": "ゲームを始める",
 	"startOver": "最初からやり直す",
 	"home": "ホーム",
@@ -107,6 +108,16 @@
 			"instructions": "スライダーを使用して、これらの色の明るさの違いを示してください（1〜100）",
 			"valueDifference": "明度差",
 			"yourGuess": "あなたの推測："
+		},
+		"image": {
+			"name": "画像カラーマッチ",
+			"description": "ランダムな画像から色を合わせる",
+			"instructions": "画像内の強調表示されたエリアの色を選択してください",
+			"selectPrompt": "一致する色を選択：",
+			"toggleMagnifier": {
+				"show": "拡大表示する",
+				"hide": "拡大表示を隠す"
+			}
 		}
 	}
 }

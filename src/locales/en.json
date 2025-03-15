@@ -1,0 +1,10 @@
+{
+  "// ...existing translations...": "",
+  "startImageGame": "Image Color Match",
+  "gameModes": {
+    "image": {
+      "instructions": "Match the color from the highlighted area in the image",
+      "selectPrompt": "Select the color that matches the highlighted area"
+    }
+  }
+}

@@ -24,6 +24,12 @@ function startRelativeGame() {
 	router.push("/relative-game");
 }
 
+function startImageGame() {
+	state.updateGameType("image");
+	state.startOver(); // Initialize a new game
+	router.push("/image-game");
+}
+
 function openSettings() {
 	state.settingsMode = "global";
 	state.toggleSettingsPopup();
@@ -72,6 +78,18 @@ function openSettings() {
         @click="startRelativeGame"
       >
         {{ $t('startRelativeGame') }}
+      </BaseButton>
+
+      <BaseButton
+        variant="primary"
+        is3d
+        size="lg"
+        full-width
+        class-name="bg-amber-500 dark:bg-amber-600 hover:bg-amber-600 dark:hover:bg-amber-700 border-b-4 border-amber-700 dark:border-amber-800"
+        :override-styles="true"
+        @click="startImageGame"
+      >
+        {{ $t('startImageGame') }}
       </BaseButton>
 
       <div class="mt-4">

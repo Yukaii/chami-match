@@ -2,7 +2,7 @@ import { useStorage, useToggle } from "@vueuse/core";
 import { nanoid } from "nanoid";
 import { computed, reactive, ref, watch } from "vue"; // Add watch import
 import { celebrateFirstTry } from "../utils/confetti";
-import { createGameMode } from "./modes";
+import { createGameMode, ImageMode } from "./modes"; // Explicitly import ImageMode class here
 
 function createSession({ maxLife, precision, mode, gameType }) {
 	return {
@@ -78,47 +78,94 @@ export const useGlobalGameState = createGlobalState(() => {
 	// Track first attempt for each round
 	const attemptCount = ref(0);
 
-	// Initialize game mode
+	// Initialize game mode with better error handling
 	function initGameMode() {
-		// Create game mode with current preferences
-		const newMode = createGameMode(gameType.value, {
-			colorMode: mode.value,
-			precision: precision.value,
-			realtimePreview: realtimePreview.value,
-		});
+		try {
+			console.log("Initializing game mode for type:", gameType.value);
 
-		// Initialize mode-specific state
-		const modeState = newMode.initState();
-		newMode.state = modeState;
+			// Create game mode with current preferences
+			const newMode = createGameMode(gameType.value, {
+				colorMode: mode.value,
+				precision: precision.value,
+				realtimePreview: realtimePreview.value,
+			});
 
-		// Update current game mode
-		currentGameMode.value = newMode;
+			if (!newMode) {
+				console.error("Failed to create game mode for type:", gameType.value);
+				return null;
+			}
 
-		return modeState;
+			// Special handling for image mode to ensure it's properly initialized
+			if (gameType.value === "image" && !(newMode instanceof ImageMode)) {
+				console.error("Created mode is not a proper ImageMode instance! Forcing direct creation.");
+				const imageMode = new ImageMode({
+					colorMode: mode.value,
+					precision: precision.value,
+					realtimePreview: realtimePreview.value,
+				});
+
+				// Initialize mode-specific state
+				const modeState = imageMode.initState();
+				imageMode.state = modeState;
+
+				// Update current game mode
+				currentGameMode.value = imageMode;
+				console.log("Directly created ImageMode:",
+					typeof imageMode.selectRandomColorFromImage === "function" ? "has" : "missing",
+					"selectRandomColorFromImage method");
+
+				return modeState;
+			}
+
+			// Normal initialization for other modes
+			const modeState = newMode.initState();
+			newMode.state = modeState;
+
+			// Update current game mode
+			currentGameMode.value = newMode;
+			console.log("Game mode initialized:", newMode.type,
+				"has required methods:",
+				gameType.value === "image" ?
+					typeof newMode.selectRandomColorFromImage === "function" : true);
+
+			return modeState;
+		} catch (error) {
+			console.error("Error initializing game mode:", error);
+			return null;
+		}
 	}
 
-	// Start a new game
+	// Start a new game with better error handling
 	function startOver() {
-		// Create a new session
-		const session = createSession({
-			maxLife: maxLife.value,
-			precision: precision.value,
-			mode: mode.value,
-			gameType: gameType.value,
-		});
-		currentSession.value = session;
-		sessions.value.push(session);
+		try {
+			// Create a new session
+			const session = createSession({
+				maxLife: maxLife.value,
+				precision: precision.value,
+				mode: mode.value,
+				gameType: gameType.value,
+			});
+			currentSession.value = session;
+			sessions.value.push(session);
 
-		// Reset the round and score
-		currentRound.value = 0;
-		score.value = 0;
-		lives.value = maxLife.value; // Explicitly reset lives based on maxLife
+			// Reset the round and score
+			currentRound.value = 0;
+			score.value = 0;
+			lives.value = maxLife.value; // Explicitly reset lives based on maxLife
 
-		// Initialize the game mode
-		initGameMode();
+			// Initialize the game mode
+			const modeState = initGameMode();
 
-		// Start a new round
-		startNewRound();
+			if (!modeState || !currentGameMode.value) {
+				console.error("Failed to initialize game mode in startOver");
+				return;
+			}
+
+			// Start a new round
+			startNewRound();
+		} catch (error) {
+			console.error("Error in startOver:", error);
+		}
 	}
 
 	// Start a new round
@@ -223,11 +270,30 @@ export const useGlobalGameState = createGlobalState(() => {
 		preferences.value.realtimePreview = preview;
 	}
 
+	// Update game type and initialize immediately
 	function updateGameType(newGameType) {
+		console.log("Updating game type to:", newGameType, "from:", preferences.value.gameType);
+
+		// Update the preference value
 		preferences.value.gameType = newGameType;
+
 		// Immediately update lives when game type changes
-		lives.value =
-			newGameType === "contextual" ? 2 : preferences.value.maxLife || 5;
+		lives.value = newGameType === "contextual" ? 2 : preferences.value.maxLife || 5;
+
+		// For image mode, initialize right away to avoid race conditions
+		if (newGameType === 'image') {
+			console.log("Creating ImageMode directly on type change");
+			const imageMode = new ImageMode({
+				colorMode: mode.value,
+				precision: precision.value,
+				realtimePreview: realtimePreview.value,
+			});
+
+			// Initialize mode-specific state
+			const modeState = imageMode.initState();
+			imageMode.state = modeState;
+			currentGameMode.value = imageMode;
+		}
 	}
 
 	function updateConfetti(enabled) {
@@ -478,5 +544,28 @@ export const useGlobalGameState = createGlobalState(() => {
 		},
 		refreshGameRecords, // Add this new method
 		attemptCount, // Add current attempts count
+		currentGameMode, // Expose currentGameMode directly for components
+
+		// Add direct ImageMode access
+		getImageMode() {
+			if (currentGameMode.value?.type === 'image') {
+				return currentGameMode.value;
+			}
+
+			// Create one if needed
+			console.log("Creating new ImageMode on demand");
+			const imageMode = new ImageMode({
+				colorMode: mode.value,
+				precision: precision.value,
+				realtimePreview: realtimePreview.value
+			});
+
+			// Initialize it
+			const modeState = imageMode.initState();
+			imageMode.state = modeState;
+
+			// Return the new instance
+			return imageMode;
+		},
 	};
 });
