@@ -17,6 +17,7 @@ export class ImageMode extends ContextualMode {
 			...baseState,
 			imageUrl: null,
 			imageLoading: false,
+			colorOptions: [], // Ensure colorOptions is initialized
 			targetRegion: {
 				x: 0,
 				y: 0,
@@ -115,15 +116,24 @@ export class ImageMode extends ContextualMode {
 
 			const { x, y, color } = findSuitableColorRegion(ctx, width, height);
 
+			// Ensure target region is properly initialized with all required properties
 			this.state.targetRegion = {
-				x,
-				y,
+				x: x || 0,
+				y: y || 0,
 				radius: 20,
+				targetRegionReady: true
 			};
 
 			return color;
 		} catch (error) {
 			console.error("Error in selectRandomColorFromImage:", error);
+			// Initialize fallback target region
+			this.state.targetRegion = {
+				x: 0,
+				y: 0,
+				radius: 20,
+				targetRegionReady: true
+			};
 			return generateFallbackColor();
 		}
 	}
@@ -228,86 +238,59 @@ export class ImageMode extends ContextualMode {
 		console.log("ImageMode.setTargetColorAndGenerateOptions called with color:", color);
 
 		try {
-			// ...existing state validation code...
-
-			// Make sure we have valid color values
-			if (!color || typeof color.h !== 'number' || typeof color.s !== 'number' || typeof color.v !== 'number') {
-				console.error("Invalid color provided to setTargetColorAndGenerateOptions", color);
-				// Generate fallback color
-				color = {
-					h: Math.floor(Math.random() * 360),
-					s: Math.floor(Math.random() * 70) + 30,
-					v: Math.floor(Math.random() * 70) + 30
-				};
+			if (!this.state) {
+				this.state = this.initState();
 			}
 
-			// Make sure target region is initialized
-			if (!this.state.targetRegion) {
-				this.state.targetRegion = {
-					x: 0,
-					y: 0,
-					radius: 20
-				};
-			}
-
-			// Update the target color
-			this.state.randomColor.h = color.h;
-			this.state.randomColor.s = color.s;
-			this.state.randomColor.v = color.v;
-
-			// Generate new color options
-			this.state.colorOptions = this.generateColorOptions();
-			console.log("Generated color options:", this.state.colorOptions.length, "items");
-
-			// Make sure options include the correct color
-			let hasCorrectColor = false;
-			for (const option of this.state.colorOptions) {
-				if (option.h === color.h && option.s === color.s && option.v === color.v) {
-					hasCorrectColor = true;
-					break;
+				// Validate and set the target color
+				if (!color || typeof color.h !== 'number') {
+					color = generateFallbackColor();
 				}
-			}
 
-			// If correct color is not included, replace a random option with it
-			if (!hasCorrectColor && this.state.colorOptions.length > 0) {
-				const randomIndex = Math.floor(Math.random() * this.state.colorOptions.length);
-				this.state.colorOptions[randomIndex] = { ...color };
-				console.log("Added correct color to options at index", randomIndex);
+				// Set the target color
+				this.state.randomColor = { ...color };
+
+				// Generate and set color options
+				const options = this.generateColorOptions();
+				this.state.colorOptions = options;
+
+				console.log("Set color options:", this.state.colorOptions?.length);
+				return this.state.colorOptions;
+			} catch (error) {
+				console.error("Error in setTargetColorAndGenerateOptions:", error);
+				const fallbackOptions = Array(6).fill().map(() => generateFallbackColor());
+				this.state.colorOptions = fallbackOptions;
+				return fallbackOptions;
 			}
-		} catch (error) {
-			console.error("Error in setTargetColorAndGenerateOptions:", error);
-			// Make sure we generate at least some options
-			this.state.colorOptions = Array(6).fill().map(() => ({
-				h: Math.floor(Math.random() * 360),
-				s: Math.floor(Math.random() * 100),
-				v: Math.floor(Math.random() * 100)
-			}));
 		}
-	}
 
 	// Override generateColorOptions to ensure we create good options for image colors
 	generateColorOptions() {
-		const options = [];
+		try {
+			const options = [];
+			const baseColor = this.state.randomColor;
 
-		// Add the target color (the correct answer)
-		if (this.state.randomColor) {
-			options.push({ ...this.state.randomColor });
+			// Always add the target color first
+			options.push({ ...baseColor });
+
+			// Generate variations
+			for (let i = 0; i < 5; i++) {
+				const hVariation = Math.floor(Math.random() * 60 - 30);
+				const sVariation = Math.floor(Math.random() * 40 - 20);
+				const vVariation = Math.floor(Math.random() * 40 - 20);
+
+				options.push({
+					h: (baseColor.h + hVariation + 360) % 360,
+					s: Math.max(10, Math.min(100, baseColor.s + sVariation)),
+					v: Math.max(10, Math.min(100, baseColor.v + vVariation))
+				});
+			}
+
+			// Shuffle the options
+			return options.sort(() => Math.random() - 0.5);
+		} catch (error) {
+			console.error("Error generating color options:", error);
+			return Array(6).fill().map(() => generateFallbackColor());
 		}
-
-		// Generate 5 additional similar but incorrect colors
-		for (let i = 0; i < 5; i++) {
-			const hVariation = Math.random() * 60 - 30; // ±30 degrees of hue
-			const sVariation = Math.random() * 40 - 20; // ±20% saturation
-			const vVariation = Math.random() * 40 - 20; // ±20% value/brightness
-
-			const h = Math.round((this.state.randomColor.h + hVariation + 360) % 360);
-			const s = Math.max(10, Math.min(100, this.state.randomColor.s + sVariation));
-			const v = Math.max(10, Math.min(100, this.state.randomColor.v + vVariation));
-
-			options.push({ h, s, v });
-		}
-
-		// Shuffle the options to randomize the correct answer's position
-		return options.sort(() => Math.random() - 0.5);
 	}
 }

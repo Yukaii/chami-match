@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch, computed, onBeforeUnmount } from "vue";
+import { onMounted, ref, watch, computed, onBeforeUnmount, reactive } from "vue";
 import { useGlobalGameState } from "../gameState";
 import GameNavBar from "./GameNavBar.vue";
 import { ImageMode } from "../gameState/modes/ImageMode"; // Import ImageMode explicitly
@@ -54,9 +54,9 @@ const getTargetRegion = computed(() => {
   return state.currentModeState.targetRegion;
 });
 
-// Add a computed property to properly handle color options display
+// Add safety checks for state.colorOptions
 const hasColorOptions = computed(() => {
-  return state.colorOptions && state.colorOptions.length > 0;
+  return state.colorOptions && Array.isArray(state.colorOptions) && state.colorOptions.length > 0;
 });
 
 // Calculate adjusted position for target circle and magnifier with null checks
@@ -163,67 +163,58 @@ async function handleImageLoad() {
   if (!imageElement.value || imageProcessing.value) return;
 
   console.log("Image loaded, processing...");
-  console.log("Image dimensions:", imageElement.value.naturalWidth, "x", imageElement.value.naturalHeight);
   imageProcessing.value = true;
   imageLoaded.value = true;
 
-  // Update the displayed dimensions
   updateImageDimensions();
 
   try {
-    // Check if the image has valid dimensions
-    if (imageElement.value.naturalWidth === 0 || imageElement.value.naturalHeight === 0) {
-      console.error("Image has no natural dimensions, trying to wait...");
-      await new Promise(resolve => setTimeout(resolve, 100));
-      console.log("After wait, dimensions:", imageElement.value.naturalWidth, "x", imageElement.value.naturalHeight);
-    }
-
-    // Make sure we have a valid ImageMode reference
-    if (!imageMode.value) {
-      console.log("No ImageMode reference, initializing now");
-      await initializeImageMode();
-    }
-
-    if (!imageMode.value || typeof imageMode.value.selectRandomColorFromImage !== 'function') {
-      throw new Error("Failed to get valid ImageMode instance");
-    }
-
-    // Use our direct ImageMode reference with explicit target region initialization
-    console.log("Using ImageMode to extract color from image");
-
-    // Ensure the mode has a target region
-    if (imageMode.value && !imageMode.value.state.targetRegion) {
-      imageMode.value.state.targetRegion = { x: 0, y: 0, radius: 20 };
-    }
-
     const extractedColor = await imageMode.value.selectRandomColorFromImage(imageElement.value);
     console.log("Extracted color:", extractedColor);
 
-    // Verify target region exists after processing
-    console.log("Target region after extraction:",
-      imageMode.value.state.targetRegion ?
-      `x:${imageMode.value.state.targetRegion.x}, y:${imageMode.value.state.targetRegion.y}` :
-      "undefined");
-
-    // Update the state's random color
+    // Update image mode first
     imageMode.value.setTargetColorAndGenerateOptions(extractedColor);
 
-    // Also update the global state if possible
-    if (state.currentGameMode && state.currentGameMode.type === 'image') {
-      state.currentGameMode.setTargetColorAndGenerateOptions(extractedColor);
+    // Set the current game mode
+    state.currentGameMode = imageMode.value;
+
+    // Initialize or update currentModeState if needed
+    if (!state.currentModeState) {
+      state.currentModeState = reactive({
+        targetRegion: {
+          x: 0,
+          y: 0,
+          radius: 20,
+          targetRegionReady: false
+        },
+        colorOptions: [],
+        imageUrl: null
+      });
     }
 
-    // Log color options after processing for debugging
-    console.log("Color options available:",
-      state.colorOptions?.length || 0,
-      "items:",
-      state.colorOptions);
+    // Update mode state properties
+    state.currentModeState.targetRegion = {
+      ...imageMode.value.state.targetRegion,
+      targetRegionReady: true
+    };
+    state.currentModeState.colorOptions = [...imageMode.value.state.colorOptions];
+    state.currentModeState.imageUrl = imageMode.value.state.imageUrl;
+
+    console.log("Updated state:", {
+      targetRegion: state.currentModeState.targetRegion,
+      modeColorOptions: state.currentModeState.colorOptions?.length,
+      imageUrl: state.currentModeState.imageUrl
+    });
   } catch (error) {
     console.error("Error processing image:", error);
-
-    // Ensure we have a fallback target region if there was an error
-    if (imageMode.value && !imageMode.value.state.targetRegion) {
-      imageMode.value.state.targetRegion = { x: 0, y: 0, radius: 20 };
+    // Set fallback values
+    if (state.currentModeState) {
+      state.currentModeState.targetRegion = {
+        x: 0,
+        y: 0,
+        radius: 20,
+        targetRegionReady: true
+      };
     }
   } finally {
     imageProcessing.value = false;
@@ -403,8 +394,6 @@ function toggleMagnifier() {
 }
 
 .color-button {
-  aspect-ratio: 1/1;
-  min-height: 3rem;
   border-radius: 0.5rem;
   transition: all 0.2s ease;
   cursor: pointer;
