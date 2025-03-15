@@ -103,9 +103,9 @@
 		},
 		"color": {
 			"name": "圖像顏色模式",
-			"description": "從實際圖像中匹配顏色 - 測試你在上下文中的顏色感知能力！",
-			"instructions": "選擇與圖像中突出顯示區域匹配的顏色",
-			"selectPrompt": "選擇匹配的顏色：",
+			"description": "從實際圖像中配對顏色 - 測試你在上下文中的顏色感知能力！",
+			"instructions": "選擇與圖像中突出顯示區域配對的顏色",
+			"selectPrompt": "選擇配對的顏色：",
 			"lastSelection": "你上次的選擇：",
 			"toggleMagnifier": {
 				"show": "顯示放大鏡",
