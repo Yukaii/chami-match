@@ -94,7 +94,7 @@ const currentColorOptions = computed(() => {
 function getAdjustedPosition(x, y) {
 	if (
 		!imageElement.value ||
-		!imageWrapperRef.value || // Use wrapper ref instead of container
+		!imageWrapperRef.value ||
 		typeof x !== "number" ||
 		typeof y !== "number"
 	) {
@@ -102,19 +102,17 @@ function getAdjustedPosition(x, y) {
 	}
 
 	try {
+		// Get the actual dimensions of the image as displayed
 		const imageRect = imageElement.value.getBoundingClientRect();
 
-		// Calculate scaling of the image
-		const scaleX =
-			imageElement.value.clientWidth / imageElement.value.naturalWidth;
-		const scaleY =
-			imageElement.value.clientHeight / imageElement.value.naturalHeight;
+		// Calculate scaling of the image based on natural vs displayed size
+		const scaleX = imageRect.width / imageElement.value.naturalWidth;
+		const scaleY = imageRect.height / imageElement.value.naturalHeight;
 
-		// Calculate the position within the image element itself
+		// Calculate the position within the image itself
 		const scaledX = x * scaleX;
 		const scaledY = y * scaleY;
 
-		// No additional offsets needed when using the wrapper
 		return {
 			x: scaledX,
 			y: scaledY,
@@ -125,11 +123,28 @@ function getAdjustedPosition(x, y) {
 	}
 }
 
+// Add debounce function
+function debounce(fn, delay) {
+  let timeoutId;
+  return function(...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn.apply(this, args), delay);
+  };
+}
+
+// Debounced version of updateImageDimensions
+const debouncedUpdateDimensions = debounce(() => {
+  updateImageDimensions();
+}, 100);
+
 // Update the image dimensions
 function updateImageDimensions() {
 	if (imageElement.value) {
-		displayedImageWidth.value = imageElement.value.clientWidth;
-		displayedImageHeight.value = imageElement.value.clientHeight;
+    const imageRect = imageElement.value.getBoundingClientRect();
+		displayedImageWidth.value = imageRect.width;
+		displayedImageHeight.value = imageRect.height;
+    // Force position update when dimensions change
+    positionUpdateTrigger.value++;
 	}
 }
 
@@ -181,13 +196,34 @@ onMounted(async () => {
 	console.log("ImageGameScreen mounted, initializing");
 	await initializeImageMode();
 
-	// Add resize listener
-	window.addEventListener("resize", updateImageDimensions);
+	// Add resize listener with the debounced function
+	window.addEventListener("resize", debouncedUpdateDimensions);
+
+	// Initial dimension update
+	nextTick(() => {
+		updateImageDimensions();
+	});
+
+  // Setup ResizeObserver for more reliable size change detection
+  if (window.ResizeObserver) {
+    resizeObserver = new ResizeObserver(debouncedUpdateDimensions);
+
+    // Observe both the wrapper and the image
+    if (imageWrapperRef.value) {
+      resizeObserver.observe(imageWrapperRef.value);
+    }
+    if (imageElement.value) {
+      resizeObserver.observe(imageElement.value);
+    }
+  }
 });
 
-// Clean up event listeners
+// Clean up event listeners and observers
 onBeforeUnmount(() => {
-	window.removeEventListener("resize", updateImageDimensions);
+	window.removeEventListener("resize", debouncedUpdateDimensions);
+  if (resizeObserver) {
+    resizeObserver.disconnect();
+  }
 });
 
 // Handle image load
@@ -238,6 +274,8 @@ async function handleImageLoad() {
 		imageLoaded.value = false;
 	} finally {
 		imageProcessing.value = false;
+		// Ensure dimensions are updated after processing completes
+		nextTick(() => updateImageDimensions());
 	}
 }
 
@@ -282,6 +320,56 @@ const isDevMode = ref(false);
 
 // Fixed size for inner color dot (in pixels)
 const innerColorDotSize = 10;
+
+// Add a watcher to update dimensions when key properties change
+watch(
+	[
+		() => imageElement.value?.naturalWidth,
+		() => imageElement.value?.naturalHeight,
+		() => imageWrapperRef.value?.clientWidth,
+		() => imageWrapperRef.value?.clientHeight,
+		imageLoaded
+	],
+	() => {
+		if (imageLoaded.value && !imageProcessing.value) {
+			nextTick(() => {
+        updateImageDimensions();
+        // Force position update
+        positionUpdateTrigger.value++;
+      });
+		}
+	}
+);
+
+// Add a reactive counter to force position updates
+const positionUpdateTrigger = ref(0);
+
+// Create a reactive computed property for the adjusted position
+const adjustedTargetPosition = computed(() => {
+  // Including positionUpdateTrigger in the computation makes this reactive
+  positionUpdateTrigger.value;
+  if (!getTargetRegion.value || getTargetRegion.value.x === undefined) {
+    return { x: 0, y: 0 };
+  }
+  return getAdjustedPosition(getTargetRegion.value.x, getTargetRegion.value.y);
+});
+
+// Track resize observer
+let resizeObserver = null;
+
+// Update observer targets when refs change
+watch([imageWrapperRef, imageElement], ([newWrapper, newImage]) => {
+  if (resizeObserver) {
+    resizeObserver.disconnect();
+
+    if (newWrapper) {
+      resizeObserver.observe(newWrapper);
+    }
+    if (newImage) {
+      resizeObserver.observe(newImage);
+    }
+  }
+});
 </script>
 
 <template>
@@ -326,15 +414,15 @@ const innerColorDotSize = 10;
               @error="console.error('Image failed to load:', store.currentModeState.imageUrl)"
             />
 
-            <!-- Target circle overlay (formerly magnifier) - now always visible -->
+            <!-- Target circle overlay - now using computed adjustedTargetPosition -->
             <div
               v-if="imageLoaded && !imageProcessing && getTargetRegion?.x !== undefined"
               class="absolute pointer-events-none border-2 border-white shadow-lg overflow-hidden rounded-full"
               :style="{
                 width: `${targetCircleSize}px`,
                 height: `${targetCircleSize}px`,
-                top: `${getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).y - targetCircleSize/2}px`,
-                left: `${getAdjustedPosition(getTargetRegion.x, getTargetRegion.y).x - targetCircleSize/2}px`,
+                top: `${adjustedTargetPosition.y - targetCircleSize/2}px`,
+                left: `${adjustedTargetPosition.x - targetCircleSize/2}px`,
                 zIndex: 10
               }"
             >
