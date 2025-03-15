@@ -282,26 +282,6 @@ function toggleMagnifier() {
 // Development mode flag
 const isDevMode = ref(import.meta.env.DEV);
 
-// Magnifier image style
-const magnifierImageStyle = computed(() => {
-	if (!getTargetRegion.value || !imageElement.value) return {};
-
-	const pos = getAdjustedPosition(
-		getTargetRegion.value.x,
-		getTargetRegion.value.y,
-	);
-
-	return {
-		minWidth: "300px",
-		width: `${displayedImageWidth.value}px`,
-		height: `${displayedImageHeight.value}px`,
-		transform: `translate(
-      ${-(pos.x - imageElement.value.offsetLeft)}px,
-      ${-(pos.y - imageElement.value.offsetTop)}px
-    )`,
-	};
-});
-
 // Watch for region updates
 watch(
 	() => getTargetRegion.value,
@@ -376,11 +356,7 @@ watch([displayedImageWidth, displayedImageHeight], () => {
               zIndex: 10
             }"
           >
-            <img
-              :src="store.currentModeState.imageUrl"
-              class="absolute select-none"
-              :style="magnifierImageStyle"
-            />
+            <!-- Image overlay removed from here -->
           </div>
 
           <!-- Target circle -->
