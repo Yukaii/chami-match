@@ -287,17 +287,6 @@ async function handleImageLoad() {
   }
 }
 
-// Use a watcher to detect new rounds and reset the selected color index
-watch(
-  [() => state.randomColor, () => currentRound.value],
-  () => {
-    imageLoaded.value = false;
-    imageProcessing.value = false;
-    selectedColorIndex.value = -1;
-  },
-  { deep: true },
-);
-
 function selectColor(color, index) {
   if (!color) return;
 
@@ -313,6 +302,22 @@ function selectColor(color, index) {
 
 function resetSelection() {
   selectedColorIndex.value = -1; // Reset selected index
+  if (imageMode.value && typeof imageMode.value.startRound === 'function') {
+    imageLoaded.value = false;
+    imageProcessing.value = false;
+    imageMode.value.startRound().then(() => {
+      if (imageMode.value?.state) {
+        const newState = {
+          targetRegion: imageMode.value.state.targetRegion,
+          targetRegionReady: true,
+          colorOptions: [...(imageMode.value.state.colorOptions || [])],
+          imageUrl: imageMode.value.state.imageUrl
+        };
+        Object.assign(imageMode.value.state, newState);
+        Object.assign(state.currentModeState, newState);
+      }
+    });
+  }
 }
 
 // Toggle magnifier
