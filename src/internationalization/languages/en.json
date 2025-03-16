@@ -7,6 +7,7 @@
 	"startContextualGame": "Contextual Mode",
 	"startRelativeGame": "Value Difference Mode",
 	"startColorGame": "Image Color Mode",
+	"startRecallGame": "Recall Mode",
 	"startGame": "Start Game",
 	"start": "Start",
 	"quickStart": "Quick Start Last Game",
@@ -60,6 +61,9 @@
 		},
 		"realtimePreview": {
 			"label": "Realtime Preview"
+		},
+		"recallTimeout": {
+			"label": "Recall Time"
 		},
 		"notice": "Applying game options will start a new round.",
 		"cta": "Apply",
@@ -118,6 +122,14 @@
 				"show": "Show Target Circle",
 				"hide": "Hide Target Circle"
 			}
+		},
+		"recall": {
+			"name": "Recall Mode",
+			"description": "Test your color memory - see a color briefly and then recall it",
+			"instructions": "Memorize the color before it disappears, then select the matching color",
+			"selectPrompt": "Select the matching color:",
+			"lastSelection": "Your last selection:",
+			"memorizePrompt": "Memorize this color!"
 		}
 	},
 	"colorDifferences": "Color Differences",

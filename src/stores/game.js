@@ -28,6 +28,7 @@ export const useGameStore = defineStore("game", {
 			gameType: "standard",
 			enableConfetti: true,
 			lastPlayedGameType: null, // Track the last played game type
+			recallTimeout: 5, // Default recall timeout
 		}),
 		history: useStorage("history", []),
 
@@ -73,6 +74,9 @@ export const useGameStore = defineStore("game", {
 		},
 		gameType(state) {
 			return state.preferences.gameType || "standard";
+		},
+		recallTimeout(state) {
+			return state.preferences.recallTimeout || 5;
 		},
 
 		// Current game mode state accessors
@@ -386,7 +390,9 @@ export const useGameStore = defineStore("game", {
 			this.preferences.lastPlayedGameType = newGameType;
 			// Immediately update lives when game type changes
 			this.lives =
-				newGameType === "contextual" || newGameType === "image"
+				newGameType === "contextual" ||
+				newGameType === "image" ||
+				newGameType === "recall"
 					? 2
 					: this.preferences.maxLife || 5;
 		},
@@ -398,6 +404,11 @@ export const useGameStore = defineStore("game", {
 
 		updateConfetti(enabled) {
 			this.preferences.enableConfetti = enabled;
+		},
+
+		// Add new action for updating recall timeout
+		updateRecallTimeout(newTimeout) {
+			this.preferences.recallTimeout = newTimeout;
 		},
 
 		// Toggle UI states
@@ -472,7 +483,9 @@ export const useGameStore = defineStore("game", {
 				() => this.preferences.gameType,
 				(newGameType) => {
 					this.lives =
-						newGameType === "contextual" || newGameType === "image"
+						newGameType === "contextual" ||
+						newGameType === "image" ||
+						newGameType === "recall"
 							? 2
 							: this.preferences.maxLife || 5;
 				},

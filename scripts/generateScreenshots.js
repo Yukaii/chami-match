@@ -30,6 +30,10 @@ const routes = [
 		path: "/image-game",
 		name: "image-game",
 	},
+	{
+		path: "/recall-game",
+		name: "recall-game",
+	},
 ];
 
 // Dimensions to capture

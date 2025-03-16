@@ -13,6 +13,7 @@
 | コンテキストモード | <img src="./docs/screenshots/ja/light/mobile/context-game.png" width="400"> |
 | 明度差モード       | <img src="./docs/screenshots/ja/light/mobile/relative-game.png" width="400"> |
 | 画像モード         | <img src="./docs/screenshots/ja/light/mobile/image-game.png" width="400">    |
+| 記憶モード         | <img src="./docs/screenshots/ja/light/mobile/recall-game.png" width="400">    |
 
 ### ダークモード
 
@@ -23,6 +24,7 @@
 | コンテキストモード | <img src="./docs/screenshots/ja/dark/mobile/context-game.png" width="400"> |
 | 明度差モード       | <img src="./docs/screenshots/ja/dark/mobile/relative-game.png" width="400"> |
 | 画像モード         | <img src="./docs/screenshots/ja/dark/mobile/image-game.png" width="400">    |
+| 記憶モード         | <img src="./docs/screenshots/ja/dark/mobile/recall-game.png" width="400">    |
 
 ## クレジット
 

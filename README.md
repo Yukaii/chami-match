@@ -13,6 +13,7 @@ Language: [English](README.md) | [日本語](README.ja.md) | [繁體中文](READ
 | Context Game  | <img src="./docs/screenshots/en/light/mobile/context-game.png" width="400">  |
 | Relative Game | <img src="./docs/screenshots/en/light/mobile/relative-game.png" width="400"> |
 | Image Game    | <img src="./docs/screenshots/en/light/mobile/image-game.png" width="400">    |
+| Recall        | <img src="./docs/screenshots/en/light/mobile/recall-game.png" width="400">    |
 
 ### Dark Mode
 
@@ -23,6 +24,7 @@ Language: [English](README.md) | [日本語](README.ja.md) | [繁體中文](READ
 | Context Game    | <img src="./docs/screenshots/en/dark/mobile/context-game.png" width="400"> |
 | Relative Game   | <img src="./docs/screenshots/en/dark/mobile/relative-game.png" width="400"> |
 | Image Game    | <img src="./docs/screenshots/en/dark/mobile/image-game.png" width="400">    |
+| Recall          | <img src="./docs/screenshots/en/dark/mobile/recall-game.png" width="400">    |
 
 ## Credits
 

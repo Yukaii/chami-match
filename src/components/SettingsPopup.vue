@@ -69,7 +69,7 @@
       <hr class="mb-4 border-gray-400" />
 
       <!-- Precision - Only shown when NOT in contextual mode or image mode -->
-      <div v-if="store.gameType !== 'contextual' && store.gameType !== 'image'" class="mb-4">
+      <div v-if="isBasicGameType" class="mb-4">
         <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.precision.label') }}</label>
         <div class="flex space-x-2">
           <BaseButton
@@ -86,7 +86,7 @@
       </div>
 
       <!-- Color Mode - Not shown in image mode -->
-      <div v-if="store.gameType !== 'image'" class="mb-4">
+      <div v-if="isNotImageMode" class="mb-4">
         <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.colorMode.label') }}</label>
         <div class="flex space-x-2">
           <BaseButton
@@ -103,7 +103,7 @@
       </div>
 
       <!-- Max Tries -->
-      <div v-if="store.gameType !== 'contextual' && store.gameType !== 'image'" class="mb-4">
+      <div v-if="isBasicGameType" class="mb-4">
         <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.maxTries.label') }}</label>
         <div class="flex space-x-2">
           <BaseButton
@@ -120,7 +120,7 @@
       </div>
 
       <!-- Realtime Preview -->
-      <div v-if="store.gameType !== 'image'" class="mb-4">
+      <div v-if="isBasicGameType" class="mb-4">
         <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.realtimePreview.label') }}</label>
         <div class="flex space-x-2">
           <BaseButton
@@ -132,6 +132,23 @@
             @click="settings.realtimePreview = value"
           >
             {{ value ? 'On' : 'Off' }}
+          </BaseButton>
+        </div>
+      </div>
+
+      <!-- Recall Timeout - Only shown when in recall mode -->
+      <div v-if="store.gameType === 'recall'" class="mb-4">
+        <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.recallTimeout.label') }}</label>
+        <div class="flex space-x-2">
+          <BaseButton
+            v-for="value in [3, 5, 10]"
+            :key="value"
+            :variant="settings.recallTimeout === value ? 'primary' : 'secondary'"
+            size="sm"
+            is3d
+            @click="settings.recallTimeout = value"
+          >
+            {{ value }}s
           </BaseButton>
         </div>
       </div>
@@ -167,7 +184,7 @@
 
 <script setup>
 import { PhDeviceMobile, PhMoon, PhSun } from "@phosphor-icons/vue";
-import { onMounted, reactive, ref, watch } from "vue";
+import { computed, onMounted, reactive, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useGameStore } from "../stores/game";
 import BaseButton from "./base/BaseButton.vue";
@@ -179,6 +196,17 @@ const languages = [
 	{ code: "en", label: "English" },
 	{ code: "ja", label: "日本語" },
 ];
+
+// Computed properties for game type conditions
+const isBasicGameType = computed(
+	() =>
+		store.gameType !== "image" &&
+		store.gameType !== "contextual" &&
+		store.gameType !== "recall",
+);
+
+const isNotImageMode = computed(() => store.gameType !== "image");
+
 const settings = reactive({
 	language: localStorage.getItem("lang") || navigator.language || "zh-TW",
 	precision: store.precision,
@@ -186,6 +214,7 @@ const settings = reactive({
 	maxTries: store.maxLife,
 	realtimePreview: store.realtimePreview,
 	enableConfetti: store.preferences.enableConfetti || true,
+	recallTimeout: store.recallTimeout,
 });
 
 // Theme handling
@@ -232,6 +261,7 @@ watch(
 			settings.maxTries = store.maxLife;
 			settings.realtimePreview = store.realtimePreview;
 			settings.enableConfetti = store.preferences.enableConfetti ?? true;
+			settings.recallTimeout = store.recallTimeout;
 		}
 	},
 );
@@ -242,6 +272,7 @@ const onApply = () => {
 	store.updateMaxLife(settings.maxTries);
 	store.updateRealtimePreview(settings.realtimePreview);
 	store.updateConfetti(settings.enableConfetti);
+	store.updateRecallTimeout(settings.recallTimeout);
 	store.startOver();
 	onClose();
 };
