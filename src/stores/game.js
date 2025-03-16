@@ -27,6 +27,7 @@ export const useGameStore = defineStore("game", {
 			realtimePreview: false,
 			gameType: "standard",
 			enableConfetti: true,
+			lastPlayedGameType: null, // Track the last played game type
 		}),
 		history: useStorage("history", []),
 
@@ -210,7 +211,11 @@ export const useGameStore = defineStore("game", {
 				console.error("Error getting round history:", error);
 				return [];
 			}
-		},
+			},
+
+			lastPlayedGameType(state) {
+				return state.preferences.lastPlayedGameType || state.preferences.gameType || "standard";
+			},
 	},
 
 	actions: {
@@ -373,11 +378,18 @@ export const useGameStore = defineStore("game", {
 
 		updateGameType(newGameType) {
 			this.preferences.gameType = newGameType;
+				// Also update lastPlayedGameType
+				this.preferences.lastPlayedGameType = newGameType;
 			// Immediately update lives when game type changes
 			this.lives =
 				newGameType === "contextual" || newGameType === "image"
 					? 2
 					: this.preferences.maxLife || 5;
+		},
+
+		updateLastPlayedGameType(gameType) {
+			// Specifically update only the last played game type
+			this.preferences.lastPlayedGameType = gameType;
 		},
 
 		updateConfetti(enabled) {

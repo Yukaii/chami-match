@@ -6,6 +6,8 @@
 	"startRelativeGame": "明度差モード",
 	"startColorGame": "画像カラーモード",
 	"startGame": "ゲームを始める",
+	"start": "スタート",
+	"quickStart": "前回のゲームを開始",
 	"startOver": "最初からやり直す",
 	"home": "ホーム",
 	"submit": "提出",
