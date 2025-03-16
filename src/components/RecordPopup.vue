@@ -458,13 +458,22 @@ function formatGameType(type) {
 
 // Helper function to determine color format
 function getColorFormat(record) {
-	if (!record?.actualColor) return "HSV";
-	if ('r' in record.actualColor && 'g' in record.actualColor && 'b' in record.actualColor) {
-		return "RGB";
-	} else if ('L' in record.actualColor && 'a' in record.actualColor && 'b' in record.actualColor) {
-		return "OKLAB";
-	}
-	return "HSV";
+  if (!record?.actualColor) return "HSV";
+
+  // More precise format detection
+  if ('L' in record.actualColor && 'a' in record.actualColor && 'b' in record.actualColor) {
+    // OKLAB has specific L, a, b properties
+    return "OKLAB";
+  } else if ('r' in record.actualColor && 'g' in record.actualColor && 'b' in record.actualColor) {
+    // RGB has specific r, g, b properties
+    return "RGB";
+  } else if ('h' in record.actualColor && 's' in record.actualColor && 'v' in record.actualColor) {
+    // HSV has specific h, s, v properties
+    return "HSV";
+  }
+
+  // If we can't determine format, look for colorSpace property
+  return record.colorSpace?.toUpperCase() || "HSV";
 }
 
 // Convert any color to HSV for comparison
