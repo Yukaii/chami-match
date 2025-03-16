@@ -195,10 +195,18 @@ export class StandardMode extends BaseMode {
 	}
 
 	createHistoryRecord(wasSuccess, round, sessionId) {
+		// Create a clean copy of the random color, excluding the _hsv property to avoid circular references
+		const actualColor = {};
+		Object.keys(this.state.randomColor).forEach(key => {
+			if (key !== '_hsv') {
+				actualColor[key] = this.state.randomColor[key];
+			}
+		});
+
 		return {
 			type: "color",
 			guessedColor: Object.assign({}, this.state.userColor),
-			actualColor: Object.assign({}, this.state.randomColor),
+			actualColor: actualColor,
 		};
 	}
 }
