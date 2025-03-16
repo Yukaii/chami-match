@@ -481,7 +481,7 @@ export const useGameStore = defineStore("game", {
 				() => this.preferences.gameType,
 				(newGameType) => {
 					this.lives =
-						newGameType === "contextual" || newGameType === "image"
+						newGameType === "contextual" || newGameType === "image" || newGameType === "recall"
 							? 2
 							: this.preferences.maxLife || 5;
 				},

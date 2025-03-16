@@ -69,7 +69,7 @@
       <hr class="mb-4 border-gray-400" />
 
       <!-- Precision - Only shown when NOT in contextual mode or image mode -->
-      <div v-if="store.gameType !== 'contextual' && store.gameType !== 'image'" class="mb-4">
+      <div v-if="store.gameType !== 'contextual' && store.gameType !== 'image' && store.gameType !== 'recall'" class="mb-4">
         <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.precision.label') }}</label>
         <div class="flex space-x-2">
           <BaseButton
@@ -103,7 +103,7 @@
       </div>
 
       <!-- Max Tries -->
-      <div v-if="store.gameType !== 'contextual' && store.gameType !== 'image'" class="mb-4">
+      <div v-if="store.gameType !== 'contextual' && store.gameType !== 'image' && store.gameType !== 'recall'" class="mb-4">
         <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.maxTries.label') }}</label>
         <div class="flex space-x-2">
           <BaseButton
@@ -120,7 +120,7 @@
       </div>
 
       <!-- Realtime Preview -->
-      <div v-if="store.gameType !== 'image'" class="mb-4">
+      <div v-if="store.gameType !== 'image' && store.gameType !== 'contextual' && store.gameType !== 'recall'" class="mb-4">
         <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.realtimePreview.label') }}</label>
         <div class="flex space-x-2">
           <BaseButton
