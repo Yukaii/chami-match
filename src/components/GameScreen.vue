@@ -10,6 +10,11 @@ const mode = computed(() => store.mode);
 const colorSpace = computed(() => store.colorSpace);
 const realtimePreview = computed(() => store.realtimePreview);
 
+// start a new round if current round is zero
+if (store.currentRound === 0) {
+  store.startNewRound();
+}
+
 // HSV values
 const userH = ref(store.userColor?.h || 0);
 const userS = ref(store.userColor?.s || 0);

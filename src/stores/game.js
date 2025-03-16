@@ -162,7 +162,7 @@ export const useGameStore = defineStore("game", {
 
 				// Process all records from history
 				state.history.forEach((record) => {
-					if (!record || !record.sessionId || typeof record.round === 'undefined') return;
+					if (!record || !record.sessionId || !record.round) return;
 
 					// Initialize session if needed
 					if (!recordsBySession[record.sessionId]) {
