@@ -76,7 +76,7 @@ watch([colorValues, realtimePreview], () => {
 </script>
 
 <template>
-  <div class="flex size-full flex-col justify-between p-2 pb-4">
+  <div class="flex size-full flex-col justify-between p-2 pb-4 overflow-y-auto min-h-screen">
     <div class="flex flex-col gap-3">
       <!-- Navigation bar separate from game toolbar -->
       <GameNavBar />
@@ -86,13 +86,13 @@ watch([colorValues, realtimePreview], () => {
       <HealthBar />
     </div>
 
-    <div class="flex gap-2">
+    <div class="flex gap-2 my-2">
       <ColorBlock :color="store.randomColor" />
       <ColorBlock :color="store.userColor" />
     </div>
 
     <!-- Color Space Selector -->
-    <div class="mb-2 mt-2">
+    <div class="mb-2 mt-1">
       <div class="flex justify-center space-x-2">
         <BaseButton
           v-for="space in ['hsv', 'rgb', 'oklab']"
@@ -108,7 +108,7 @@ watch([colorValues, realtimePreview], () => {
     </div>
 
     <!-- Sliders and Submit Button -->
-    <div class="flex flex-col space-y-4">
+    <div class="flex flex-col space-y-3 mt-auto">
       <!-- HSV Sliders -->
       <template v-if="colorSpace === 'hsv'">
         <BaseSlider
@@ -184,15 +184,18 @@ watch([colorValues, realtimePreview], () => {
         />
       </template>
 
-      <!-- Submit Button -->
-      <BaseButton
-        variant="primary"
-        is3d
-        full-width
-        @click="submit"
-      >
-        {{ $t('submit') }}
-      </BaseButton>
+      <!-- Submit Button - Ensure it's always visible -->
+      <div class="sticky bottom-0 pt-2 pb-1 bg-opacity-90 z-10">
+        <BaseButton
+          variant="primary"
+          is3d
+          full-width
+          @click="submit"
+          class="py-2"
+        >
+          {{ $t('submit') }}
+        </BaseButton>
+      </div>
     </div>
   </div>
 </template>
