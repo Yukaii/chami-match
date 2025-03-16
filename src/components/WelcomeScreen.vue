@@ -115,20 +115,7 @@ onMounted(() => {
                 <span v-html="mode.icon"></span>
               </div>
               <h2 class="text-2xl font-bold mb-4">{{ $t(mode.name) }}</h2>
-
-              <!-- Start game button -->
-              <BaseButton
-                v-if="index === currentSlide"
-                variant="primary"
-                is3d
-                size="lg"
-                full-width
-                :class-name="mode.color"
-                :override-styles="true"
-                @click="startGame"
-              >
-                {{ $t('start') }}
-              </BaseButton>
+              <!-- Start button removed from here -->
             </div>
           </slide>
 
@@ -140,8 +127,25 @@ onMounted(() => {
         </carousel>
       </div>
 
+      <!-- Start game button - now outside the carousel -->
+      <div class="mt-4">
+        <BaseButton
+          variant="primary"
+          is3d
+          size="lg"
+          full-width
+          :class-name="currentGameMode.color"
+          :override-styles="true"
+          @click="startGame"
+        >
+          {{ $t('start') }}
+        </BaseButton>
+      </div>
+
       <!-- Quick start last played game -->
-      <div v-if="store.lastPlayedGameType" class="mt-4">
+      <div v-if="store.lastPlayedGameType &&
+                 store.lastPlayedGameType !== currentGameMode.type"
+           class="mt-4">
         <BaseButton
           variant="primary"
           full-width
