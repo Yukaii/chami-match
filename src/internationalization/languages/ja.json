@@ -58,6 +58,9 @@
 		"colorMode": {
 			"label": "カラーモード"
 		},
+		"colorSpace": {
+			"label": "色空間"
+		},
 		"maxTries": {
 			"label": "試行回数"
 		},

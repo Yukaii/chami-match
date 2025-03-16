@@ -56,6 +56,9 @@
 		"colorMode": {
 			"label": "Color Mode"
 		},
+		"colorSpace": {
+			"label": "Color Space"
+		},
 		"maxTries": {
 			"label": "Max Tries"
 		},

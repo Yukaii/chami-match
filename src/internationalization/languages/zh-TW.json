@@ -54,7 +54,10 @@
 			"label": "精度"
 		},
 		"colorMode": {
-			"label": "色彩模式"
+			"label": "顏色模式"
+		},
+		"colorSpace": {
+			"label": "色彩空間"
 		},
 		"maxTries": {
 			"label": "最大嘗試次數"

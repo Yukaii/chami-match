@@ -24,6 +24,7 @@ export const useGameStore = defineStore("game", {
 			maxLife: 5,
 			precision: 10,
 			mode: "Color",
+			colorSpace: "hsv", // Default color space
 			realtimePreview: false,
 			gameType: "standard",
 			enableConfetti: true,
@@ -69,6 +70,9 @@ export const useGameStore = defineStore("game", {
 		},
 		mode(state) {
 			return state.preferences.mode || "Color";
+		},
+		colorSpace(state) {
+			return state.preferences.colorSpace || "hsv";
 		},
 		realtimePreview(state) {
 			return state.preferences.realtimePreview || false;
@@ -239,6 +243,7 @@ export const useGameStore = defineStore("game", {
 			// Create game mode with current preferences
 			const newMode = createGameMode(this.gameType, {
 				colorMode: this.mode,
+				colorSpace: this.colorSpace,
 				precision: this.precision,
 				realtimePreview: this.realtimePreview,
 			});
@@ -371,6 +376,13 @@ export const useGameStore = defineStore("game", {
 		// Settings updates
 		updateMode(newMode) {
 			this.preferences.mode = newMode;
+		},
+
+		updateColorSpace(newColorSpace) {
+			this.preferences.colorSpace = newColorSpace;
+
+			// If we have an active game mode, update its color space
+			this.currentGameMode?.setColorSpace?.(newColorSpace);
 		},
 
 		updatePrecision(newPrecision) {
