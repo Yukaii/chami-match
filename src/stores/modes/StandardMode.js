@@ -61,12 +61,12 @@ export class StandardMode extends BaseMode {
 		if (this.colorSpace === "rgb") {
 			// Convert HSV to RGB
 			const { r, g, b } = this.hsvToRgb(hsvColor.h, hsvColor.s, hsvColor.v);
-			return { r, g, b, _hsv: hsvColor }; // Keep the original HSV for comparison
+			return { r, g, b }; // Return only RGB values
 		}
 		if (this.colorSpace === "oklab") {
 			// Convert HSV to OKLAB
 			const { L, a, b } = hsvToOklab(hsvColor.h, hsvColor.s, hsvColor.v);
-			return { L, a, b, _hsv: hsvColor }; // Keep the original HSV for comparison
+			return { L, a, b }; // Return only OKLAB values
 		}
 		return hsvColor; // Default to HSV
 	}
@@ -85,12 +85,10 @@ export class StandardMode extends BaseMode {
 			this.state.randomColor.r = random.r;
 			this.state.randomColor.g = random.g;
 			this.state.randomColor.b = random.b;
-			this.state.randomColor._hsv = random._hsv; // Store original HSV for comparison
 		} else if (this.colorSpace === "oklab") {
 			this.state.randomColor.L = random.L;
 			this.state.randomColor.a = random.a;
 			this.state.randomColor.b = random.b;
-			this.state.randomColor._hsv = random._hsv; // Store original HSV for comparison
 		} else {
 			// Default to HSV
 			this.state.randomColor.h = random.h;
@@ -118,6 +116,32 @@ export class StandardMode extends BaseMode {
 
 	// Set the color space
 	setColorSpace(colorSpace) {
+		// Store the current color values in HSV for conversion
+		let currentHsv;
+
+		// Convert current color to HSV for transition
+		if (this.colorSpace === "rgb") {
+			currentHsv = rgbToHsv(
+				this.state.randomColor.r,
+				this.state.randomColor.g,
+				this.state.randomColor.b,
+			);
+		} else if (this.colorSpace === "oklab") {
+			currentHsv = oklabToHsv(
+				this.state.randomColor.L,
+				this.state.randomColor.a,
+				this.state.randomColor.b,
+			);
+		} else {
+			// Already HSV
+			currentHsv = {
+				h: this.state.randomColor.h,
+				s: this.state.randomColor.s,
+				v: this.state.randomColor.v,
+			};
+		}
+
+		// Update the color space
 		this.colorSpace = colorSpace;
 		this.state.colorSpace = colorSpace;
 
@@ -127,60 +151,55 @@ export class StandardMode extends BaseMode {
 			this.state.userColor[key] = defaultColor[key];
 		});
 
-		// Convert the random color to the new color space
-		const randomHsv = this.state.randomColor._hsv || this.state.randomColor;
-		const newRandom = this.generateRandomColor();
+		// Convert the current color to the new color space
+		let newColor;
+		if (colorSpace === "rgb") {
+			newColor = hsvToRgb(currentHsv.h, currentHsv.s, currentHsv.v);
+		} else if (colorSpace === "oklab") {
+			newColor = hsvToOklab(currentHsv.h, currentHsv.s, currentHsv.v);
+		} else {
+			newColor = currentHsv;
+		}
 
-		// Update the random color for the new color space
-		Object.keys(newRandom).forEach((key) => {
-			if (key !== "_hsv") {
-				this.state.randomColor[key] = newRandom[key];
-			}
+		// Clear existing properties from randomColor
+		Object.keys(this.state.randomColor).forEach((key) => {
+			delete this.state.randomColor[key];
 		});
 
-		// Keep the original HSV for comparison
-		if (this.colorSpace !== "hsv") {
-			this.state.randomColor._hsv = randomHsv;
-		}
+		// Set new properties based on color space
+		Object.keys(newColor).forEach((key) => {
+			this.state.randomColor[key] = newColor[key];
+		});
 	}
 
 	checkGuess() {
 		const precision = this.options.precision || 10;
 
-		// For non-HSV color spaces, we need to convert to HSV for comparison
-		// since the game logic is based on HSV differences
+		// Check based on the current color space
 		if (this.colorSpace === "rgb") {
-			// Convert RGB to HSV for comparison
-			const userHsv = rgbToHsv(
-				this.state.userColor.r,
-				this.state.userColor.g,
-				this.state.userColor.b,
-			);
+			// Compare RGB values directly
+			const targetRgb = this.state.randomColor;
+			const userRgb = this.state.userColor;
 
-			// Compare with the original HSV color
-			const targetHsv = this.state.randomColor._hsv;
-			const hIsGood = Math.abs(targetHsv.h - userHsv.h) <= precision;
-			const sIsGood = Math.abs(targetHsv.s - userHsv.s) <= precision;
-			const vIsGood = Math.abs(targetHsv.v - userHsv.v) <= precision;
+			// Calculate percentage differences for RGB (0-255 scale)
+			const rDiff = Math.abs(targetRgb.r - userRgb.r) / 2.55; // Convert to percentage
+			const gDiff = Math.abs(targetRgb.g - userRgb.g) / 2.55;
+			const bDiff = Math.abs(targetRgb.b - userRgb.b) / 2.55;
 
-			return hIsGood && sIsGood && vIsGood;
+			return rDiff <= precision && gDiff <= precision && bDiff <= precision;
 		}
 
 		if (this.colorSpace === "oklab") {
-			// Convert OKLAB to HSV for comparison
-			const userHsv = oklabToHsv(
-				this.state.userColor.L,
-				this.state.userColor.a,
-				this.state.userColor.b,
-			);
+			// Compare OKLAB values directly
+			const targetLab = this.state.randomColor;
+			const userLab = this.state.userColor;
 
-			// Compare with the original HSV color
-			const targetHsv = this.state.randomColor._hsv;
-			const hIsGood = Math.abs(targetHsv.h - userHsv.h) <= precision;
-			const sIsGood = Math.abs(targetHsv.s - userHsv.s) <= precision;
-			const vIsGood = Math.abs(targetHsv.v - userHsv.v) <= precision;
+			// For OKLAB, L is 0-100, a and b are -100 to +100
+			const LDiff = Math.abs(targetLab.L - userLab.L); // Already percentage
+			const aDiff = Math.abs(targetLab.a - userLab.a) / 2; // Convert to percentage (200 range)
+			const bDiff = Math.abs(targetLab.b - userLab.b) / 2;
 
-			return hIsGood && sIsGood && vIsGood;
+			return LDiff <= precision && aDiff <= precision && bDiff <= precision;
 		}
 
 		// Default HSV comparison
@@ -195,18 +214,55 @@ export class StandardMode extends BaseMode {
 	}
 
 	createHistoryRecord(wasSuccess, round, sessionId) {
-		// Create a clean copy of the random color, excluding the _hsv property to avoid circular references
-		const actualColor = {};
-		Object.keys(this.state.randomColor).forEach(key => {
-			if (key !== '_hsv') {
-				actualColor[key] = this.state.randomColor[key];
-			}
-		});
+		// Create filtered copies of the colors based on the active color space
+		let actualColor = {};
+		let guessedColor = {};
 
+		// Select only the properties relevant to the current color space
+		if (this.colorSpace === "hsv") {
+			// For HSV, include only h, s, v properties
+			actualColor = {
+				h: this.state.randomColor.h,
+				s: this.state.randomColor.s,
+				v: this.state.randomColor.v,
+			};
+			guessedColor = {
+				h: this.state.userColor.h,
+				s: this.state.userColor.s,
+				v: this.state.userColor.v,
+			};
+		} else if (this.colorSpace === "rgb") {
+			// For RGB, include only r, g, b properties
+			actualColor = {
+				r: this.state.randomColor.r,
+				g: this.state.randomColor.g,
+				b: this.state.randomColor.b,
+			};
+			guessedColor = {
+				r: this.state.userColor.r,
+				g: this.state.userColor.g,
+				b: this.state.userColor.b,
+			};
+		} else if (this.colorSpace === "oklab") {
+			// For OKLAB, include only L, a, b properties
+			actualColor = {
+				L: this.state.randomColor.L,
+				a: this.state.randomColor.a,
+				b: this.state.randomColor.b,
+			};
+			guessedColor = {
+				L: this.state.userColor.L,
+				a: this.state.userColor.a,
+				b: this.state.userColor.b,
+			};
+		}
+
+		// Include color space information in the record
 		return {
 			type: "color",
-			guessedColor: Object.assign({}, this.state.userColor),
-			actualColor: actualColor,
+			guessedColor,
+			actualColor,
+			colorSpace: this.colorSpace, // Store the color space used
 		};
 	}
 }
