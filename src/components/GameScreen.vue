@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useGameStore } from "../stores/game";
 import GameNavBar from "./GameNavBar.vue";
 import BaseButton from "./base/BaseButton.vue";
@@ -10,10 +10,12 @@ const mode = computed(() => store.mode);
 const colorSpace = computed(() => store.colorSpace);
 const realtimePreview = computed(() => store.realtimePreview);
 
-// start a new round if current round is zero
-if (store.currentRound === 0) {
-	store.startNewRound();
-}
+onMounted(() => {
+  // start a new round if current round is zero
+  if (store.currentRound === 0) {
+    store.startNewRound();
+  }
+})
 
 // HSV values
 const userH = ref(store.userColor?.h || 0);
