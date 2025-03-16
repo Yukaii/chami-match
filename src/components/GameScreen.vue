@@ -27,51 +27,51 @@ const userB_lab = ref(store.userColor?.b || 0);
 
 // Computed values for the current color space
 const colorValues = computed(() => {
-  if (colorSpace.value === "rgb") {
-    return [
-      Number.parseInt(userR.value, 10),
-      Number.parseInt(userG.value, 10),
-      Number.parseInt(userB.value, 10),
-    ];
-  }
+	if (colorSpace.value === "rgb") {
+		return [
+			Number.parseInt(userR.value, 10),
+			Number.parseInt(userG.value, 10),
+			Number.parseInt(userB.value, 10),
+		];
+	}
 
-  if (colorSpace.value === "oklab") {
-    return [
-      Number.parseInt(userL.value, 10),
-      Number.parseInt(userA.value, 10),
-      Number.parseInt(userB_lab.value, 10),
-    ];
-  }
+	if (colorSpace.value === "oklab") {
+		return [
+			Number.parseInt(userL.value, 10),
+			Number.parseInt(userA.value, 10),
+			Number.parseInt(userB_lab.value, 10),
+		];
+	}
 
-  // Default: HSV
-  const hsv = [
-    Number.parseInt(userH.value, 10),
-    Number.parseInt(userS.value, 10),
-    Number.parseInt(userV.value, 10),
-  ];
+	// Default: HSV
+	const hsv = [
+		Number.parseInt(userH.value, 10),
+		Number.parseInt(userS.value, 10),
+		Number.parseInt(userV.value, 10),
+	];
 
-  if (mode.value === "B/W") {
-    hsv[0] = 0;
-    hsv[1] = 0;
-  }
+	if (mode.value === "B/W") {
+		hsv[0] = 0;
+		hsv[1] = 0;
+	}
 
-  return hsv;
+	return hsv;
 });
 
 // Change the color space
 const changeColorSpace = (space) => {
-  store.updateColorSpace(space);
+	store.updateColorSpace(space);
 };
 
 const submit = () => {
-  store.updateUserColor(...colorValues.value);
-  store.checkGuess();
+	store.updateUserColor(...colorValues.value);
+	store.checkGuess();
 };
 
 watch([colorValues, realtimePreview], () => {
-  if (realtimePreview.value) {
-    store.updateUserColor(...colorValues.value);
-  }
+	if (realtimePreview.value) {
+		store.updateUserColor(...colorValues.value);
+	}
 });
 </script>
 

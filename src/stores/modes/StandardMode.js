@@ -1,6 +1,11 @@
 import { reactive } from "vue";
+import {
+	hsvToOklab,
+	hsvToRgb,
+	oklabToHsv,
+	rgbToHsv,
+} from "../../utils/colorSpaceUtils";
 import { BaseMode } from "./BaseMode";
-import { rgbToHsv, hsvToOklab, oklabToHsv, hsvToRgb } from "../../utils/colorSpaceUtils";
 
 export class StandardMode extends BaseMode {
 	constructor(options = {}) {
@@ -118,7 +123,7 @@ export class StandardMode extends BaseMode {
 
 		// Reset user color for the new color space
 		const defaultColor = this.getDefaultUserColor();
-		Object.keys(defaultColor).forEach(key => {
+		Object.keys(defaultColor).forEach((key) => {
 			this.state.userColor[key] = defaultColor[key];
 		});
 
@@ -127,14 +132,14 @@ export class StandardMode extends BaseMode {
 		const newRandom = this.generateRandomColor();
 
 		// Update the random color for the new color space
-		Object.keys(newRandom).forEach(key => {
-			if (key !== '_hsv') {
+		Object.keys(newRandom).forEach((key) => {
+			if (key !== "_hsv") {
 				this.state.randomColor[key] = newRandom[key];
 			}
 		});
 
 		// Keep the original HSV for comparison
-		if (this.colorSpace !== 'hsv') {
+		if (this.colorSpace !== "hsv") {
 			this.state.randomColor._hsv = randomHsv;
 		}
 	}
@@ -149,7 +154,7 @@ export class StandardMode extends BaseMode {
 			const userHsv = rgbToHsv(
 				this.state.userColor.r,
 				this.state.userColor.g,
-				this.state.userColor.b
+				this.state.userColor.b,
 			);
 
 			// Compare with the original HSV color
@@ -166,7 +171,7 @@ export class StandardMode extends BaseMode {
 			const userHsv = oklabToHsv(
 				this.state.userColor.L,
 				this.state.userColor.a,
-				this.state.userColor.b
+				this.state.userColor.b,
 			);
 
 			// Compare with the original HSV color
@@ -179,9 +184,12 @@ export class StandardMode extends BaseMode {
 		}
 
 		// Default HSV comparison
-		const hIsGood = Math.abs(this.state.randomColor.h - this.state.userColor.h) <= precision;
-		const sIsGood = Math.abs(this.state.randomColor.s - this.state.userColor.s) <= precision;
-		const vIsGood = Math.abs(this.state.randomColor.v - this.state.userColor.v) <= precision;
+		const hIsGood =
+			Math.abs(this.state.randomColor.h - this.state.userColor.h) <= precision;
+		const sIsGood =
+			Math.abs(this.state.randomColor.s - this.state.userColor.s) <= precision;
+		const vIsGood =
+			Math.abs(this.state.randomColor.v - this.state.userColor.v) <= precision;
 
 		return hIsGood && sIsGood && vIsGood;
 	}

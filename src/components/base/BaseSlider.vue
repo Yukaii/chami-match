@@ -70,7 +70,18 @@ const props = defineProps({
 		type: String,
 		default: "default",
 		validator: (value) =>
-			["default", "hue", "saturation", "value", "red", "green", "blue", "lightness", "a-axis", "b-axis"].includes(value),
+			[
+				"default",
+				"hue",
+				"saturation",
+				"value",
+				"red",
+				"green",
+				"blue",
+				"lightness",
+				"a-axis",
+				"b-axis",
+			].includes(value),
 	},
 	label: {
 		type: String,
