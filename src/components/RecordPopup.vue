@@ -356,10 +356,26 @@ function formatGameType(type) {
 function getColorStyle(color) {
 	if (!color) return "background-color: gray;";
 
+	// Handle RGB color space
+	if ('r' in color && 'g' in color && 'b' in color) {
+		const r = color.r ?? 0;
+		const g = color.g ?? 0;
+		const b = color.b ?? 0;
+		return `background-color: rgb(${r}, ${g}, ${b});`;
+	}
+
+	// Handle OKLAB color space
+	if ('L' in color && 'a' in color && 'b' in color) {
+		const L = color.L ?? 0;
+		const a = color.a ?? 0;
+		const b = color.b ?? 0;
+		return `background-color: oklab(${L} ${a} ${b});`;
+	}
+
+	// Default to HSV color space
 	const h = color.h ?? 0;
 	const s = color.s ?? 0;
 	const v = color.v ?? 0;
-
 	return `background-color: hsl(${h}, ${s}%, ${v}%);`;
 }
 
