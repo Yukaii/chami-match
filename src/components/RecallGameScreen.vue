@@ -1,27 +1,17 @@
 <template>
   <div class="flex size-full flex-col items-center p-4 text-gray-900 dark:text-white">
     <!-- Game Navigation -->
-    <div class="w-full mb-4">
+    <div class="flex flex-col gap-3">
+      <!-- Navigation bar separate from game toolbar -->
       <GameNavBar />
-    </div>
 
-    <!-- Game Stats -->
-    <div class="w-full mb-4">
+      <!-- Regular game toolbar with all stats -->
       <Toolbar />
-    </div>
-
-    <div class="mb-4 text-center">
-      <h1 class="text-2xl font-bold">{{ $t('gameModes.recall.name') }}</h1>
-      <p class="text-lg">{{ $t('gameModes.recall.description') }}</p>
+      <HealthBar />
     </div>
 
     <div class="mb-4">
       <p>{{ $t('gameModes.recall.instructions') }}</p>
-    </div>
-
-    <!-- Health Bar -->
-    <div class="mb-4">
-      <HealthBar />
     </div>
 
     <!-- Color Display Area -->
@@ -51,14 +41,6 @@
              :class="{ 'ring-2 ring-pink-500 dark:ring-orange-300': isSelectedColor(color) }"
              :style="{ backgroundColor: colorHSVtoHex(color) }"
              @click="selectColor(color)">
-        </div>
-      </div>
-
-      <!-- Last selection info -->
-      <div v-if="lastSelectedColor" class="mb-4 text-center">
-        <p>{{ $t('gameModes.recall.lastSelection') }}</p>
-        <div class="mx-auto mt-1 size-8 rounded"
-             :style="{ backgroundColor: colorHSVtoHex(lastSelectedColor) }">
         </div>
       </div>
 
