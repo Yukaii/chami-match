@@ -113,7 +113,7 @@ onMounted(() => {
         <carousel
           v-model="currentSlide"
           :items-to-show="1"
-          :wrap-around="false"
+          :wrap-around="true"
           :transition="500"
         >
           <slide v-for="(mode, index) in gameModes" :key="index">
