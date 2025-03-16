@@ -147,55 +147,46 @@ export class StandardMode extends BaseMode {
 	checkGuess() {
 		const precision = this.options.precision || 10;
 
-		// For non-HSV color spaces, we need to convert to HSV for comparison
-		// since the game logic is based on HSV differences
-		if (this.colorSpace === "rgb") {
-			// Convert RGB to HSV for comparison
-			const userHsv = rgbToHsv(
-				this.state.userColor.r,
-				this.state.userColor.g,
-				this.state.userColor.b,
-			);
+			// Check based on the current color space
+			if (this.colorSpace === "rgb") {
+				// Compare RGB values directly
+				const targetRgb = this.state.randomColor;
+				const userRgb = this.state.userColor;
 
-			// Compare with the original HSV color
-			const targetHsv = this.state.randomColor._hsv;
-			const hIsGood = Math.abs(targetHsv.h - userHsv.h) <= precision;
-			const sIsGood = Math.abs(targetHsv.s - userHsv.s) <= precision;
-			const vIsGood = Math.abs(targetHsv.v - userHsv.v) <= precision;
+				// Calculate percentage differences for RGB (0-255 scale)
+				const rDiff = Math.abs(targetRgb.r - userRgb.r) / 2.55; // Convert to percentage
+				const gDiff = Math.abs(targetRgb.g - userRgb.g) / 2.55;
+				const bDiff = Math.abs(targetRgb.b - userRgb.b) / 2.55;
+
+				return rDiff <= precision && gDiff <= precision && bDiff <= precision;
+			}
+
+			if (this.colorSpace === "oklab") {
+				// Compare OKLAB values directly
+				const targetLab = this.state.randomColor;
+				const userLab = this.state.userColor;
+
+				// For OKLAB, L is 0-100, a and b are -100 to +100
+				const LDiff = Math.abs(targetLab.L - userLab.L); // Already percentage
+				const aDiff = Math.abs(targetLab.a - userLab.a) / 2; // Convert to percentage (200 range)
+				const bDiff = Math.abs(targetLab.b - userLab.b) / 2;
+
+				return LDiff <= precision && aDiff <= precision && bDiff <= precision;
+			}
+
+			// Default HSV comparison
+			const hIsGood =
+				Math.abs(this.state.randomColor.h - this.state.userColor.h) <= precision;
+			const sIsGood =
+				Math.abs(this.state.randomColor.s - this.state.userColor.s) <= precision;
+			const vIsGood =
+				Math.abs(this.state.randomColor.v - this.state.userColor.v) <= precision;
 
 			return hIsGood && sIsGood && vIsGood;
-		}
-
-		if (this.colorSpace === "oklab") {
-			// Convert OKLAB to HSV for comparison
-			const userHsv = oklabToHsv(
-				this.state.userColor.L,
-				this.state.userColor.a,
-				this.state.userColor.b,
-			);
-
-			// Compare with the original HSV color
-			const targetHsv = this.state.randomColor._hsv;
-			const hIsGood = Math.abs(targetHsv.h - userHsv.h) <= precision;
-			const sIsGood = Math.abs(targetHsv.s - userHsv.s) <= precision;
-			const vIsGood = Math.abs(targetHsv.v - userHsv.v) <= precision;
-
-			return hIsGood && sIsGood && vIsGood;
-		}
-
-		// Default HSV comparison
-		const hIsGood =
-			Math.abs(this.state.randomColor.h - this.state.userColor.h) <= precision;
-		const sIsGood =
-			Math.abs(this.state.randomColor.s - this.state.userColor.s) <= precision;
-		const vIsGood =
-			Math.abs(this.state.randomColor.v - this.state.userColor.v) <= precision;
-
-		return hIsGood && sIsGood && vIsGood;
 	}
 
 	createHistoryRecord(wasSuccess, round, sessionId) {
-		// Create a clean copy of the random color, excluding the _hsv property to avoid circular references
+		// Create a clean copy of the random color, excluding the _hsv property
 		const actualColor = {};
 		Object.keys(this.state.randomColor).forEach(key => {
 			if (key !== '_hsv') {
@@ -203,10 +194,12 @@ export class StandardMode extends BaseMode {
 			}
 		});
 
+		// Include color space information in the record
 		return {
 			type: "color",
 			guessedColor: Object.assign({}, this.state.userColor),
 			actualColor: actualColor,
+			colorSpace: this.colorSpace // Store the color space used
 		};
 	}
 }

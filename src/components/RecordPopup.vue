@@ -112,44 +112,129 @@
                     <div class="text-gray-800 dark:text-white">{{ $t('precisionTarget') }}: ±{{ record.session?.precision || 10 }}</div>
                   </div>
 
-                  <!-- Hue difference -->
-                  <div class="flex items-center gap-2">
-                    <div class="w-6 font-mono text-pink-600 dark:text-pink-300">H:</div>
-                    <div class="h-2 flex-1 overflow-hidden rounded-full bg-gray-300 dark:bg-gray-700">
-                      <div
-                        class="h-full"
-                        :class="getColorDifferenceClass(getHueDifference(record))"
-                        :style="`width: ${Math.min(100, getHueDifference(record))}%`"
-                      ></div>
+                  <!-- Display color differences based on color space -->
+                  <template v-if="getColorFormat(record) === 'RGB'">
+                    <!-- RGB differences -->
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 font-mono text-red-600 dark:text-red-300">R:</div>
+                      <div class="h-2 flex-1 overflow-hidden rounded-full bg-gray-300 dark:bg-gray-700">
+                        <div
+                          class="h-full"
+                          :class="getColorDifferenceClass(getRgbDifference(record, 'r'))"
+                          :style="`width: ${Math.min(100, getRgbDifference(record, 'r'))}%`"
+                        ></div>
+                      </div>
+                      <div class="w-12 text-right font-mono text-xs text-gray-800 dark:text-white">{{ formatDifference(getRgbDifference(record, 'r')) }}</div>
                     </div>
-                    <div class="w-12 text-right font-mono text-xs text-gray-800 dark:text-white">{{ formatDifference(getHueDifference(record)) }}</div>
-                  </div>
 
-                  <!-- Saturation difference -->
-                  <div class="flex items-center gap-2">
-                    <div class="w-6 font-mono text-pink-600 dark:text-pink-300">S:</div>
-                    <div class="h-2 flex-1 overflow-hidden rounded-full bg-gray-300 dark:bg-gray-700">
-                      <div
-                        class="h-full"
-                        :class="getColorDifferenceClass(getSaturationDifference(record))"
-                        :style="`width: ${Math.min(100, getSaturationDifference(record))}%`"
-                      ></div>
+                    <!-- Green difference -->
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 font-mono text-green-600 dark:text-green-300">G:</div>
+                      <div class="h-2 flex-1 overflow-hidden rounded-full bg-gray-300 dark:bg-gray-700">
+                        <div
+                          class="h-full"
+                          :class="getColorDifferenceClass(getRgbDifference(record, 'g'))"
+                          :style="`width: ${Math.min(100, getRgbDifference(record, 'g'))}%`"
+                        ></div>
+                      </div>
+                      <div class="w-12 text-right font-mono text-xs text-gray-800 dark:text-white">{{ formatDifference(getRgbDifference(record, 'g')) }}</div>
                     </div>
-                    <div class="w-12 text-right font-mono text-xs text-gray-800 dark:text-white">{{ formatDifference(getSaturationDifference(record)) }}</div>
-                  </div>
 
-                  <!-- Value difference -->
-                  <div class="flex items-center gap-2">
-                    <div class="w-6 font-mono text-pink-600 dark:text-pink-300">V:</div>
-                    <div class="h-2 flex-1 overflow-hidden rounded-full bg-gray-300 dark:bg-gray-700">
-                      <div
-                        class="h-full"
-                        :class="getColorDifferenceClass(getValueDifference(record))"
-                        :style="`width: ${Math.min(100, getValueDifference(record))}%`"
-                      ></div>
+                    <!-- Blue difference -->
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 font-mono text-blue-600 dark:text-blue-300">B:</div>
+                      <div class="h-2 flex-1 overflow-hidden rounded-full bg-gray-300 dark:bg-gray-700">
+                        <div
+                          class="h-full"
+                          :class="getColorDifferenceClass(getRgbDifference(record, 'b'))"
+                          :style="`width: ${Math.min(100, getRgbDifference(record, 'b'))}%`"
+                        ></div>
+                      </div>
+                      <div class="w-12 text-right font-mono text-xs text-gray-800 dark:text-white">{{ formatDifference(getRgbDifference(record, 'b')) }}</div>
                     </div>
-                    <div class="w-12 text-right font-mono text-xs text-gray-800 dark:text-white">{{ formatDifference(getValueDifference(record)) }}</div>
-                  </div>
+                  </template>
+
+                  <template v-else-if="getColorFormat(record) === 'OKLAB'">
+                    <!-- OKLAB differences -->
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 font-mono text-purple-600 dark:text-purple-300">L:</div>
+                      <div class="h-2 flex-1 overflow-hidden rounded-full bg-gray-300 dark:bg-gray-700">
+                        <div
+                          class="h-full"
+                          :class="getColorDifferenceClass(getOklabDifference(record, 'L'))"
+                          :style="`width: ${Math.min(100, getOklabDifference(record, 'L'))}%`"
+                        ></div>
+                      </div>
+                      <div class="w-12 text-right font-mono text-xs text-gray-800 dark:text-white">{{ formatDifference(getOklabDifference(record, 'L')) }}</div>
+                    </div>
+
+                    <!-- a-axis difference -->
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 font-mono text-emerald-600 dark:text-emerald-300">a:</div>
+                      <div class="h-2 flex-1 overflow-hidden rounded-full bg-gray-300 dark:bg-gray-700">
+                        <div
+                          class="h-full"
+                          :class="getColorDifferenceClass(getOklabDifference(record, 'a'))"
+                          :style="`width: ${Math.min(100, getOklabDifference(record, 'a'))}%`"
+                        ></div>
+                      </div>
+                      <div class="w-12 text-right font-mono text-xs text-gray-800 dark:text-white">{{ formatDifference(getOklabDifference(record, 'a')) }}</div>
+                    </div>
+
+                    <!-- b-axis difference -->
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 font-mono text-amber-600 dark:text-amber-300">b:</div>
+                      <div class="h-2 flex-1 overflow-hidden rounded-full bg-gray-300 dark:bg-gray-700">
+                        <div
+                          class="h-full"
+                          :class="getColorDifferenceClass(getOklabDifference(record, 'b'))"
+                          :style="`width: ${Math.min(100, getOklabDifference(record, 'b'))}%`"
+                        ></div>
+                      </div>
+                      <div class="w-12 text-right font-mono text-xs text-gray-800 dark:text-white">{{ formatDifference(getOklabDifference(record, 'b')) }}</div>
+                    </div>
+                  </template>
+
+                  <template v-else>
+                    <!-- Default HSV differences -->
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 font-mono text-pink-600 dark:text-pink-300">H:</div>
+                      <div class="h-2 flex-1 overflow-hidden rounded-full bg-gray-300 dark:bg-gray-700">
+                        <div
+                          class="h-full"
+                          :class="getColorDifferenceClass(getHueDifference(record))"
+                          :style="`width: ${Math.min(100, getHueDifference(record))}%`"
+                        ></div>
+                      </div>
+                      <div class="w-12 text-right font-mono text-xs text-gray-800 dark:text-white">{{ formatDifference(getHueDifference(record)) }}</div>
+                    </div>
+
+                    <!-- Saturation difference -->
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 font-mono text-pink-600 dark:text-pink-300">S:</div>
+                      <div class="h-2 flex-1 overflow-hidden rounded-full bg-gray-300 dark:bg-gray-700">
+                        <div
+                          class="h-full"
+                          :class="getColorDifferenceClass(getSaturationDifference(record))"
+                          :style="`width: ${Math.min(100, getSaturationDifference(record))}%`"
+                        ></div>
+                      </div>
+                      <div class="w-12 text-right font-mono text-xs text-gray-800 dark:text-white">{{ formatDifference(getSaturationDifference(record)) }}</div>
+                    </div>
+
+                    <!-- Value difference -->
+                    <div class="flex items-center gap-2">
+                      <div class="w-6 font-mono text-pink-600 dark:text-pink-300">V:</div>
+                      <div class="h-2 flex-1 overflow-hidden rounded-full bg-gray-300 dark:bg-gray-700">
+                        <div
+                          class="h-full"
+                          :class="getColorDifferenceClass(getValueDifference(record))"
+                          :style="`width: ${Math.min(100, getValueDifference(record))}%`"
+                        ></div>
+                      </div>
+                      <div class="w-12 text-right font-mono text-xs text-gray-800 dark:text-white">{{ formatDifference(getValueDifference(record)) }}</div>
+                    </div>
+                  </template>
                 </div>
               </template>
             </template>
@@ -477,6 +562,30 @@ function getValueDifference(record) {
 	const guessedHsv = convertToHsv(record.guessedColor);
 
 	return Math.abs(actualHsv.v - guessedHsv.v);
+}
+
+// Helper functions to calculate RGB color differences
+function getRgbDifference(record, channel) {
+  if (!record?.actualColor?.[channel] || !record?.guessedColor?.[channel]) return 0;
+
+  // Calculate percentage difference (0-100%) from the 0-255 range
+  const diff = Math.abs(record.actualColor[channel] - record.guessedColor[channel]);
+  return (diff / 2.55); // Convert to percentage (255/100 = 2.55)
+}
+
+// Helper functions to calculate OKLAB color differences
+function getOklabDifference(record, channel) {
+  if (!record?.actualColor?.[channel] || !record?.guessedColor?.[channel]) return 0;
+
+  // Calculate percentage difference
+  // For L: 0-100 is already percentage
+  // For a & b: -100 to +100 range needs to be converted to percentage
+  if (channel === 'L') {
+    return Math.abs(record.actualColor[channel] - record.guessedColor[channel]);
+  } else {
+    // a and b range from -100 to +100, so divide by 2 to get percentage
+    return Math.abs(record.actualColor[channel] - record.guessedColor[channel]) / 2;
+  }
 }
 
 // Format difference to show + or - prefix
