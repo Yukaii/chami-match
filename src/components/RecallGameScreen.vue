@@ -10,17 +10,17 @@
       <HealthBar />
     </div>
 
-    <div class="mb-4">
-      <p>{{ $t('gameModes.recall.instructions') }}</p>
-    </div>
+      <div class="mb-4 md:mb-6">
+        <p class="mx-4 text-center">{{ $t('gameModes.recall.instructions') }}</p>
+      </div>
 
     <!-- Color Display Area -->
     <div class="flex flex-col items-center">
       <!-- The target color with countdown timer -->
       <div v-if="state.colorVisible"
-           class="relative mb-8 size-32 rounded-lg border-4 border-gray-300 shadow-lg"
+           class="relative mb-12 md:mb-8 size-32 rounded-lg border-4 border-gray-300 shadow-lg"
            :style="{ backgroundColor: colorHSVtoHex(state.randomColor) }">
-        <div class="absolute -top-10 left-1/2 -translate-x-1/2 text-2xl font-bold">
+        <div class="absolute -bottom-10 left-1/2 -translate-x-1/2 text-xl md:text-2xl font-bold">
           {{ state.timeRemaining }}s
         </div>
       </div>
