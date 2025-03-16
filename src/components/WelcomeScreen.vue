@@ -58,7 +58,11 @@ const currentSlide = ref(0);
 
 // Get the current game mode based on slide index
 const currentGameMode = computed(() => {
-	return gameModes[currentSlide.value];
+	if (currentSlide.value >= 0 && currentSlide.value < gameModes.length) {
+		return gameModes[currentSlide.value];
+	}
+	// Fall back to the first game mode if the index is invalid
+	return gameModes[0];
 });
 
 function startGame() {
