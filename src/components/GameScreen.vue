@@ -12,7 +12,7 @@ const realtimePreview = computed(() => store.realtimePreview);
 
 // start a new round if current round is zero
 if (store.currentRound === 0) {
-  store.startNewRound();
+	store.startNewRound();
 }
 
 // HSV values

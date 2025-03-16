@@ -124,20 +124,20 @@ export class StandardMode extends BaseMode {
 			currentHsv = rgbToHsv(
 				this.state.randomColor.r,
 				this.state.randomColor.g,
-				this.state.randomColor.b
+				this.state.randomColor.b,
 			);
 		} else if (this.colorSpace === "oklab") {
 			currentHsv = oklabToHsv(
 				this.state.randomColor.L,
 				this.state.randomColor.a,
-				this.state.randomColor.b
+				this.state.randomColor.b,
 			);
 		} else {
 			// Already HSV
 			currentHsv = {
 				h: this.state.randomColor.h,
 				s: this.state.randomColor.s,
-				v: this.state.randomColor.v
+				v: this.state.randomColor.v,
 			};
 		}
 
@@ -162,12 +162,12 @@ export class StandardMode extends BaseMode {
 		}
 
 		// Clear existing properties from randomColor
-		Object.keys(this.state.randomColor).forEach(key => {
+		Object.keys(this.state.randomColor).forEach((key) => {
 			delete this.state.randomColor[key];
 		});
 
 		// Set new properties based on color space
-		Object.keys(newColor).forEach(key => {
+		Object.keys(newColor).forEach((key) => {
 			this.state.randomColor[key] = newColor[key];
 		});
 	}
@@ -175,42 +175,42 @@ export class StandardMode extends BaseMode {
 	checkGuess() {
 		const precision = this.options.precision || 10;
 
-			// Check based on the current color space
-			if (this.colorSpace === "rgb") {
-				// Compare RGB values directly
-				const targetRgb = this.state.randomColor;
-				const userRgb = this.state.userColor;
+		// Check based on the current color space
+		if (this.colorSpace === "rgb") {
+			// Compare RGB values directly
+			const targetRgb = this.state.randomColor;
+			const userRgb = this.state.userColor;
 
-				// Calculate percentage differences for RGB (0-255 scale)
-				const rDiff = Math.abs(targetRgb.r - userRgb.r) / 2.55; // Convert to percentage
-				const gDiff = Math.abs(targetRgb.g - userRgb.g) / 2.55;
-				const bDiff = Math.abs(targetRgb.b - userRgb.b) / 2.55;
+			// Calculate percentage differences for RGB (0-255 scale)
+			const rDiff = Math.abs(targetRgb.r - userRgb.r) / 2.55; // Convert to percentage
+			const gDiff = Math.abs(targetRgb.g - userRgb.g) / 2.55;
+			const bDiff = Math.abs(targetRgb.b - userRgb.b) / 2.55;
 
-				return rDiff <= precision && gDiff <= precision && bDiff <= precision;
-			}
+			return rDiff <= precision && gDiff <= precision && bDiff <= precision;
+		}
 
-			if (this.colorSpace === "oklab") {
-				// Compare OKLAB values directly
-				const targetLab = this.state.randomColor;
-				const userLab = this.state.userColor;
+		if (this.colorSpace === "oklab") {
+			// Compare OKLAB values directly
+			const targetLab = this.state.randomColor;
+			const userLab = this.state.userColor;
 
-				// For OKLAB, L is 0-100, a and b are -100 to +100
-				const LDiff = Math.abs(targetLab.L - userLab.L); // Already percentage
-				const aDiff = Math.abs(targetLab.a - userLab.a) / 2; // Convert to percentage (200 range)
-				const bDiff = Math.abs(targetLab.b - userLab.b) / 2;
+			// For OKLAB, L is 0-100, a and b are -100 to +100
+			const LDiff = Math.abs(targetLab.L - userLab.L); // Already percentage
+			const aDiff = Math.abs(targetLab.a - userLab.a) / 2; // Convert to percentage (200 range)
+			const bDiff = Math.abs(targetLab.b - userLab.b) / 2;
 
-				return LDiff <= precision && aDiff <= precision && bDiff <= precision;
-			}
+			return LDiff <= precision && aDiff <= precision && bDiff <= precision;
+		}
 
-			// Default HSV comparison
-			const hIsGood =
-				Math.abs(this.state.randomColor.h - this.state.userColor.h) <= precision;
-			const sIsGood =
-				Math.abs(this.state.randomColor.s - this.state.userColor.s) <= precision;
-			const vIsGood =
-				Math.abs(this.state.randomColor.v - this.state.userColor.v) <= precision;
+		// Default HSV comparison
+		const hIsGood =
+			Math.abs(this.state.randomColor.h - this.state.userColor.h) <= precision;
+		const sIsGood =
+			Math.abs(this.state.randomColor.s - this.state.userColor.s) <= precision;
+		const vIsGood =
+			Math.abs(this.state.randomColor.v - this.state.userColor.v) <= precision;
 
-			return hIsGood && sIsGood && vIsGood;
+		return hIsGood && sIsGood && vIsGood;
 	}
 
 	createHistoryRecord(wasSuccess, round, sessionId) {
@@ -224,36 +224,36 @@ export class StandardMode extends BaseMode {
 			actualColor = {
 				h: this.state.randomColor.h,
 				s: this.state.randomColor.s,
-				v: this.state.randomColor.v
+				v: this.state.randomColor.v,
 			};
 			guessedColor = {
 				h: this.state.userColor.h,
 				s: this.state.userColor.s,
-				v: this.state.userColor.v
+				v: this.state.userColor.v,
 			};
 		} else if (this.colorSpace === "rgb") {
 			// For RGB, include only r, g, b properties
 			actualColor = {
 				r: this.state.randomColor.r,
 				g: this.state.randomColor.g,
-				b: this.state.randomColor.b
+				b: this.state.randomColor.b,
 			};
 			guessedColor = {
 				r: this.state.userColor.r,
 				g: this.state.userColor.g,
-				b: this.state.userColor.b
+				b: this.state.userColor.b,
 			};
 		} else if (this.colorSpace === "oklab") {
 			// For OKLAB, include only L, a, b properties
 			actualColor = {
 				L: this.state.randomColor.L,
 				a: this.state.randomColor.a,
-				b: this.state.randomColor.b
+				b: this.state.randomColor.b,
 			};
 			guessedColor = {
 				L: this.state.userColor.L,
 				a: this.state.userColor.a,
-				b: this.state.userColor.b
+				b: this.state.userColor.b,
 			};
 		}
 
@@ -262,7 +262,7 @@ export class StandardMode extends BaseMode {
 			type: "color",
 			guessedColor,
 			actualColor,
-			colorSpace: this.colorSpace // Store the color space used
+			colorSpace: this.colorSpace, // Store the color space used
 		};
 	}
 }

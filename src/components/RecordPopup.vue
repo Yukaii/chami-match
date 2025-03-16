@@ -277,8 +277,13 @@
 <script setup>
 import { computed, onMounted, ref, watch } from "vue";
 import { useGameStore } from "../stores/game";
+import {
+	hsvToOklab,
+	hsvToRgb,
+	oklabToHsv,
+	rgbToHsv,
+} from "../utils/colorSpaceUtils";
 import Modal from "./Modal.vue";
-import { hsvToRgb, rgbToHsv, hsvToOklab, oklabToHsv } from "../utils/colorSpaceUtils";
 
 const store = useGameStore();
 const filterType = ref("all");
@@ -420,25 +425,25 @@ onMounted(() => {
 
 // Helper functions to check record types safely with support for old record format
 function isColorRecord(record) {
-  if (!record) return false;
+	if (!record) return false;
 
-  // Check if it's explicitly a color record
-  if (record.type === "color") return true;
+	// Check if it's explicitly a color record
+	if (record.type === "color") return true;
 
-  // Check for implicit color record without type field
-  if (!record.type) {
-    // Has both color objects
-    if (record.actualColor && record.guessedColor) return true;
+	// Check for implicit color record without type field
+	if (!record.type) {
+		// Has both color objects
+		if (record.actualColor && record.guessedColor) return true;
 
-    // Check if actualColor has any color space properties
-    if (record.actualColor) {
-      if (record.actualColor.r !== undefined) return true;
-      if (record.actualColor.L !== undefined) return true;
-      if (record.actualColor.h !== undefined) return true;
-    }
-  }
+		// Check if actualColor has any color space properties
+		if (record.actualColor) {
+			if (record.actualColor.r !== undefined) return true;
+			if (record.actualColor.L !== undefined) return true;
+			if (record.actualColor.h !== undefined) return true;
+		}
+	}
 
-  return false;
+	return false;
 }
 
 function isDifferenceRecord(record) {
@@ -458,22 +463,38 @@ function formatGameType(type) {
 
 // Helper function to determine color format
 function getColorFormat(record) {
-  if (!record?.actualColor) return "HSV";
+	if (!record?.actualColor) return "HSV";
 
-  // More precise format detection
-  if ('L' in record.actualColor && 'a' in record.actualColor && 'b' in record.actualColor) {
-    // OKLAB has specific L, a, b properties
-    return "OKLAB";
-  } else if ('r' in record.actualColor && 'g' in record.actualColor && 'b' in record.actualColor) {
-    // RGB has specific r, g, b properties
-    return "RGB";
-  } else if ('h' in record.actualColor && 's' in record.actualColor && 'v' in record.actualColor) {
-    // HSV has specific h, s, v properties
-    return "HSV";
-  }
+	// More precise format detection
+	if (
+		"L" in record.actualColor &&
+		"a" in record.actualColor &&
+		"b" in record.actualColor
+	) {
+		// OKLAB has specific L, a, b properties
+		return "OKLAB";
+	}
 
-  // If we can't determine format, look for colorSpace property
-  return record.colorSpace?.toUpperCase() || "HSV";
+	if (
+		"r" in record.actualColor &&
+		"g" in record.actualColor &&
+		"b" in record.actualColor
+	) {
+		// RGB has specific r, g, b properties
+		return "RGB";
+	}
+
+	if (
+		"h" in record.actualColor &&
+		"s" in record.actualColor &&
+		"v" in record.actualColor
+	) {
+		// HSV has specific h, s, v properties
+		return "HSV";
+	}
+
+	// If we can't determine format, look for colorSpace property
+	return record.colorSpace?.toUpperCase() || "HSV";
 }
 
 // Convert any color to HSV for comparison
@@ -481,17 +502,17 @@ function convertToHsv(color) {
 	if (!color) return { h: 0, s: 0, v: 0 };
 
 	// Already HSV
-	if ('h' in color && 's' in color && 'v' in color) {
+	if ("h" in color && "s" in color && "v" in color) {
 		return { h: color.h || 0, s: color.s || 0, v: color.v || 0 };
 	}
 
 	// RGB conversion
-	if ('r' in color && 'g' in color && 'b' in color) {
+	if ("r" in color && "g" in color && "b" in color) {
 		return rgbToHsv(color.r || 0, color.g || 0, color.b || 0);
 	}
 
 	// OKLAB conversion
-	if ('L' in color && 'a' in color && 'b' in color) {
+	if ("L" in color && "a" in color && "b" in color) {
 		return oklabToHsv(color.L || 0, color.a || 0, color.b || 0);
 	}
 
@@ -502,24 +523,24 @@ function convertToHsv(color) {
 function getColorStyle(color) {
 	if (!color) return "background-color: gray;";
 
-  // Handle OKLAB color space
-  if ('L' in color && 'a' in color && 'b' in color) {
-    const L = color.L ?? 0;
-    const a = color.a ?? 0;
-    const b = color.b ?? 0;
+	// Handle OKLAB color space
+	if ("L" in color && "a" in color && "b" in color) {
+		const L = color.L ?? 0;
+		const a = color.a ?? 0;
+		const b = color.b ?? 0;
 
-    // Convert from our sliders' range (-100 to 100) to CSS oklab() range (-0.4 to 0.4)
-    // L is already properly scaled (0-100 to 0-1) by dividing by 100
-    // But a and b need to be scaled from -100/+100 to -0.4/+0.4
-    const cssL = L / 100;
-    const cssA = a / 250; // Scale from -100/+100 to -0.4/+0.4
-    const cssB = b / 250; // Scale from -100/+100 to -0.4/+0.4
+		// Convert from our sliders' range (-100 to 100) to CSS oklab() range (-0.4 to 0.4)
+		// L is already properly scaled (0-100 to 0-1) by dividing by 100
+		// But a and b need to be scaled from -100/+100 to -0.4/+0.4
+		const cssL = L / 100;
+		const cssA = a / 250; // Scale from -100/+100 to -0.4/+0.4
+		const cssB = b / 250; // Scale from -100/+100 to -0.4/+0.4
 
-    return `background-color: oklab(${cssL} ${cssA} ${cssB});`;
-  }
+		return `background-color: oklab(${cssL} ${cssA} ${cssB});`;
+	}
 
 	// Handle RGB color space
-	if ('r' in color && 'g' in color && 'b' in color) {
+	if ("r" in color && "g" in color && "b" in color) {
 		const r = color.r ?? 0;
 		const g = color.g ?? 0;
 		const b = color.b ?? 0;
@@ -582,26 +603,32 @@ function getValueDifference(record) {
 
 // Helper functions to calculate RGB color differences
 function getRgbDifference(record, channel) {
-  if (!record?.actualColor?.[channel] || !record?.guessedColor?.[channel]) return 0;
+	if (!record?.actualColor?.[channel] || !record?.guessedColor?.[channel])
+		return 0;
 
-  // Calculate percentage difference (0-100%) from the 0-255 range
-  const diff = Math.abs(record.actualColor[channel] - record.guessedColor[channel]);
-  return (diff / 2.55); // Convert to percentage (255/100 = 2.55)
+	// Calculate percentage difference (0-100%) from the 0-255 range
+	const diff = Math.abs(
+		record.actualColor[channel] - record.guessedColor[channel],
+	);
+	return diff / 2.55; // Convert to percentage (255/100 = 2.55)
 }
 
 // Helper functions to calculate OKLAB color differences
 function getOklabDifference(record, channel) {
-  if (!record?.actualColor?.[channel] || !record?.guessedColor?.[channel]) return 0;
+	if (!record?.actualColor?.[channel] || !record?.guessedColor?.[channel])
+		return 0;
 
-  // Calculate percentage difference
-  // For L: 0-100 is already percentage
-  // For a & b: -100 to +100 range needs to be converted to percentage
-  if (channel === 'L') {
-    return Math.abs(record.actualColor[channel] - record.guessedColor[channel]);
-  } else {
-    // a and b range from -100 to +100, so divide by 2 to get percentage
-    return Math.abs(record.actualColor[channel] - record.guessedColor[channel]) / 2;
-  }
+	// Calculate percentage difference
+	// For L: 0-100 is already percentage
+	// For a & b: -100 to +100 range needs to be converted to percentage
+	if (channel === "L") {
+		return Math.abs(record.actualColor[channel] - record.guessedColor[channel]);
+	}
+
+	// a and b range from -100 to +100, so divide by 2 to get percentage
+	return (
+		Math.abs(record.actualColor[channel] - record.guessedColor[channel]) / 2
+	);
 }
 
 // Format difference to show + or - prefix
