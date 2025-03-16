@@ -502,21 +502,28 @@ function convertToHsv(color) {
 function getColorStyle(color) {
 	if (!color) return "background-color: gray;";
 
+  // Handle OKLAB color space
+  if ('L' in color && 'a' in color && 'b' in color) {
+    const L = color.L ?? 0;
+    const a = color.a ?? 0;
+    const b = color.b ?? 0;
+
+    // Convert from our sliders' range (-100 to 100) to CSS oklab() range (-0.4 to 0.4)
+    // L is already properly scaled (0-100 to 0-1) by dividing by 100
+    // But a and b need to be scaled from -100/+100 to -0.4/+0.4
+    const cssL = L / 100;
+    const cssA = a / 250; // Scale from -100/+100 to -0.4/+0.4
+    const cssB = b / 250; // Scale from -100/+100 to -0.4/+0.4
+
+    return `background-color: oklab(${cssL} ${cssA} ${cssB});`;
+  }
+
 	// Handle RGB color space
 	if ('r' in color && 'g' in color && 'b' in color) {
 		const r = color.r ?? 0;
 		const g = color.g ?? 0;
 		const b = color.b ?? 0;
 		return `background-color: rgb(${r}, ${g}, ${b});`;
-	}
-
-	// Handle OKLAB color space
-	if ('L' in color && 'a' in color && 'b' in color) {
-		const L = color.L ?? 0;
-		const a = color.a ?? 0;
-		const b = color.b ?? 0;
-		// For display, convert OKLAB to RGB using CSS oklch()
-		return `background-color: oklab(${L/100} ${a/100} ${b/100});`;
 	}
 
 	// Default to HSV color space
