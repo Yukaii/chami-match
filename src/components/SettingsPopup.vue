@@ -136,6 +136,23 @@
         </div>
       </div>
 
+      <!-- Recall Timeout - Only shown when in recall mode -->
+      <div v-if="store.gameType === 'recall'" class="mb-4">
+        <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.recallTimeout.label') }}</label>
+        <div class="flex space-x-2">
+          <BaseButton
+            v-for="value in [3, 5, 10]"
+            :key="value"
+            :variant="settings.recallTimeout === value ? 'primary' : 'secondary'"
+            size="sm"
+            is3d
+            @click="settings.recallTimeout = value"
+          >
+            {{ value }}s
+          </BaseButton>
+        </div>
+      </div>
+
       <div class="mb-2 rounded-lg px-4 py-2 text-sm">{{ $t('settings.notice') }}</div>
       <BaseButton
         variant="primary"
@@ -186,6 +203,7 @@ const settings = reactive({
 	maxTries: store.maxLife,
 	realtimePreview: store.realtimePreview,
 	enableConfetti: store.preferences.enableConfetti || true,
+	recallTimeout: store.recallTimeout,
 });
 
 // Theme handling
@@ -232,6 +250,7 @@ watch(
 			settings.maxTries = store.maxLife;
 			settings.realtimePreview = store.realtimePreview;
 			settings.enableConfetti = store.preferences.enableConfetti ?? true;
+			settings.recallTimeout = store.recallTimeout;
 		}
 	},
 );
@@ -242,6 +261,7 @@ const onApply = () => {
 	store.updateMaxLife(settings.maxTries);
 	store.updateRealtimePreview(settings.realtimePreview);
 	store.updateConfetti(settings.enableConfetti);
+	store.updateRecallTimeout(settings.recallTimeout);
 	store.startOver();
 	onClose();
 };

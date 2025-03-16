@@ -7,6 +7,7 @@
 	"startContextualGame": "情境模式",
 	"startRelativeGame": "亮度差異模式",
 	"startColorGame": "圖像顏色模式",
+	"startRecallGame": "記憶模式",
 	"startGame": "開始遊戲",
 	"start": "開始",
 	"quickStart": "快速開始上次遊戲",
@@ -60,6 +61,9 @@
 		},
 		"realtimePreview": {
 			"label": "即時預覽"
+		},
+		"recallTimeout": {
+			"label": "記憶時間"
 		},
 		"notice": "套用遊戲選項將開始新一輪的遊戲。",
 		"cta": "套用",
@@ -119,6 +123,13 @@
 				"show": "顯示目標圓圈",
 				"hide": "隱藏目標圓圈"
 			}
+		},
+		"recall": {
+			"name": "記憶模式",
+			"description": "測試你的顏色記憶力 - 短暫看到顏色後進行回憶",
+			"instructions": "在顏色消失前記住它，然後選擇相符的顏色",
+			"selectPrompt": "選擇配對的顏色：",
+			"lastSelection": "你上次的選擇："
 		}
 	},
 	"colorDifferences": "顏色差異",

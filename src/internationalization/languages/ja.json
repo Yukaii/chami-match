@@ -7,6 +7,7 @@
 	"startContextualGame": "コンテキストモード",
 	"startRelativeGame": "明度差モード",
 	"startColorGame": "画像カラーモード",
+	"startRecallGame": "記憶モード",
 	"startGame": "ゲームを始める",
 	"start": "スタート",
 	"quickStart": "前回のゲームを開始",
@@ -62,6 +63,9 @@
 		},
 		"realtimePreview": {
 			"label": "リアルタイムプレビュー"
+		},
+			"recallTimeout": {
+			"label": "記憶時間"
 		},
 		"notice": "ゲームオプションを適用すると、新しいラウンドが始まります。",
 		"cta": "適用",
@@ -127,6 +131,13 @@
 				"show": "ターゲットサークルを表示",
 				"hide": "ターゲットサークルを非表示"
 			}
+		},
+		"recall": {
+			"name": "記憶モード",
+			"description": "色の記憶力をテスト - 一瞬見た色を覚えて選ぶ",
+			"instructions": "色が消える前に記憶し、一致する色を選んでください",
+			"selectPrompt": "一致する色を選択：",
+			"lastSelection": "前回の選択："
 		}
 	}
 }
