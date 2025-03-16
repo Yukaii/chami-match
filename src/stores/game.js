@@ -390,7 +390,7 @@ export const useGameStore = defineStore("game", {
 			this.preferences.lastPlayedGameType = newGameType;
 			// Immediately update lives when game type changes
 			this.lives =
-				newGameType === "contextual" || newGameType === "image"
+				newGameType === "contextual" || newGameType === "image" || newGameType === "recall"
 					? 2
 					: this.preferences.maxLife || 5;
 		},
