@@ -90,18 +90,20 @@ onMounted(() => {
   store.startOver();
 
   // Register callbacks for the game mode
-  if (store.currentGameMode) {
-    store.currentGameMode.registerViewCallback('onNewRound', handleNewRound);
-  }
-
-  // Start the countdown timer
-  startTimer();
+  registerCallbacks();
 });
 
 // Clean up when component is destroyed
 onBeforeUnmount(() => {
   clearTimer();
 });
+
+// Watch for changes to the game mode and re-register callbacks
+watch(() => store.currentGameMode, (newMode) => {
+  if (newMode) {
+    registerCallbacks();
+  }
+}, { immediate: true });
 
 // Watch for new rounds to restart the timer
 watch(() => store.currentRound, () => {
@@ -114,6 +116,17 @@ watch(() => state.value.timeRemaining, (newTime) => {
     store.currentGameMode.hideColor();
   }
 });
+
+function registerCallbacks() {
+  if (store.currentGameMode) {
+    store.currentGameMode.registerViewCallback('onNewRound', handleNewRound);
+
+    // Ensure timer starts immediately if we're in a visible state
+    if (state.value && state.value.colorVisible && state.value.timerActive) {
+      startTimer();
+    }
+  }
+}
 
 function handleNewRound() {
   // Reset state for a new round
