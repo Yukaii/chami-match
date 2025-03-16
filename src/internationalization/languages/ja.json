@@ -137,7 +137,8 @@
 			"description": "色の記憶力をテスト - 一瞬見た色を覚えて選ぶ",
 			"instructions": "色が消える前に記憶し、一致する色を選んでください",
 			"selectPrompt": "一致する色を選択：",
-			"lastSelection": "前回の選択："
+			"lastSelection": "前回の選択：",
+			"memorizePrompt": "この色を記憶してください！"
 		}
 	}
 }

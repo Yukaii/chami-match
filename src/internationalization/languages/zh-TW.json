@@ -129,7 +129,8 @@
 			"description": "測試你的顏色記憶力 - 短暫看到顏色後進行回憶",
 			"instructions": "在顏色消失前記住它，然後選擇相符的顏色",
 			"selectPrompt": "選擇配對的顏色：",
-			"lastSelection": "你上次的選擇："
+			"lastSelection": "你上次的選擇：",
+			"memorizePrompt": "記住這個顏色！"
 		}
 	},
 	"colorDifferences": "顏色差異",

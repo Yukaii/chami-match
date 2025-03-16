@@ -30,28 +30,38 @@
         <span class="text-lg font-bold text-gray-500 dark:text-gray-300">?</span>
       </div>
 
-      <!-- Color selection prompt -->
-      <h3 class="mb-2 text-xl font-bold">{{ $t('gameModes.recall.selectPrompt') }}</h3>
+      <!-- Only show color options after the countdown ends and color is hidden -->
+      <div v-if="!state.colorVisible" class="w-full flex-col flex justify-center">
+        <!-- Color selection prompt -->
+        <h3 class="mb-2 text-xl font-bold text-center">{{ $t('gameModes.recall.selectPrompt') }}</h3>
 
-      <!-- Color options grid -->
-      <div class="grid grid-cols-3 gap-3 mb-6">
-        <div v-for="(color, index) in state.colorOptions"
-             :key="index"
-             class="size-16 cursor-pointer rounded-lg border-2 border-gray-400 transition-all hover:scale-110"
-             :class="{ 'ring-2 ring-pink-500 dark:ring-orange-300': isSelectedColor(color) }"
-             :style="{ backgroundColor: colorHSVtoHex(color) }"
-             @click="selectColor(color)">
+        <!-- Color options grid -->
+        <div class="grid grid-cols-3 gap-3 mb-6">
+          <div v-for="(color, index) in state.colorOptions"
+               :key="index"
+               class="size-16 cursor-pointer rounded-lg border-2 border-gray-400 transition-all hover:scale-110"
+               :class="{ 'ring-2 ring-pink-500 dark:ring-orange-300': isSelectedColor(color) }"
+               :style="{ backgroundColor: colorHSVtoHex(color) }"
+               @click="selectColor(color)">
+          </div>
         </div>
+
+        <!-- Submit Button -->
+        <BaseButton
+          variant="primary"
+          :disabled="!userHasSelected"
+          @click="submitGuess"
+        >
+          {{ $t('submit') }}
+        </BaseButton>
       </div>
 
-      <!-- Submit Button -->
-      <BaseButton
-        variant="primary"
-        :disabled="!userHasSelected || state.colorVisible"
-        @click="submitGuess"
-      >
-        {{ $t('submit') }}
-      </BaseButton>
+      <!-- Show instruction while countdown is active -->
+      <div v-else class="mt-6 text-center">
+        <p class="text-lg font-medium text-gray-700 dark:text-gray-300">
+          {{ $t('gameModes.recall.memorizePrompt') }}
+        </p>
+      </div>
     </div>
   </div>
 </template>

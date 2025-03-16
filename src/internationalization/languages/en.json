@@ -128,7 +128,8 @@
 			"description": "Test your color memory - see a color briefly and then recall it",
 			"instructions": "Memorize the color before it disappears, then select the matching color",
 			"selectPrompt": "Select the matching color:",
-			"lastSelection": "Your last selection:"
+			"lastSelection": "Your last selection:",
+			"memorizePrompt": "Memorize this color!"
 		}
 	},
 	"colorDifferences": "Color Differences",
