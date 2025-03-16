@@ -64,7 +64,7 @@
 		"realtimePreview": {
 			"label": "リアルタイムプレビュー"
 		},
-			"recallTimeout": {
+		"recallTimeout": {
 			"label": "記憶時間"
 		},
 		"notice": "ゲームオプションを適用すると、新しいラウンドが始まります。",

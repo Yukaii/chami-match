@@ -17,7 +17,7 @@ export function createGameMode(type, options = {}) {
 				...options,
 				recallTimeout: options.recallTimeout || 5,
 			});
-		case "standard":
+		// case "standard":
 		default:
 			return new StandardMode(options);
 	}

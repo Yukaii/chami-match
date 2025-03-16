@@ -62,7 +62,7 @@
 		"realtimePreview": {
 			"label": "Realtime Preview"
 		},
-			"recallTimeout": {
+		"recallTimeout": {
 			"label": "Recall Time"
 		},
 		"notice": "Applying game options will start a new round.",

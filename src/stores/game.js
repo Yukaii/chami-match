@@ -390,7 +390,9 @@ export const useGameStore = defineStore("game", {
 			this.preferences.lastPlayedGameType = newGameType;
 			// Immediately update lives when game type changes
 			this.lives =
-				newGameType === "contextual" || newGameType === "image" || newGameType === "recall"
+				newGameType === "contextual" ||
+				newGameType === "image" ||
+				newGameType === "recall"
 					? 2
 					: this.preferences.maxLife || 5;
 		},
@@ -404,7 +406,7 @@ export const useGameStore = defineStore("game", {
 			this.preferences.enableConfetti = enabled;
 		},
 
-		 // Add new action for updating recall timeout
+		// Add new action for updating recall timeout
 		updateRecallTimeout(newTimeout) {
 			this.preferences.recallTimeout = newTimeout;
 		},
@@ -481,7 +483,9 @@ export const useGameStore = defineStore("game", {
 				() => this.preferences.gameType,
 				(newGameType) => {
 					this.lives =
-						newGameType === "contextual" || newGameType === "image" || newGameType === "recall"
+						newGameType === "contextual" ||
+						newGameType === "image" ||
+						newGameType === "recall"
 							? 2
 							: this.preferences.maxLife || 5;
 				},

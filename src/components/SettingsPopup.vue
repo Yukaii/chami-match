@@ -184,7 +184,7 @@
 
 <script setup>
 import { PhDeviceMobile, PhMoon, PhSun } from "@phosphor-icons/vue";
-import { onMounted, reactive, ref, watch, computed } from "vue";
+import { computed, onMounted, reactive, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useGameStore } from "../stores/game";
 import BaseButton from "./base/BaseButton.vue";
@@ -198,11 +198,14 @@ const languages = [
 ];
 
 // Computed properties for game type conditions
-const isBasicGameType = computed(() =>
-  store.gameType !== 'image' && store.gameType !== 'contextual' && store.gameType !== 'recall'
+const isBasicGameType = computed(
+	() =>
+		store.gameType !== "image" &&
+		store.gameType !== "contextual" &&
+		store.gameType !== "recall",
 );
 
-const isNotImageMode = computed(() => store.gameType !== 'image');
+const isNotImageMode = computed(() => store.gameType !== "image");
 
 const settings = reactive({
 	language: localStorage.getItem("lang") || navigator.language || "zh-TW",

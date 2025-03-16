@@ -21,7 +21,7 @@ export class RecallMode extends StandardMode {
 			colorOptions: [],
 			colorVisible: true,
 			timerActive: false,
-			timeRemaining: this.recallTimeout
+			timeRemaining: this.recallTimeout,
 		};
 	}
 
@@ -64,7 +64,10 @@ export class RecallMode extends StandardMode {
 		this.state.colorOptions = this.generateColorOptions();
 
 		// Call the onNewRound callback if registered
-		if (this.viewCallbacks && typeof this.viewCallbacks.onNewRound === "function") {
+		if (
+			this.viewCallbacks &&
+			typeof this.viewCallbacks.onNewRound === "function"
+		) {
 			this.viewCallbacks.onNewRound();
 		}
 	}
