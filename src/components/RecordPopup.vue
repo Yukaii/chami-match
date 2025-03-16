@@ -63,6 +63,10 @@
                   <span class="text-xs text-gray-500 dark:text-gray-400">
                     {{ formatGameType(record.gameType) }}
                   </span>
+                  <!-- Add color format badge -->
+                  <span v-if="isColorRecord(record)" class="text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-1.5 py-0.5 rounded">
+                    {{ getColorFormat(record) }}
+                  </span>
                 </div>
                 <div
                   class="rounded-lg px-2 py-1 text-white"
@@ -188,6 +192,8 @@
 <script setup>
 import { computed, onMounted, ref, watch } from "vue";
 import { useGameStore } from "../stores/game";
+import Modal from "./Modal.vue";
+import { hsvToRgb, rgbToHsv, hsvToOklab, oklabToHsv } from "../utils/colorSpaceUtils";
 
 const store = useGameStore();
 const filterType = ref("all");
@@ -199,7 +205,6 @@ const rawRecords = ref([]);
 // Function to extract records from the Pinia store
 function extractRecords() {
 	try {
-		console.log("Extracting records from store...");
 		// Get records directly from the store's getter
 		rawRecords.value = store.lastTriesOfEachRound || [];
 		console.log("Extracted records:", rawRecords.value);
@@ -330,11 +335,25 @@ onMounted(() => {
 
 // Helper functions to check record types safely with support for old record format
 function isColorRecord(record) {
-	return (
-		record &&
-		(record.type === "color" ||
-			(!record.type && record.actualColor && record.guessedColor))
-	);
+  if (!record) return false;
+
+  // Check if it's explicitly a color record
+  if (record.type === "color") return true;
+
+  // Check for implicit color record without type field
+  if (!record.type) {
+    // Has both color objects
+    if (record.actualColor && record.guessedColor) return true;
+
+    // Check if actualColor has any color space properties
+    if (record.actualColor) {
+      if (record.actualColor.r !== undefined) return true;
+      if (record.actualColor.L !== undefined) return true;
+      if (record.actualColor.h !== undefined) return true;
+    }
+  }
+
+  return false;
 }
 
 function isDifferenceRecord(record) {
@@ -350,6 +369,39 @@ function isDifferenceRecord(record) {
 function formatGameType(type) {
 	if (!type) return "Standard";
 	return type.charAt(0).toUpperCase() + type.slice(1);
+}
+
+// Helper function to determine color format
+function getColorFormat(record) {
+	if (!record?.actualColor) return "HSV";
+	if ('r' in record.actualColor && 'g' in record.actualColor && 'b' in record.actualColor) {
+		return "RGB";
+	} else if ('L' in record.actualColor && 'a' in record.actualColor && 'b' in record.actualColor) {
+		return "OKLAB";
+	}
+	return "HSV";
+}
+
+// Convert any color to HSV for comparison
+function convertToHsv(color) {
+	if (!color) return { h: 0, s: 0, v: 0 };
+
+	// Already HSV
+	if ('h' in color && 's' in color && 'v' in color) {
+		return { h: color.h || 0, s: color.s || 0, v: color.v || 0 };
+	}
+
+	// RGB conversion
+	if ('r' in color && 'g' in color && 'b' in color) {
+		return rgbToHsv(color.r || 0, color.g || 0, color.b || 0);
+	}
+
+	// OKLAB conversion
+	if ('L' in color && 'a' in color && 'b' in color) {
+		return oklabToHsv(color.L || 0, color.a || 0, color.b || 0);
+	}
+
+	return { h: 0, s: 0, v: 0 }; // Default fallback
 }
 
 // Get valid color style even if color values are missing
@@ -369,7 +421,8 @@ function getColorStyle(color) {
 		const L = color.L ?? 0;
 		const a = color.a ?? 0;
 		const b = color.b ?? 0;
-		return `background-color: oklab(${L} ${a} ${b});`;
+		// For display, convert OKLAB to RGB using CSS oklch()
+		return `background-color: oklab(${L/100} ${a/100} ${b/100});`;
 	}
 
 	// Default to HSV color space
@@ -393,23 +446,37 @@ const onClose = () => {
 
 // Helper functions to calculate color differences
 function getHueDifference(record) {
-	if (!record?.actualColor?.h || !record?.guessedColor?.h) return 0;
+	if (!record?.actualColor || !record?.guessedColor) return 0;
+
+	// Convert both colors to HSV for comparison
+	const actualHsv = convertToHsv(record.actualColor);
+	const guessedHsv = convertToHsv(record.guessedColor);
 
 	// Handle hue's circular nature (0-360)
-	let diff = Math.abs(record.actualColor.h - record.guessedColor.h);
+	let diff = Math.abs(actualHsv.h - guessedHsv.h);
 	if (diff > 180) diff = 360 - diff;
 
 	return diff;
 }
 
 function getSaturationDifference(record) {
-	if (!record?.actualColor?.s || !record?.guessedColor?.s) return 0;
-	return Math.abs(record.actualColor.s - record.guessedColor.s);
+	if (!record?.actualColor || !record?.guessedColor) return 0;
+
+	// Convert both colors to HSV for comparison
+	const actualHsv = convertToHsv(record.actualColor);
+	const guessedHsv = convertToHsv(record.guessedColor);
+
+	return Math.abs(actualHsv.s - guessedHsv.s);
 }
 
 function getValueDifference(record) {
-	if (!record?.actualColor?.v || !record?.guessedColor?.v) return 0;
-	return Math.abs(record.actualColor.v - record.guessedColor.v);
+	if (!record?.actualColor || !record?.guessedColor) return 0;
+
+	// Convert both colors to HSV for comparison
+	const actualHsv = convertToHsv(record.actualColor);
+	const guessedHsv = convertToHsv(record.guessedColor);
+
+	return Math.abs(actualHsv.v - guessedHsv.v);
 }
 
 // Format difference to show + or - prefix
