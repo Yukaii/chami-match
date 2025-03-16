@@ -57,7 +57,8 @@ export const useGameStore = defineStore("game", {
 			// Override maxLife for contextual and image mode to always be 2
 			if (
 				state.preferences.gameType === "contextual" ||
-				state.preferences.gameType === "image"
+				state.preferences.gameType === "image" ||
+				state.preferences.gameType === "recall"
 			) {
 				return 2;
 			}
