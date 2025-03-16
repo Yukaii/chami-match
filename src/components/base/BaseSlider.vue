@@ -70,7 +70,7 @@ const props = defineProps({
 		type: String,
 		default: "default",
 		validator: (value) =>
-			["default", "hue", "saturation", "value"].includes(value),
+			["default", "hue", "saturation", "value", "red", "green", "blue", "lightness", "a-axis", "b-axis"].includes(value),
 	},
 	label: {
 		type: String,
@@ -104,6 +104,18 @@ const variantBackgroundClass = computed(() => {
 			return "saturation-slider";
 		case "value":
 			return "value-slider";
+		case "red":
+			return "red-slider";
+		case "green":
+			return "green-slider";
+		case "blue":
+			return "blue-slider";
+		case "lightness":
+			return "lightness-slider";
+		case "a-axis":
+			return "a-axis-slider";
+		case "b-axis":
+			return "b-axis-slider";
 		default:
 			return "bg-linear-to-r from-pink-400 to-pink-600";
 	}
@@ -151,5 +163,29 @@ const handleInput = (event) => {
 
 .value-slider {
   background: linear-gradient(to right, #000000, #ffffff);
+}
+
+.red-slider {
+  background: linear-gradient(to right, #000000, #ff0000);
+}
+
+.green-slider {
+  background: linear-gradient(to right, #000000, #00ff00);
+}
+
+.blue-slider {
+  background: linear-gradient(to right, #000000, #0000ff);
+}
+
+.lightness-slider {
+  background: linear-gradient(to right, #000000, #ffffff);
+}
+
+.a-axis-slider {
+  background: linear-gradient(to right, #00ff00, #ff0000);
+}
+
+.b-axis-slider {
+  background: linear-gradient(to right, #0000ff, #ffff00);
 }
 </style>

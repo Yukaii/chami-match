@@ -3,7 +3,13 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
 import { hsvToRgb } from "../utils";
+import { oklabToRgb } from "../utils/colorSpaceUtils";
+import { useGameStore } from "../stores/game";
+
+const store = useGameStore();
+const colorSpace = computed(() => store.colorSpace);
 
 const props = defineProps({
 	color: {
@@ -13,8 +19,23 @@ const props = defineProps({
 });
 
 const colorStr = computed(() => {
-	const { h, s, v } = props.color;
-	const rgbColor = hsvToRgb(h, s, v);
-	return `rgb(${rgbColor.r}, ${rgbColor.g}, ${rgbColor.b})`;
+  // Check which color space we're using
+  if (colorSpace.value === "rgb") {
+    // RGB color space
+    const { r, g, b } = props.color;
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+
+  if (colorSpace.value === "oklab") {
+    // OKLAB color space - convert to RGB for display
+    const { L, a, b } = props.color;
+    const rgb = oklabToRgb(L, a, b);
+    return `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+  }
+
+  // Default HSV color space
+  const { h, s, v } = props.color;
+  const rgbColor = hsvToRgb(h, s, v);
+  return `rgb(${rgbColor.r}, ${rgbColor.g}, ${rgbColor.b})`;
 });
 </script>

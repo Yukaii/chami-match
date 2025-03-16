@@ -1,8 +1,10 @@
 import { hsvToRgb } from "./index";
+import { oklabToRgb } from "./colorSpaceUtils";
+import { useGameStore } from "../stores/game";
 
 /**
- * Convert HSV color object to a hex string for CSS
- * @param {Object} color - Color object with h, s, v properties
+ * Convert color object to a hex string for CSS based on the current color space
+ * @param {Object} color - Color object with properties depending on color space
  * @returns {string} - Hex color string (e.g., "#ff0000")
  */
 export function colorHSVtoHex(color) {
@@ -10,8 +12,50 @@ export function colorHSVtoHex(color) {
 		return "#000000";
 	}
 
-	const { h = 0, s = 0, v = 0 } = color;
-	const { r, g, b } = hsvToRgb(h, s, v);
+	// Get the current color space from the store
+	let r;
+	let g;
+	let b;
+	let store;
+
+	try {
+		store = useGameStore();
+		const colorSpace = store.colorSpace;
+
+		if (colorSpace === "rgb") {
+			// RGB color space
+			r = color.r || 0;
+			g = color.g || 0;
+			b = color.b || 0;
+		} else if (colorSpace === "oklab") {
+			// OKLAB color space - convert to RGB
+			const L = color.L || 0;
+			const a = color.a || 0;
+			const lab_b = color.b || 0;
+			const rgb = oklabToRgb(L, a, lab_b);
+			r = rgb.r;
+			g = rgb.g;
+			b = rgb.b;
+		} else {
+			// Default HSV color space
+			const h = color.h || 0;
+			const s = color.s || 0;
+			const v = color.v || 0;
+			const rgb = hsvToRgb(h, s, v);
+			r = rgb.r;
+			g = rgb.g;
+			b = rgb.b;
+		}
+	} catch (e) {
+		// Fallback to HSV if store is not available
+		const h = color.h || 0;
+		const s = color.s || 0;
+		const v = color.v || 0;
+		const rgb = hsvToRgb(h, s, v);
+		r = rgb.r;
+		g = rgb.g;
+		b = rgb.b;
+	}
 
 	return rgbToHex(r, g, b);
 }

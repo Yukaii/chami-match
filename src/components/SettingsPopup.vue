@@ -102,6 +102,23 @@
         </div>
       </div>
 
+      <!-- Color Space - Only shown in standard mode -->
+      <div v-if="store.gameType === 'standard'" class="mb-4">
+        <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.colorSpace.label') || 'Color Space' }}</label>
+        <div class="flex space-x-2">
+          <BaseButton
+            v-for="value in ['hsv', 'rgb', 'oklab']"
+            :key="value"
+            :variant="settings.colorSpace === value ? 'primary' : 'secondary'"
+            size="sm"
+            is3d
+            @click="settings.colorSpace = value"
+          >
+            {{ value.toUpperCase() }}
+          </BaseButton>
+        </div>
+      </div>
+
       <!-- Max Tries -->
       <div v-if="isBasicGameType" class="mb-4">
         <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.maxTries.label') }}</label>
@@ -211,6 +228,7 @@ const settings = reactive({
 	language: localStorage.getItem("lang") || navigator.language || "zh-TW",
 	precision: store.precision,
 	mode: store.mode,
+	colorSpace: store.colorSpace,
 	maxTries: store.maxLife,
 	realtimePreview: store.realtimePreview,
 	enableConfetti: store.preferences.enableConfetti || true,
@@ -258,6 +276,7 @@ watch(
 		if (isOpen) {
 			settings.precision = store.precision;
 			settings.mode = store.mode;
+			settings.colorSpace = store.colorSpace;
 			settings.maxTries = store.maxLife;
 			settings.realtimePreview = store.realtimePreview;
 			settings.enableConfetti = store.preferences.enableConfetti ?? true;
@@ -269,6 +288,7 @@ watch(
 const onApply = () => {
 	store.updatePrecision(settings.precision);
 	store.updateMode(settings.mode);
+	store.updateColorSpace(settings.colorSpace);
 	store.updateMaxLife(settings.maxTries);
 	store.updateRealtimePreview(settings.realtimePreview);
 	store.updateConfetti(settings.enableConfetti);
