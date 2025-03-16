@@ -1,52 +1,56 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { Carousel, Navigation, Pagination, Slide } from "vue3-carousel";
 import { useGameStore } from "../stores/game";
 import BaseButton from "./base/BaseButton.vue";
-import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
-import 'vue3-carousel/dist/carousel.css';
+import "vue3-carousel/dist/carousel.css";
 
 const store = useGameStore();
 const router = useRouter();
 
 // Game modes configuration
 const gameModes = [
-  {
-    type: "standard",
-    name: "startStandardGame",
-    color: "bg-green-500 dark:bg-green-600 hover:bg-green-600 dark:hover:bg-green-700 border-b-4 border-green-700 dark:border-green-800",
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+	{
+		type: "standard",
+		name: "startStandardGame",
+		color:
+			"bg-green-500 dark:bg-green-600 hover:bg-green-600 dark:hover:bg-green-700 border-b-4 border-green-700 dark:border-green-800",
+		icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
     </svg>`,
-    route: "/game"
-  },
-  {
-    type: "contextual",
-    name: "startContextualGame",
-    color: "bg-purple-500 dark:bg-purple-600 hover:bg-purple-600 dark:hover:bg-purple-700 border-b-4 border-purple-700 dark:border-purple-800",
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+		route: "/game",
+	},
+	{
+		type: "contextual",
+		name: "startContextualGame",
+		color:
+			"bg-purple-500 dark:bg-purple-600 hover:bg-purple-600 dark:hover:bg-purple-700 border-b-4 border-purple-700 dark:border-purple-800",
+		icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
     </svg>`,
-    route: "/context-game"
-  },
-  {
-    type: "relative",
-    name: "startRelativeGame",
-    color: "bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700 border-b-4 border-blue-700 dark:border-blue-800",
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+		route: "/context-game",
+	},
+	{
+		type: "relative",
+		name: "startRelativeGame",
+		color:
+			"bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700 border-b-4 border-blue-700 dark:border-blue-800",
+		icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
     </svg>`,
-    route: "/relative-game"
-  },
-  {
-    type: "image",
-    name: "startColorGame",
-    color: "bg-amber-500 dark:bg-amber-600 hover:bg-amber-600 dark:hover:bg-amber-700 border-b-4 border-amber-700 dark:border-amber-800",
-    icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+		route: "/relative-game",
+	},
+	{
+		type: "image",
+		name: "startColorGame",
+		color:
+			"bg-amber-500 dark:bg-amber-600 hover:bg-amber-600 dark:hover:bg-amber-700 border-b-4 border-amber-700 dark:border-amber-800",
+		icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
     </svg>`,
-    route: "/image-game"
-  }
+		route: "/image-game",
+	},
 ];
 
 // Current slide index
@@ -54,39 +58,40 @@ const currentSlide = ref(0);
 
 // Get the current game mode based on slide index
 const currentGameMode = computed(() => {
-  return gameModes[currentSlide.value];
+	return gameModes[currentSlide.value];
 });
 
 function startGame() {
-  const mode = currentGameMode.value;
-  store.updateGameType(mode.type);
-  store.updateLastPlayedGameType(mode.type); // Save the selected mode
-  store.startOver(); // Initialize a new game
-  router.push(mode.route);
+	const mode = currentGameMode.value;
+	store.updateGameType(mode.type);
+	store.updateLastPlayedGameType(mode.type); // Save the selected mode
+	store.startOver(); // Initialize a new game
+	router.push(mode.route);
 }
 
 function quickStartLastGame() {
-  const lastGameType = store.lastPlayedGameType;
-  const lastGame = gameModes.find(mode => mode.type === lastGameType) || gameModes[0];
-  store.updateGameType(lastGame.type);
-  store.startOver();
-  router.push(lastGame.route);
+	const lastGameType = store.lastPlayedGameType;
+	const lastGame =
+		gameModes.find((mode) => mode.type === lastGameType) || gameModes[0];
+	store.updateGameType(lastGame.type);
+	store.startOver();
+	router.push(lastGame.route);
 }
 
 function openSettings() {
-  store.settingsMode = "global";
-  store.toggleSettingsPopup();
+	store.settingsMode = "global";
+	store.toggleSettingsPopup();
 }
 
 // Initialize the carousel to show the last played game (if available)
 onMounted(() => {
-  const lastType = store.lastPlayedGameType;
-  if (lastType) {
-    const lastIndex = gameModes.findIndex(mode => mode.type === lastType);
-    if (lastIndex !== -1) {
-      currentSlide.value = lastIndex;
-    }
-  }
+	const lastType = store.lastPlayedGameType;
+	if (lastType) {
+		const lastIndex = gameModes.findIndex((mode) => mode.type === lastType);
+		if (lastIndex !== -1) {
+			currentSlide.value = lastIndex;
+		}
+	}
 });
 </script>
 
