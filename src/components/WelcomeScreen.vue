@@ -107,7 +107,7 @@ onMounted(() => {
           :transition="500"
         >
           <slide v-for="(mode, index) in gameModes" :key="index">
-            <div class="flex flex-col items-center px-4">
+            <div class="flex flex-col items-center px-4 w-full">
               <div
                 class="flex h-24 w-24 items-center justify-center rounded-full mb-4"
                 :class="mode.color.split(' ').slice(0, 2).join(' ')"
@@ -152,7 +152,7 @@ onMounted(() => {
       </div>
 
       <!-- Settings and About buttons -->
-      <div class="mt-4">
+      <div class="mt-4 flex flex-col gap-2">
         <BaseButton
           variant="secondary"
           full-width
@@ -160,15 +160,15 @@ onMounted(() => {
         >
           {{ $t('settings.title') }}
         </BaseButton>
-      </div>
 
-      <BaseButton
-        variant="secondary"
-        full-width
-        @click="store.toggleAboutPopup()"
-      >
-        {{ $t('about.title') }}
-      </BaseButton>
+        <BaseButton
+          variant="secondary"
+          full-width
+          @click="store.toggleAboutPopup()"
+        >
+          {{ $t('about.title') }}
+        </BaseButton>
+      </div>
     </div>
   </div>
 </template>
