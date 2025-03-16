@@ -69,7 +69,7 @@
       <hr class="mb-4 border-gray-400" />
 
       <!-- Precision - Only shown when NOT in contextual mode or image mode -->
-      <div v-if="store.gameType !== 'contextual' && store.gameType !== 'image' && store.gameType !== 'recall'" class="mb-4">
+      <div v-if="isBasicGameType" class="mb-4">
         <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.precision.label') }}</label>
         <div class="flex space-x-2">
           <BaseButton
@@ -86,7 +86,7 @@
       </div>
 
       <!-- Color Mode - Not shown in image mode -->
-      <div v-if="store.gameType !== 'image'" class="mb-4">
+      <div v-if="isNotImageMode" class="mb-4">
         <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.colorMode.label') }}</label>
         <div class="flex space-x-2">
           <BaseButton
@@ -103,7 +103,7 @@
       </div>
 
       <!-- Max Tries -->
-      <div v-if="store.gameType !== 'contextual' && store.gameType !== 'image' && store.gameType !== 'recall'" class="mb-4">
+      <div v-if="isBasicGameType" class="mb-4">
         <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.maxTries.label') }}</label>
         <div class="flex space-x-2">
           <BaseButton
@@ -120,7 +120,7 @@
       </div>
 
       <!-- Realtime Preview -->
-      <div v-if="store.gameType !== 'image' && store.gameType !== 'contextual' && store.gameType !== 'recall'" class="mb-4">
+      <div v-if="isBasicGameType" class="mb-4">
         <label class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.realtimePreview.label') }}</label>
         <div class="flex space-x-2">
           <BaseButton
@@ -184,7 +184,7 @@
 
 <script setup>
 import { PhDeviceMobile, PhMoon, PhSun } from "@phosphor-icons/vue";
-import { onMounted, reactive, ref, watch } from "vue";
+import { onMounted, reactive, ref, watch, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useGameStore } from "../stores/game";
 import BaseButton from "./base/BaseButton.vue";
@@ -196,6 +196,14 @@ const languages = [
 	{ code: "en", label: "English" },
 	{ code: "ja", label: "日本語" },
 ];
+
+// Computed properties for game type conditions
+const isBasicGameType = computed(() =>
+  store.gameType !== 'image' && store.gameType !== 'contextual' && store.gameType !== 'recall'
+);
+
+const isNotImageMode = computed(() => store.gameType !== 'image');
+
 const settings = reactive({
 	language: localStorage.getItem("lang") || navigator.language || "zh-TW",
 	precision: store.precision,
