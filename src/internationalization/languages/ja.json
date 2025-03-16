@@ -1,5 +1,7 @@
 {
 	"title": "チャミマッチ - 色を再現してみよう！",
+	"mainTitle": "チャミマッチ",
+	"subtitle": "色を再現してみよう！",
 	"description": "色覚を楽しくトレーニング！シンプルな色合わせゲーム",
 	"startStandardGame": "標準モード",
 	"startContextualGame": "コンテキストモード",

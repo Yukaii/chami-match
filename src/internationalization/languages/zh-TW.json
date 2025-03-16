@@ -1,5 +1,7 @@
 {
 	"title": "Chami Match - Recognize the Color!",
+	"mainTitle": "Chami Match",
+	"subtitle": "顏色辨識挑戰",
 	"description": "一個簡單又有趣的顏色辨識訓練遊戲！",
 	"startStandardGame": "標準模式",
 	"startContextualGame": "情境模式",

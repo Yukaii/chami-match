@@ -93,7 +93,8 @@ onMounted(() => {
 <template>
   <div class="flex size-full flex-col items-center justify-center gap-6 p-4">
     <div class="text-center">
-      <h1 class="mb-2 text-4xl font-bold text-pink-600 dark:text-orange-300">{{ $t('title') }}</h1>
+      <h1 class="mb-1 text-4xl font-bold text-pink-600 dark:text-orange-300">{{ $t('mainTitle') }}</h1>
+      <p class="mb-2 text-xl font-semibold text-pink-500 dark:text-orange-200">{{ $t('subtitle') }}</p>
       <p class="text-lg text-gray-600 dark:text-gray-200">{{ $t('description') }}</p>
     </div>
 
