@@ -90,7 +90,6 @@
 </template>
 
 <script setup>
-import { PhGithubLogo, PhShareNetwork } from "@phosphor-icons/vue";
 import { useGameStore } from "../stores/game";
 import BaseButton from "./base/BaseButton.vue";
 

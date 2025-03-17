@@ -6,7 +6,7 @@ import { initializeStores } from "./stores";
 
 import "./style.css";
 import App from "./App.vue";
-import i18n from "./internationalization/index";
+import i18n from "./i18n/locales/i18n.config.mjs";
 import router from "./router";
 
 const head = createHead();

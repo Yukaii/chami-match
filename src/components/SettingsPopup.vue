@@ -200,9 +200,7 @@
 </template>
 
 <script setup>
-import { PhDeviceMobile, PhMoon, PhSun } from "@phosphor-icons/vue";
 import { computed, onMounted, reactive, ref, watch } from "vue";
-import { useI18n } from "vue-i18n";
 import { useGameStore } from "../stores/game";
 import BaseButton from "./base/BaseButton.vue";
 

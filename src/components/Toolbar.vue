@@ -72,14 +72,6 @@
 </template>
 
 <script setup>
-import {
-	PhArrowsClockwise,
-	PhChartLine,
-	PhClockCounterClockwise,
-	PhGearSix,
-	PhHandFist,
-	PhQuestion,
-} from "@phosphor-icons/vue";
 import { computed, ref, watch } from "vue";
 import { useGameStore } from "../stores/game";
 import { cn } from "../utils/index";

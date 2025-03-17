@@ -13,7 +13,7 @@
         'delay-400': life === 5
       }"
     >
-      <PhHeart
+      <PhosphorIconHeart
         :size="24"
         weight="fill"
         class="drop-shadow-md transition-colors duration-300"
@@ -27,7 +27,6 @@
 </template>
 
 <script setup>
-import { PhHeart } from "@phosphor-icons/vue";
 import { useGameStore } from "../stores/game";
 
 const store = useGameStore();
