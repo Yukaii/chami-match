@@ -21,10 +21,16 @@ function startOver() {
 </script>
 
 <template>
-  <div class="flex w-full justify-between">
+  <div class="flex w-full justify-between items-center">
     <BaseButton variant="secondary" size="sm" @click="goToHome">
       <span class="mr-1 text-lg">←</span> {{ $t('home') }}
     </BaseButton>
+
+    <!-- Challenge Mode Indicator -->
+    <div v-if="store.currentChallengeId" class="text-xs font-semibold text-purple-600 dark:text-purple-400 border border-purple-400 dark:border-purple-500 rounded px-2 py-0.5">
+      Challenge Mode
+    </div>
+
     <BaseButton variant="secondary" size="sm" @click="startOver">
       {{ $t('startOver') }}
     </BaseButton>

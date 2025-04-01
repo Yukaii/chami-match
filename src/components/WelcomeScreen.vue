@@ -118,10 +118,38 @@ const handleJoinChallenge = async () => {
     const challenge = await joinChallenge(payload);
     console.log("Joined challenge:", challenge);
 
-    // TODO: Store joined challenge state (e.g., in Pinia store or local state)
-    // TODO: Navigate to a challenge lobby/leaderboard view?
-    // For now, just navigate to the leaderboard page
-    router.push({ name: 'ChallengeLeaderboard', params: { id: challenge.id } });
+    // Find the participant record for the current device
+    const myParticipant = challenge.participants.find(p => p.deviceId === store.deviceId);
+
+    if (!myParticipant) {
+        // This shouldn't happen if the join was successful, but handle defensively
+        console.error("Could not find own participant record after joining challenge.");
+        alert("Error: Could not verify participation after joining.");
+        return;
+    }
+
+    // Store challenge context in Pinia
+    store.currentChallengeId = challenge.id;
+    store.currentParticipantId = myParticipant.id;
+
+    // Set the game type based on the challenge settings
+    store.updateGameType(challenge.settings.gameType);
+    // Optionally update other settings like precision, maxLife based on challenge.settings?
+    // store.updatePrecision(challenge.settings.precision);
+    // store.updateMaxLife(challenge.settings.maxLife); // Lives are handled differently
+
+    // Find the route for the challenge's game type
+    const gameModeRoute = gameModes.find(mode => mode.type === challenge.settings.gameType)?.route || '/game'; // Default to standard game
+
+    // Start a new game session for the challenge
+    store.startOver(); // This resets score/round and sets challenge IDs to null, need to re-set them
+
+    // Re-set challenge context after startOver clears it
+    store.currentChallengeId = challenge.id;
+    store.currentParticipantId = myParticipant.id;
+
+    // Navigate to the correct game screen to start the challenge attempt
+    router.push(gameModeRoute);
 
   } catch (err) {
     console.error("Failed to join challenge:", apiError.value);
