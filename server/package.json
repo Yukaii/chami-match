@@ -1,0 +1,22 @@
+{
+  "name": "server",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "scripts": {
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@hono/zod-validator": "^0.4.3",
+    "@types/uuid": "^10.0.0",
+    "hono": "^4.7.5",
+    "uuid": "^11.1.0",
+    "zod": "^3.24.2"
+  }
+}
