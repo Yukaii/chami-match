@@ -46,6 +46,9 @@ export function useChallengeApi() {
     } catch (err) {
       console.error(`API call failed: ${method} ${endpoint}`, err);
       error.value = err.message || 'An unknown error occurred';
+      // Log the full error object for more details
+      console.error(`API call failed: ${method} ${endpoint}`, err);
+      error.value = err.message || 'An unknown error occurred';
       throw err; // Re-throw to allow caller to handle
     } finally {
       isLoading.value = false;
