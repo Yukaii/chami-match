@@ -361,17 +361,18 @@ export const useGameStore = defineStore("game", {
 				if (wasSuccess || this.lives === 0) {
 					this.startNewRound();
 				}
+
+                // If in a challenge, submit the attempt to the server
+                // Ensure completeRecord is defined before submitting
+                if (this.currentChallengeId && this.currentParticipantId && completeRecord) {
+                    this.submitChallengeAttempt(completeRecord);
+                }
 			} catch (error) {
 				console.error("Error recording game round:", error);
 			}
-
-			// If in a challenge, submit the attempt to the server
-			if (this.currentChallengeId && this.currentParticipantId) {
-				this.submitChallengeAttempt(completeRecord);
-			}
 		},
 
-		async submitChallengeAttempt(record) {
+		async submitChallengeAttempt(record) { // Now called explicitly after try block
 			const { submitAttempt } = useChallengeApi(); // Get API function
 			const payload = {
 				participantId: this.currentParticipantId,
