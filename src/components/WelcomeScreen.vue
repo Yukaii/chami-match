@@ -265,13 +265,13 @@ onMounted(() => {
 
       <!-- Join Challenge Section -->
       <div class="mt-6 border-t pt-4 dark:border-gray-700">
-         <h3 class="text-lg font-semibold mb-2 text-center text-gray-700 dark:text-gray-300">Join a Challenge</h3>
+         <h3 class="text-lg font-semibold mb-2 text-center text-gray-700 dark:text-gray-300">{{ $t('joinChallenge') }}</h3>
          <div class="flex gap-2">
             <input
                 v-model="accessCode"
                 type="text"
                 maxlength="6"
-                placeholder="Access Code"
+                :placeholder="$t('accessCode')"
                 class="flex-grow p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-500 dark:focus:ring-orange-400 uppercase text-center tracking-widest font-mono"
                 @keyup.enter="handleJoinChallenge"
             />
@@ -281,7 +281,7 @@ onMounted(() => {
                 :disabled="isApiLoading || accessCode.length !== 6"
                 @click="handleJoinChallenge"
             >
-                {{ isApiLoading ? 'Joining...' : 'Join' }}
+                {{ isApiLoading ? $t('loading') : $t('join') }}
             </BaseButton>
          </div>
          <p v-if="apiError" class="text-red-500 text-sm mt-1 text-center">{{ apiError }}</p>
