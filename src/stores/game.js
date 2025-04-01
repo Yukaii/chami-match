@@ -2,6 +2,7 @@ import { useStorage } from "@vueuse/core";
 import { nanoid } from "nanoid";
 import { defineStore } from "pinia";
 import { computed, watch } from "vue";
+import { v4 as uuidv4 } from 'uuid'; // Import uuid
 import { celebrateFirstTry } from "../utils/confetti";
 import { createGameMode } from "./modes";
 
@@ -32,6 +33,9 @@ export const useGameStore = defineStore("game", {
 			recallTimeout: 5, // Default recall timeout
 		}),
 		history: useStorage("history", []),
+
+		challengeServerUrl: useStorage("challengeServerUrl", 'http://localhost:8787'), // Default URL, make it persistent
+		deviceId: useStorage("deviceId", uuidv4()), // Generate and store device ID persistently
 
 		// Session state
 		currentSession: null,
