@@ -3,6 +3,7 @@ import { nanoid } from "nanoid";
 import { defineStore } from "pinia";
 import { computed, watch } from "vue";
 import { v4 as uuidv4 } from 'uuid'; // Import uuid
+import { useChallengeApi } from "../composables/useChallengeApi"; // Import challenge API
 import { celebrateFirstTry } from "../utils/confetti";
 import { createGameMode } from "./modes";
 
@@ -39,6 +40,8 @@ export const useGameStore = defineStore("game", {
 
 		// Session state
 		currentSession: null,
+		currentChallengeId: null, // ID of the active challenge, if any
+		currentParticipantId: null, // ID of the current user within the active challenge
 
 		// Game state
 		currentRound: 0,
@@ -274,6 +277,10 @@ export const useGameStore = defineStore("game", {
 			this.currentSession = session;
 			this.sessions.push(session);
 
+			// Reset challenge state when starting a new non-challenge game
+			this.currentChallengeId = null;
+			this.currentParticipantId = null;
+
 			// Reset the round and score
 			this.currentRound = 0;
 			this.score = 0;
@@ -355,6 +362,39 @@ export const useGameStore = defineStore("game", {
 				}
 			} catch (error) {
 				console.error("Error recording game round:", error);
+			}
+
+			// If in a challenge, submit the attempt to the server
+			if (this.currentChallengeId && this.currentParticipantId) {
+				this.submitChallengeAttempt(completeRecord);
+			}
+		},
+
+		async submitChallengeAttempt(record) {
+			const { submitAttempt } = useChallengeApi(); // Get API function
+			const payload = {
+				participantId: this.currentParticipantId,
+				score: this.score, // Submit the current total score
+				sessionId: record.sessionId, // Include session ID
+				deviceId: this.deviceId, // Include device ID for verification
+				metadata: { // Construct metadata based on game state/record
+					rounds: record.round, // Current round number
+					mode: this.mode,
+					gameType: this.gameType,
+					precision: this.precision,
+					// Add other relevant metadata from the record or game mode if needed
+					// e.g., record.guessedColor, record.actualColor for standard mode
+				}
+			};
+
+			try {
+				console.log(`Submitting attempt for challenge ${this.currentChallengeId}`, payload);
+				const result = await submitAttempt(this.currentChallengeId, payload);
+				console.log("Attempt submission result:", result);
+				// Optionally update local state based on result, though leaderboard handles display
+			} catch (error) {
+				console.error("Failed to submit challenge attempt:", error);
+				// Handle error - maybe notify user?
 			}
 		},
 
