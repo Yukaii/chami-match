@@ -83,41 +83,10 @@ watch([colorValues, realtimePreview], () => {
   }
 });
 
-// Placeholder function for starting a challenge
-const startChallenge = async () => {
-  console.log("Challenge Friends button clicked!");
-
-  // TODO: Add UI for setting challenge name and expiration
-  const challengeName = `Challenge ${new Date().toLocaleTimeString()}`; // Temporary name
-  const expiresIn = '1h'; // Temporary expiration
-
-  // Prepare payload using current game settings and store data
-  const payload = {
-    name: challengeName,
-    expiresIn: expiresIn,
-    gameMode: store.mode, // Use current game mode from store
-    settings: {
-      precision: store.precision,
-      maxLife: store.maxLife,
-      gameType: store.gameType,
-      // Add other relevant settings if needed by the server/client
-    },
-    deviceId: store.deviceId, // Get device ID from store
-    displayName: 'Player', // TODO: Get actual display name (maybe from settings/profile?)
-    // userId: store.userId, // Add if user authentication exists
-  };
-
-  try {
-    console.log("Creating challenge with payload:", payload);
-    const result = await createChallenge(payload);
-    console.log("Challenge created:", result);
-    // TODO: Show sharing modal with result.accessCode and result.id
-    alert(`Challenge Created!\nAccess Code: ${result.accessCode}\nID: ${result.id}`);
-  } catch (err) {
-    console.error("Failed to create challenge:", apiError.value);
-    // TODO: Show error message to user
-    alert(`Error creating challenge: ${apiError.value}`);
-  }
+// Function to open the create challenge popup
+const startChallenge = () => {
+  console.log("Challenge Friends button clicked - opening popup");
+  store.toggleCreateChallengePopup(); // Use the action from the store
 };
 </script>
 

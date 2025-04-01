@@ -53,6 +53,7 @@ export const useGameStore = defineStore("game", {
 		settingsPopupOpen: false,
 		aboutPopupOpen: false,
 		resetPopupOpen: false,
+		createChallengePopupOpen: false, // State for the new popup
 		settingsMode: "global",
 
 		// Other state
@@ -483,6 +484,10 @@ export const useGameStore = defineStore("game", {
 
 		toggleResetPopup() {
 			this.resetPopupOpen = !this.resetPopupOpen;
+		},
+
+		toggleCreateChallengePopup() {
+			this.createChallengePopupOpen = !this.createChallengePopupOpen;
 		},
 
 		refreshGameRecords() {

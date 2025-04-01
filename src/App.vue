@@ -6,8 +6,11 @@ import ErrorBoundary from "./components/ErrorBoundary.vue";
 import RecordPopup from "./components/RecordPopup.vue";
 import ResetPopup from "./components/ResetPopup.vue";
 import SettingsPopup from "./components/SettingsPopup.vue";
+import CreateChallengePopup from "./components/CreateChallengePopup.vue"; // Import the new popup
+import { useGameStore } from "./stores/game"; // Import store
 
 const { t, locale } = useI18n();
+const store = useGameStore(); // Use the store
 
 // Theme handling moved to the ThemeToggle component and app initialization
 onMounted(() => {
@@ -65,6 +68,11 @@ watch(
 
     <ErrorBoundary>
       <ResetPopup />
+    </ErrorBoundary>
+
+    <!-- Conditionally render the Create Challenge Popup -->
+    <ErrorBoundary>
+       <CreateChallengePopup v-if="store.createChallengePopupOpen" @close="store.toggleCreateChallengePopup" />
     </ErrorBoundary>
   </div>
 </template>
