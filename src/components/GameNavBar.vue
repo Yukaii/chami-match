@@ -24,6 +24,10 @@ function viewLeaderboard() {
     router.push({ name: 'ChallengeLeaderboard', params: { id: store.currentChallengeId } });
   }
 }
+
+function startChallenge() {
+  store.toggleCreateChallengePopup();
+}
 </script>
 
 <template>
@@ -32,15 +36,23 @@ function viewLeaderboard() {
       <span class="mr-1 text-lg">←</span> {{ $t('home') }}
     </BaseButton>
 
-    <!-- Challenge Mode Indicator -->
-    <div v-if="store.currentChallengeId" class="text-xs font-semibold text-purple-600 dark:text-purple-400 border border-purple-400 dark:border-purple-500 rounded px-2 py-0.5">
-      Challenge Mode
-    </div>
+    <!-- Challenge buttons and indicators -->
+    <div class="flex items-center gap-2">
+      <!-- Challenge Mode Indicator -->
+      <div v-if="store.currentChallengeId" class="text-xs font-semibold text-purple-600 dark:text-purple-400 border border-purple-400 dark:border-purple-500 rounded px-2 py-0.5">
+        {{ $t('challengeMode') }}
+      </div>
 
-    <!-- View Leaderboard Button (only in challenge mode) -->
-     <BaseButton v-if="store.currentChallengeId" variant="info" size="sm" @click="viewLeaderboard">
-       {{ $t('viewLeaderboard') }} <!-- Add translation -->
-     </BaseButton>
+      <!-- View Leaderboard Button (only in challenge mode) -->
+      <BaseButton v-if="store.currentChallengeId" variant="info" size="sm" @click="viewLeaderboard">
+        {{ $t('viewLeaderboard') }}
+      </BaseButton>
+
+      <!-- Create Challenge Button (not in challenge mode) -->
+      <BaseButton v-else variant="secondary" size="sm" @click="startChallenge">
+        {{ $t('challengeFriends') }}
+      </BaseButton>
+    </div>
 
     <BaseButton variant="secondary" size="sm" @click="startOver">
       {{ $t('startOver') }}

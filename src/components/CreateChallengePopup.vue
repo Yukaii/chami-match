@@ -35,7 +35,7 @@ const closePopup = () => {
 
 const submitCreateChallenge = async () => {
   if (!challengeName.value) {
-    error.value = 'Challenge name is required.';
+    error.value = $t('challenge.nameRequired');
     return;
   }
 
@@ -54,12 +54,8 @@ const submitCreateChallenge = async () => {
 
   try {
     const result = await createChallenge(payload);
-    createdChallengeInfo.value = result; // Store result to show sharing info
-    // Don't close popup immediately, show sharing info instead
-    // emit('challengeCreated', result); // Optionally emit event
-    // closePopup();
+    createdChallengeInfo.value = result;
   } catch (err) {
-    // Error is already set in the composable's error ref
     console.error("Failed to create challenge:", error.value);
   }
 };
@@ -77,9 +73,6 @@ const copyToClipboard = async (text) => {
 
 const getChallengeUrl = () => {
     if (!createdChallengeInfo.value) return '';
-    // Assuming the join flow will handle URL parameters later
-    // For now, just show the code. A full URL might be:
-    // `${window.location.origin}/join/${createdChallengeInfo.value.accessCode}`
     return `Access Code: ${createdChallengeInfo.value.accessCode}`;
 };
 
@@ -89,18 +82,18 @@ const getChallengeUrl = () => {
   <Modal :is-open="true" @close="closePopup">
     <template #header>
       <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">
-        {{ createdChallengeInfo ? 'Challenge Created!' : 'Create Challenge' }}
+        {{ createdChallengeInfo ? $t('challenge.createdTitle') : $t('challenge.createTitle') }}
       </h3>
     </template>
 
     <div class="mt-2">
       <template v-if="!createdChallengeInfo">
         <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
-          Set up a challenge for your friends based on the current game settings.
+          {{ $t('challenge.setupInfo') }}
         </p>
         <form @submit.prevent="submitCreateChallenge">
           <div class="mb-4">
-            <label for="challengeName" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Challenge Name</label>
+            <label for="challengeName" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('challenge.name') }}</label>
             <input
               type="text"
               id="challengeName"
@@ -111,7 +104,7 @@ const getChallengeUrl = () => {
           </div>
 
           <div class="mb-4">
-            <label for="expiration" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Expires In</label>
+            <label for="expiration" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('challenge.expiresIn') }}</label>
             <select
               id="expiration"
               v-model="expiration"
@@ -126,16 +119,16 @@ const getChallengeUrl = () => {
           <p v-if="error" class="text-sm text-red-500 mb-3">{{ error }}</p>
 
           <div class="mt-4 flex justify-end space-x-2">
-            <BaseButton type="button" variant="secondary" @click="closePopup">Cancel</BaseButton>
+            <BaseButton type="button" variant="secondary" @click="closePopup">{{ $t('cancel') }}</BaseButton>
             <BaseButton type="submit" variant="primary" :disabled="isLoading">
-              {{ isLoading ? 'Creating...' : 'Create' }}
+              {{ isLoading ? $t('loading') : $t('create') }}
             </BaseButton>
           </div>
         </form>
       </template>
       <template v-else>
          <p class="text-sm text-gray-700 dark:text-gray-300 mb-2">
-            Challenge "{{ createdChallengeInfo.name }}" created successfully! Share the access code with your friends:
+            {{ $t('challenge.shareCode') }}
          </p>
          <div class="p-3 bg-gray-100 dark:bg-gray-700 rounded font-mono text-center text-xl tracking-widest my-3">
             {{ createdChallengeInfo.accessCode }}
@@ -144,9 +137,8 @@ const getChallengeUrl = () => {
             Expires: {{ new Date(createdChallengeInfo.expiresAt).toLocaleString() }}
          </p>
          <div class="flex justify-center space-x-2">
-             <BaseButton variant="secondary" @click="copyToClipboard(createdChallengeInfo.accessCode)">Copy Code</BaseButton>
-             <!-- <BaseButton variant="secondary" @click="copyToClipboard(getChallengeUrl())">Copy Link</BaseButton> -->
-             <BaseButton variant="primary" @click="closePopup">Done</BaseButton>
+             <BaseButton variant="secondary" @click="copyToClipboard(createdChallengeInfo.accessCode)">{{ $t('challenge.copyCode') }}</BaseButton>
+             <BaseButton variant="primary" @click="closePopup">{{ $t('challenge.done') }}</BaseButton>
          </div>
       </template>
     </div>

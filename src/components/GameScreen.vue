@@ -106,13 +106,6 @@ const startChallenge = () => {
       <ColorBlock :color="store.userColor" />
     </div>
 
-    <!-- Challenge Button -->
-    <div class="my-2 flex justify-center">
-      <BaseButton variant="secondary" size="sm" is3d @click="startChallenge">
-        {{ $t('challengeFriends') }} <!-- Assuming translation key exists -->
-      </BaseButton>
-    </div>
-
     <!-- Color Space Selector -->
     <div class="mb-2 mt-1">
       <div class="flex justify-center space-x-2">
