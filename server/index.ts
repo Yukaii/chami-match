@@ -13,8 +13,16 @@ import { store } from './store';
 import { generateAccessCode, calculateExpiresAt } from './utils';
 import { HTTPException } from 'hono/http-exception';
 import { v4 as uuidv4 } from 'uuid'; // Import uuid
+import { cors } from 'hono/cors'; // Import cors
 
 const app = new Hono();
+
+// Enable CORS for the client origin
+app.use('/api/*', cors({
+  origin: 'http://localhost:5173', // Allow requests from the Vite client
+  allowMethods: ['GET', 'POST', 'OPTIONS'],
+  allowHeaders: ['Content-Type'], // Allow necessary headers
+}));
 
 // Simple middleware for logging
 app.use('*', async (c, next) => {
@@ -310,5 +318,10 @@ app.get('/api/challenges/:id/leaderboard', (c) => {
   });
 });
 
+// Export the app instance for testing
+export const appInstance = app;
 
-export default app
+export default {
+  port: 8787, // Specify the port
+  fetch: app.fetch,
+};

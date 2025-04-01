@@ -10,12 +10,13 @@
     "typescript": "^5"
   },
   "scripts": {
-    "test": "bun test"
+    "test": "bun test",
+    "dev": "bun run --watch index.ts"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.4.3",
     "@types/uuid": "^10.0.0",
-    "hono": "^4.7.5",
+    "hono": "4.7.5/cors",
     "uuid": "^11.1.0",
     "zod": "^3.24.2"
   }
