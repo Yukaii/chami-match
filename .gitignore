@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 tmp
+
+auto-imports.d.ts
+components.d.ts
