@@ -1,11 +1,13 @@
 <script setup>
 import { computed, onMounted, ref, watch } from "vue";
 import { useGameStore } from "../stores/game";
+import { useChallengeApi } from "../composables/useChallengeApi"; // Import the composable
 import GameNavBar from "./GameNavBar.vue";
 import BaseButton from "./base/BaseButton.vue";
 import BaseSlider from "./base/BaseSlider.vue";
 
 const store = useGameStore();
+const { createChallenge, isLoading: isApiLoading, error: apiError } = useChallengeApi(); // Use the composable
 const mode = computed(() => store.mode);
 const colorSpace = computed(() => store.colorSpace);
 const realtimePreview = computed(() => store.realtimePreview);
@@ -77,9 +79,46 @@ const submit = () => {
 
 watch([colorValues, realtimePreview], () => {
 	if (realtimePreview.value) {
-		store.updateUserColor(...colorValues.value);
-	}
+    store.updateUserColor(...colorValues.value);
+  }
 });
+
+// Placeholder function for starting a challenge
+const startChallenge = async () => {
+  console.log("Challenge Friends button clicked!");
+
+  // TODO: Add UI for setting challenge name and expiration
+  const challengeName = `Challenge ${new Date().toLocaleTimeString()}`; // Temporary name
+  const expiresIn = '1h'; // Temporary expiration
+
+  // Prepare payload using current game settings and store data
+  const payload = {
+    name: challengeName,
+    expiresIn: expiresIn,
+    gameMode: store.mode, // Use current game mode from store
+    settings: {
+      precision: store.precision,
+      maxLife: store.maxLife,
+      gameType: store.gameType,
+      // Add other relevant settings if needed by the server/client
+    },
+    deviceId: store.deviceId, // Get device ID from store
+    displayName: 'Player', // TODO: Get actual display name (maybe from settings/profile?)
+    // userId: store.userId, // Add if user authentication exists
+  };
+
+  try {
+    console.log("Creating challenge with payload:", payload);
+    const result = await createChallenge(payload);
+    console.log("Challenge created:", result);
+    // TODO: Show sharing modal with result.accessCode and result.id
+    alert(`Challenge Created!\nAccess Code: ${result.accessCode}\nID: ${result.id}`);
+  } catch (err) {
+    console.error("Failed to create challenge:", apiError.value);
+    // TODO: Show error message to user
+    alert(`Error creating challenge: ${apiError.value}`);
+  }
+};
 </script>
 
 <template>
@@ -96,6 +135,13 @@ watch([colorValues, realtimePreview], () => {
     <div class="flex gap-2 my-2">
       <ColorBlock :color="store.randomColor" />
       <ColorBlock :color="store.userColor" />
+    </div>
+
+    <!-- Challenge Button -->
+    <div class="my-2 flex justify-center">
+      <BaseButton variant="secondary" size="sm" is3d @click="startChallenge">
+        {{ $t('challengeFriends') }} <!-- Assuming translation key exists -->
+      </BaseButton>
     </div>
 
     <!-- Color Space Selector -->
