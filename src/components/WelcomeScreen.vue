@@ -162,19 +162,6 @@ onMounted(() => {
         </BaseButton>
       </div>
 
-      <!-- Quick start last played game -->
-      <div v-if="store.lastPlayedGameType &&
-                 store.lastPlayedGameType !== currentGameMode.type"
-           class="mt-4">
-        <BaseButton
-          variant="primary"
-          full-width
-          @click="quickStartLastGame"
-        >
-          {{ $t('quickStart') }}
-        </BaseButton>
-      </div>
-
       <!-- Settings and About buttons -->
       <div class="mt-4 flex flex-col gap-2">
         <BaseButton
