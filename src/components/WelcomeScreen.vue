@@ -3,11 +3,13 @@ import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { Carousel, Navigation, Pagination, Slide } from "vue3-carousel";
 import { useGameStore } from "../stores/game";
+import { useChallengeApi } from "../composables/useChallengeApi"; // Import challenge API
 import BaseButton from "./base/BaseButton.vue";
 import "vue3-carousel/dist/carousel.css";
 
 const store = useGameStore();
 const router = useRouter();
+const { joinChallenge, isLoading: isApiLoading, error: apiError } = useChallengeApi(); // Use challenge API
 
 // Game modes configuration
 const gameModes = [
@@ -65,6 +67,7 @@ const gameModes = [
 
 // Current slide index
 const currentSlide = ref(0);
+const accessCode = ref(''); // For join challenge input
 
 // Get the current game mode based on slide index
 const currentGameMode = computed(() => {
@@ -94,8 +97,37 @@ function quickStartLastGame() {
 
 function openSettings() {
 	store.settingsMode = "global";
-	store.toggleSettingsPopup();
+  store.toggleSettingsPopup();
 }
+
+const handleJoinChallenge = async () => {
+  if (!accessCode.value || accessCode.value.length !== 6) {
+    alert('Please enter a valid 6-character access code.');
+    return;
+  }
+
+  const payload = {
+    accessCode: accessCode.value.toUpperCase(), // Ensure uppercase
+    deviceId: store.deviceId,
+    displayName: 'Player', // TODO: Get actual display name
+    // userId: store.userId, // Add if user auth exists
+  };
+
+  try {
+    console.log("Joining challenge with payload:", payload);
+    const challenge = await joinChallenge(payload);
+    console.log("Joined challenge:", challenge);
+
+    // TODO: Store joined challenge state (e.g., in Pinia store or local state)
+    // TODO: Navigate to a challenge lobby/leaderboard view?
+    // For now, just navigate to the leaderboard page
+    router.push({ name: 'ChallengeLeaderboard', params: { id: challenge.id } });
+
+  } catch (err) {
+    console.error("Failed to join challenge:", apiError.value);
+    alert(`Error joining challenge: ${apiError.value}`);
+  }
+};
 
 // Initialize the carousel to show the last played game (if available)
 onMounted(() => {
@@ -193,6 +225,31 @@ onMounted(() => {
           {{ $t('about.title') }}
         </BaseButton>
       </div>
+
+      <!-- Join Challenge Section -->
+      <div class="mt-6 border-t pt-4 dark:border-gray-700">
+         <h3 class="text-lg font-semibold mb-2 text-center text-gray-700 dark:text-gray-300">Join a Challenge</h3>
+         <div class="flex gap-2">
+            <input
+                v-model="accessCode"
+                type="text"
+                maxlength="6"
+                placeholder="Access Code"
+                class="flex-grow p-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-500 dark:focus:ring-orange-400 uppercase text-center tracking-widest font-mono"
+                @keyup.enter="handleJoinChallenge"
+            />
+            <BaseButton
+                variant="success"
+                is3d
+                :disabled="isApiLoading || accessCode.length !== 6"
+                @click="handleJoinChallenge"
+            >
+                {{ isApiLoading ? 'Joining...' : 'Join' }}
+            </BaseButton>
+         </div>
+         <p v-if="apiError" class="text-red-500 text-sm mt-1 text-center">{{ apiError }}</p>
+      </div>
+
     </div>
   </div>
 </template>
