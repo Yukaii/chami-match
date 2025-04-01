@@ -61,6 +61,19 @@
           </BaseButton>
         </div>
       </div>
+
+      <!-- Display Name -->
+      <div class="mb-4">
+        <label for="displayName" class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.displayName') || 'Display Name' }}</label>
+        <input
+          type="text"
+          id="displayName"
+          v-model="settings.displayName"
+          maxlength="50"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-orange-500 dark:focus:border-orange-500"
+        />
+      </div>
+
     </div>
 
     <!-- Game Options - Only shown in game mode -->
@@ -233,6 +246,7 @@ const settings = reactive({
 	realtimePreview: store.realtimePreview,
 	enableConfetti: store.preferences.enableConfetti || true,
 	recallTimeout: store.recallTimeout,
+	displayName: store.preferences.displayName || 'Player', // Add displayName
 });
 
 // Theme handling
@@ -281,6 +295,7 @@ watch(
 			settings.realtimePreview = store.realtimePreview;
 			settings.enableConfetti = store.preferences.enableConfetti ?? true;
 			settings.recallTimeout = store.recallTimeout;
+			settings.displayName = store.preferences.displayName || 'Player'; // Sync display name
 		}
 	},
 );
@@ -293,6 +308,7 @@ const onApply = () => {
 	store.updateRealtimePreview(settings.realtimePreview);
 	store.updateConfetti(settings.enableConfetti);
 	store.updateRecallTimeout(settings.recallTimeout);
+	store.updateDisplayName(settings.displayName); // Save display name
 	store.startOver();
 	onClose();
 };

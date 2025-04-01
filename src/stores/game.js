@@ -32,6 +32,7 @@ export const useGameStore = defineStore("game", {
 			enableConfetti: true,
 			lastPlayedGameType: null, // Track the last played game type
 			recallTimeout: 5, // Default recall timeout
+			displayName: 'Player', // Default display name
 		}),
 		history: useStorage("history", []),
 
@@ -45,6 +46,7 @@ export const useGameStore = defineStore("game", {
 		currentSession: null,
 		currentChallengeId: null, // ID of the active challenge, if any
 		currentParticipantId: null, // ID of the current user within the active challenge
+		joinedChallenges: useStorage("joinedChallenges", []), // Store { id, name, accessCode }
 
 		// Game state
 		currentRound: 0,
@@ -56,7 +58,8 @@ export const useGameStore = defineStore("game", {
 		settingsPopupOpen: false,
 		aboutPopupOpen: false,
 		resetPopupOpen: false,
-		createChallengePopupOpen: false, // State for the new popup
+		createChallengePopupOpen: false,
+		leaderboardPopupOpen: false, // State for leaderboard popup
 		settingsMode: "global",
 
 		// Other state
@@ -482,6 +485,12 @@ export const useGameStore = defineStore("game", {
 			this.preferences.recallTimeout = newTimeout;
 		},
 
+		updateDisplayName(newName) {
+			if (newName && newName.trim().length > 0) {
+				this.preferences.displayName = newName.trim().slice(0, 50); // Limit length
+			}
+		},
+
 		// Toggle UI states
 		toggleRecordPopup() {
 			this.recordPopupOpen = !this.recordPopupOpen;
@@ -501,6 +510,10 @@ export const useGameStore = defineStore("game", {
 
 		toggleCreateChallengePopup() {
 			this.createChallengePopupOpen = !this.createChallengePopupOpen;
+		},
+
+		toggleLeaderboardPopup() {
+			this.leaderboardPopupOpen = !this.leaderboardPopupOpen;
 		},
 
 		refreshGameRecords() {

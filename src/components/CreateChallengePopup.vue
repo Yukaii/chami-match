@@ -49,12 +49,16 @@ const submitCreateChallenge = async () => {
 			gameType: store.gameType,
 		},
 		deviceId: store.deviceId,
-		displayName: "Player", // TODO: Use actual player name
+		displayName: store.preferences.displayName || 'Player', // Use stored name
 	};
 
 	try {
-		const result = await createChallenge(payload);
-		createdChallengeInfo.value = result;
+    const result = await createChallenge(payload);
+    createdChallengeInfo.value = result; // Store result to show sharing info
+
+    // Also store the challenge context in Pinia for the creator
+    store.currentChallengeId = result.id;
+    store.currentParticipantId = result.participantId; // Get participant ID from response
 	} catch (err) {
 		console.error("Failed to create challenge:", error.value);
 	}

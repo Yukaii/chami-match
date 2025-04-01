@@ -113,7 +113,7 @@ const handleJoinChallenge = async () => {
 	const payload = {
 		accessCode: accessCode.value.toUpperCase(), // Ensure uppercase
 		deviceId: store.deviceId,
-		displayName: "Player", // TODO: Get actual display name
+		displayName: store.preferences.displayName || 'Player', // Use stored name
 		// userId: store.userId, // Add if user auth exists
 	};
 

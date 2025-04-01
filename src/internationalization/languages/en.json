@@ -53,11 +53,12 @@
 	"sessionDate": "Session Date",
 	"allSessions": "All Sessions",
 	"currentSession": "Current Session",
-	"settings": {
-		"title": "Settings",
-		"UIOptions": "UI Options",
-		"gameOptions": "Game Options",
-		"language": "Language",
+"settings": {
+"title": "Settings",
+"UIOptions": "UI Options",
+"displayName": "Display Name",
+"gameOptions": "Game Options",
+"language": "Language",
 		"theme": {
 			"title": "Theme",
 			"system": "System",
