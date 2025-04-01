@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
 import { v4 as uuidv4 } from 'uuid'; // Import uuid for generating test IDs
-import app from './index';
+import { appInstance as app } from './index'; // Import named export for testing
 import { store } from './store';
 import type {
     Challenge,
