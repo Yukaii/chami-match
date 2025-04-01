@@ -18,6 +18,12 @@ function startOver() {
 	// Still emit event for backward compatibility
 	emit("startOver");
 }
+
+function viewLeaderboard() {
+  if (store.currentChallengeId) {
+    router.push({ name: 'ChallengeLeaderboard', params: { id: store.currentChallengeId } });
+  }
+}
 </script>
 
 <template>
@@ -30,6 +36,11 @@ function startOver() {
     <div v-if="store.currentChallengeId" class="text-xs font-semibold text-purple-600 dark:text-purple-400 border border-purple-400 dark:border-purple-500 rounded px-2 py-0.5">
       Challenge Mode
     </div>
+
+    <!-- View Leaderboard Button (only in challenge mode) -->
+     <BaseButton v-if="store.currentChallengeId" variant="info" size="sm" @click="viewLeaderboard">
+       {{ $t('viewLeaderboard') }} <!-- Add translation -->
+     </BaseButton>
 
     <BaseButton variant="secondary" size="sm" @click="startOver">
       {{ $t('startOver') }}
