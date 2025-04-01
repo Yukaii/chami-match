@@ -1,0 +1,154 @@
+<script setup>
+import { ref } from 'vue';
+import { useGameStore } from '../stores/game';
+import { useChallengeApi } from '../composables/useChallengeApi';
+import Modal from './Modal.vue';
+import BaseButton from './base/BaseButton.vue';
+
+const store = useGameStore();
+const { createChallenge, isLoading, error } = useChallengeApi();
+const emit = defineEmits(['close', 'challengeCreated']);
+
+const challengeName = ref('');
+const expiration = ref('1h'); // Default expiration
+const createdChallengeInfo = ref(null); // To store { id, accessCode, name, expiresAt }
+
+const expirationOptions = [
+  { value: '1h', label: '1 Hour' },
+  { value: '24h', label: '24 Hours' },
+  { value: '3d', label: '3 Days' },
+  { value: '7d', label: '7 Days' },
+  { value: null, label: 'Never' }, // Represent 'Never' as null or undefined
+];
+
+const resetForm = () => {
+    challengeName.value = '';
+    expiration.value = '1h';
+    error.value = null;
+    createdChallengeInfo.value = null;
+};
+
+const closePopup = () => {
+    resetForm();
+    emit('close');
+};
+
+const submitCreateChallenge = async () => {
+  if (!challengeName.value) {
+    error.value = 'Challenge name is required.';
+    return;
+  }
+
+  const payload = {
+    name: challengeName.value,
+    expiresIn: expiration.value || undefined, // Send undefined if 'Never' selected
+    gameMode: store.mode,
+    settings: {
+      precision: store.precision,
+      maxLife: store.maxLife,
+      gameType: store.gameType,
+    },
+    deviceId: store.deviceId,
+    displayName: 'Player', // TODO: Use actual player name
+  };
+
+  try {
+    const result = await createChallenge(payload);
+    createdChallengeInfo.value = result; // Store result to show sharing info
+    // Don't close popup immediately, show sharing info instead
+    // emit('challengeCreated', result); // Optionally emit event
+    // closePopup();
+  } catch (err) {
+    // Error is already set in the composable's error ref
+    console.error("Failed to create challenge:", error.value);
+  }
+};
+
+// Function to copy text to clipboard
+const copyToClipboard = async (text) => {
+    try {
+        await navigator.clipboard.writeText(text);
+        alert('Copied to clipboard!');
+    } catch (err) {
+        console.error('Failed to copy text: ', err);
+        alert('Failed to copy to clipboard.');
+    }
+};
+
+const getChallengeUrl = () => {
+    if (!createdChallengeInfo.value) return '';
+    // Assuming the join flow will handle URL parameters later
+    // For now, just show the code. A full URL might be:
+    // `${window.location.origin}/join/${createdChallengeInfo.value.accessCode}`
+    return `Access Code: ${createdChallengeInfo.value.accessCode}`;
+};
+
+</script>
+
+<template>
+  <Modal :is-open="true" @close="closePopup">
+    <template #header>
+      <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">
+        {{ createdChallengeInfo ? 'Challenge Created!' : 'Create Challenge' }}
+      </h3>
+    </template>
+
+    <div class="mt-2">
+      <template v-if="!createdChallengeInfo">
+        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
+          Set up a challenge for your friends based on the current game settings.
+        </p>
+        <form @submit.prevent="submitCreateChallenge">
+          <div class="mb-4">
+            <label for="challengeName" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Challenge Name</label>
+            <input
+              type="text"
+              id="challengeName"
+              v-model="challengeName"
+              required
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-orange-500 dark:focus:border-orange-500"
+            />
+          </div>
+
+          <div class="mb-4">
+            <label for="expiration" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Expires In</label>
+            <select
+              id="expiration"
+              v-model="expiration"
+              class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-orange-500 dark:focus:border-orange-500"
+            >
+              <option v-for="option in expirationOptions" :key="option.value ?? 'null'" :value="option.value">
+                {{ option.label }}
+              </option>
+            </select>
+          </div>
+
+          <p v-if="error" class="text-sm text-red-500 mb-3">{{ error }}</p>
+
+          <div class="mt-4 flex justify-end space-x-2">
+            <BaseButton type="button" variant="secondary" @click="closePopup">Cancel</BaseButton>
+            <BaseButton type="submit" variant="primary" :disabled="isLoading">
+              {{ isLoading ? 'Creating...' : 'Create' }}
+            </BaseButton>
+          </div>
+        </form>
+      </template>
+      <template v-else>
+         <p class="text-sm text-gray-700 dark:text-gray-300 mb-2">
+            Challenge "{{ createdChallengeInfo.name }}" created successfully! Share the access code with your friends:
+         </p>
+         <div class="p-3 bg-gray-100 dark:bg-gray-700 rounded font-mono text-center text-xl tracking-widest my-3">
+            {{ createdChallengeInfo.accessCode }}
+         </div>
+         <p v-if="createdChallengeInfo.expiresAt" class="text-xs text-gray-500 dark:text-gray-400 text-center mb-3">
+            Expires: {{ new Date(createdChallengeInfo.expiresAt).toLocaleString() }}
+         </p>
+         <div class="flex justify-center space-x-2">
+             <BaseButton variant="secondary" @click="copyToClipboard(createdChallengeInfo.accessCode)">Copy Code</BaseButton>
+             <!-- <BaseButton variant="secondary" @click="copyToClipboard(getChallengeUrl())">Copy Link</BaseButton> -->
+             <BaseButton variant="primary" @click="closePopup">Done</BaseButton>
+         </div>
+      </template>
+    </div>
+  </Modal>
+</template>
