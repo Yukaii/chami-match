@@ -1,7 +1,7 @@
 <script setup>
-import { useRoute } from 'vue-router';
-import ChallengeLeaderboard from '../../components/ChallengeLeaderboard.vue';
-import BaseButton from '../../components/base/BaseButton.vue'; // For back button
+import { useRoute } from "vue-router";
+import ChallengeLeaderboard from "../../components/ChallengeLeaderboard.vue";
+import BaseButton from "../../components/base/BaseButton.vue"; // For back button
 
 const route = useRoute();
 const challengeId = route.params.id;

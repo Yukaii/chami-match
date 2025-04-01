@@ -1,81 +1,80 @@
 <script setup>
-import { ref } from 'vue';
-import { useGameStore } from '../stores/game';
-import { useChallengeApi } from '../composables/useChallengeApi';
-import Modal from './Modal.vue';
-import BaseButton from './base/BaseButton.vue';
+import { ref } from "vue";
+import { useGameStore } from "../stores/game";
+import { useChallengeApi } from "../composables/useChallengeApi";
+import Modal from "./Modal.vue";
+import BaseButton from "./base/BaseButton.vue";
 
 const store = useGameStore();
 const { createChallenge, isLoading, error } = useChallengeApi();
-const emit = defineEmits(['close', 'challengeCreated']);
+const emit = defineEmits(["close", "challengeCreated"]);
 
-const challengeName = ref('');
-const expiration = ref('1h'); // Default expiration
+const challengeName = ref("");
+const expiration = ref("1h"); // Default expiration
 const createdChallengeInfo = ref(null); // To store { id, accessCode, name, expiresAt }
 
 const expirationOptions = [
-  { value: '1h', label: '1 Hour' },
-  { value: '24h', label: '24 Hours' },
-  { value: '3d', label: '3 Days' },
-  { value: '7d', label: '7 Days' },
-  { value: null, label: 'Never' }, // Represent 'Never' as null or undefined
+	{ value: "1h", label: "1 Hour" },
+	{ value: "24h", label: "24 Hours" },
+	{ value: "3d", label: "3 Days" },
+	{ value: "7d", label: "7 Days" },
+	{ value: null, label: "Never" }, // Represent 'Never' as null or undefined
 ];
 
 const resetForm = () => {
-    challengeName.value = '';
-    expiration.value = '1h';
-    error.value = null;
-    createdChallengeInfo.value = null;
+	challengeName.value = "";
+	expiration.value = "1h";
+	error.value = null;
+	createdChallengeInfo.value = null;
 };
 
 const closePopup = () => {
-    resetForm();
-    emit('close');
+	resetForm();
+	emit("close");
 };
 
 const submitCreateChallenge = async () => {
-  if (!challengeName.value) {
-    error.value = $t('challenge.nameRequired');
-    return;
-  }
+	if (!challengeName.value) {
+		error.value = $t("challenge.nameRequired");
+		return;
+	}
 
-  const payload = {
-    name: challengeName.value,
-    expiresIn: expiration.value || undefined, // Send undefined if 'Never' selected
-    gameMode: store.mode,
-    settings: {
-      precision: store.precision,
-      maxLife: store.maxLife,
-      gameType: store.gameType,
-    },
-    deviceId: store.deviceId,
-    displayName: 'Player', // TODO: Use actual player name
-  };
+	const payload = {
+		name: challengeName.value,
+		expiresIn: expiration.value || undefined, // Send undefined if 'Never' selected
+		gameMode: store.mode,
+		settings: {
+			precision: store.precision,
+			maxLife: store.maxLife,
+			gameType: store.gameType,
+		},
+		deviceId: store.deviceId,
+		displayName: "Player", // TODO: Use actual player name
+	};
 
-  try {
-    const result = await createChallenge(payload);
-    createdChallengeInfo.value = result;
-  } catch (err) {
-    console.error("Failed to create challenge:", error.value);
-  }
+	try {
+		const result = await createChallenge(payload);
+		createdChallengeInfo.value = result;
+	} catch (err) {
+		console.error("Failed to create challenge:", error.value);
+	}
 };
 
 // Function to copy text to clipboard
 const copyToClipboard = async (text) => {
-    try {
-        await navigator.clipboard.writeText(text);
-        alert('Copied to clipboard!');
-    } catch (err) {
-        console.error('Failed to copy text: ', err);
-        alert('Failed to copy to clipboard.');
-    }
+	try {
+		await navigator.clipboard.writeText(text);
+		alert("Copied to clipboard!");
+	} catch (err) {
+		console.error("Failed to copy text: ", err);
+		alert("Failed to copy to clipboard.");
+	}
 };
 
 const getChallengeUrl = () => {
-    if (!createdChallengeInfo.value) return '';
-    return `Access Code: ${createdChallengeInfo.value.accessCode}`;
+	if (!createdChallengeInfo.value) return "";
+	return `Access Code: ${createdChallengeInfo.value.accessCode}`;
 };
-
 </script>
 
 <template>

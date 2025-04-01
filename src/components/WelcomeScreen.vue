@@ -9,7 +9,11 @@ import "vue3-carousel/dist/carousel.css";
 
 const store = useGameStore();
 const router = useRouter();
-const { joinChallenge, isLoading: isApiLoading, error: apiError } = useChallengeApi(); // Use challenge API
+const {
+	joinChallenge,
+	isLoading: isApiLoading,
+	error: apiError,
+} = useChallengeApi(); // Use challenge API
 
 // Game modes configuration
 const gameModes = [
@@ -67,7 +71,7 @@ const gameModes = [
 
 // Current slide index
 const currentSlide = ref(0);
-const accessCode = ref(''); // For join challenge input
+const accessCode = ref(""); // For join challenge input
 
 // Get the current game mode based on slide index
 const currentGameMode = computed(() => {
@@ -97,64 +101,69 @@ function quickStartLastGame() {
 
 function openSettings() {
 	store.settingsMode = "global";
-  store.toggleSettingsPopup();
+	store.toggleSettingsPopup();
 }
 
 const handleJoinChallenge = async () => {
-  if (!accessCode.value || accessCode.value.length !== 6) {
-    alert('Please enter a valid 6-character access code.');
-    return;
-  }
+	if (!accessCode.value || accessCode.value.length !== 6) {
+		alert("Please enter a valid 6-character access code.");
+		return;
+	}
 
-  const payload = {
-    accessCode: accessCode.value.toUpperCase(), // Ensure uppercase
-    deviceId: store.deviceId,
-    displayName: 'Player', // TODO: Get actual display name
-    // userId: store.userId, // Add if user auth exists
-  };
+	const payload = {
+		accessCode: accessCode.value.toUpperCase(), // Ensure uppercase
+		deviceId: store.deviceId,
+		displayName: "Player", // TODO: Get actual display name
+		// userId: store.userId, // Add if user auth exists
+	};
 
-  try {
-    console.log("Joining challenge with payload:", payload);
-    const challenge = await joinChallenge(payload);
-    console.log("Joined challenge:", challenge);
+	try {
+		console.log("Joining challenge with payload:", payload);
+		const challenge = await joinChallenge(payload);
+		console.log("Joined challenge:", challenge);
 
-    // Find the participant record for the current device
-    const myParticipant = challenge.participants.find(p => p.deviceId === store.deviceId);
+		// Find the participant record for the current device
+		const myParticipant = challenge.participants.find(
+			(p) => p.deviceId === store.deviceId,
+		);
 
-    if (!myParticipant) {
-        // This shouldn't happen if the join was successful, but handle defensively
-        console.error("Could not find own participant record after joining challenge.");
-        alert("Error: Could not verify participation after joining.");
-        return;
-    }
+		if (!myParticipant) {
+			// This shouldn't happen if the join was successful, but handle defensively
+			console.error(
+				"Could not find own participant record after joining challenge.",
+			);
+			alert("Error: Could not verify participation after joining.");
+			return;
+		}
 
-    // Store challenge context in Pinia
-    store.currentChallengeId = challenge.id;
-    store.currentParticipantId = myParticipant.id;
+		// Store challenge context in Pinia
+		store.currentChallengeId = challenge.id;
+		store.currentParticipantId = myParticipant.id;
 
-    // Set the game type based on the challenge settings
-    store.updateGameType(challenge.settings.gameType);
-    // Optionally update other settings like precision, maxLife based on challenge.settings?
-    // store.updatePrecision(challenge.settings.precision);
-    // store.updateMaxLife(challenge.settings.maxLife); // Lives are handled differently
+		// Set the game type based on the challenge settings
+		store.updateGameType(challenge.settings.gameType);
+		// Optionally update other settings like precision, maxLife based on challenge.settings?
+		// store.updatePrecision(challenge.settings.precision);
+		// store.updateMaxLife(challenge.settings.maxLife); // Lives are handled differently
 
-    // Find the route for the challenge's game type
-    const gameModeRoute = gameModes.find(mode => mode.type === challenge.settings.gameType)?.route || '/game'; // Default to standard game
+		// Find the route for the challenge's game type
+		const gameModeRoute =
+			gameModes.find((mode) => mode.type === challenge.settings.gameType)
+				?.route || "/game"; // Default to standard game
 
-    // Start a new game session for the challenge
-    store.startOver(); // This resets score/round and sets challenge IDs to null, need to re-set them
+		// Start a new game session for the challenge
+		store.startOver(); // This resets score/round and sets challenge IDs to null, need to re-set them
 
-    // Re-set challenge context after startOver clears it
-    store.currentChallengeId = challenge.id;
-    store.currentParticipantId = myParticipant.id;
+		// Re-set challenge context after startOver clears it
+		store.currentChallengeId = challenge.id;
+		store.currentParticipantId = myParticipant.id;
 
-    // Navigate to the correct game screen to start the challenge attempt
-    router.push(gameModeRoute);
-
-  } catch (err) {
-    console.error("Failed to join challenge:", apiError.value);
-    alert(`Error joining challenge: ${apiError.value}`);
-  }
+		// Navigate to the correct game screen to start the challenge attempt
+		router.push(gameModeRoute);
+	} catch (err) {
+		console.error("Failed to join challenge:", apiError.value);
+		alert(`Error joining challenge: ${apiError.value}`);
+	}
 };
 
 // Initialize the carousel to show the last played game (if available)

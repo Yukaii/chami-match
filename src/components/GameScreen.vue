@@ -7,7 +7,11 @@ import BaseButton from "./base/BaseButton.vue";
 import BaseSlider from "./base/BaseSlider.vue";
 
 const store = useGameStore();
-const { createChallenge, isLoading: isApiLoading, error: apiError } = useChallengeApi(); // Use the composable
+const {
+	createChallenge,
+	isLoading: isApiLoading,
+	error: apiError,
+} = useChallengeApi(); // Use the composable
 const mode = computed(() => store.mode);
 const colorSpace = computed(() => store.colorSpace);
 const realtimePreview = computed(() => store.realtimePreview);
@@ -79,14 +83,14 @@ const submit = () => {
 
 watch([colorValues, realtimePreview], () => {
 	if (realtimePreview.value) {
-    store.updateUserColor(...colorValues.value);
-  }
+		store.updateUserColor(...colorValues.value);
+	}
 });
 
 // Function to open the create challenge popup
 const startChallenge = () => {
-  console.log("Challenge Friends button clicked - opening popup");
-  store.toggleCreateChallengePopup(); // Use the action from the store
+	console.log("Challenge Friends button clicked - opening popup");
+	store.toggleCreateChallengePopup(); // Use the action from the store
 };
 </script>
 

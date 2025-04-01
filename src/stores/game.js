@@ -2,7 +2,7 @@ import { useStorage } from "@vueuse/core";
 import { nanoid } from "nanoid";
 import { defineStore } from "pinia";
 import { computed, watch } from "vue";
-import { v4 as uuidv4 } from 'uuid'; // Import uuid
+import { v4 as uuidv4 } from "uuid"; // Import uuid
 import { useChallengeApi } from "../composables/useChallengeApi"; // Import challenge API
 import { celebrateFirstTry } from "../utils/confetti";
 import { createGameMode } from "./modes";
@@ -35,7 +35,10 @@ export const useGameStore = defineStore("game", {
 		}),
 		history: useStorage("history", []),
 
-		challengeServerUrl: useStorage("challengeServerUrl", 'http://localhost:8787'), // Default URL, make it persistent
+		challengeServerUrl: useStorage(
+			"challengeServerUrl",
+			"http://localhost:8787",
+		), // Default URL, make it persistent
 		deviceId: useStorage("deviceId", uuidv4()), // Generate and store device ID persistently
 
 		// Session state
@@ -362,35 +365,44 @@ export const useGameStore = defineStore("game", {
 					this.startNewRound();
 				}
 
-                // If in a challenge, submit the attempt to the server
-                // Ensure completeRecord is defined before submitting
-                if (this.currentChallengeId && this.currentParticipantId && completeRecord) {
-                    this.submitChallengeAttempt(completeRecord);
-                }
+				// If in a challenge, submit the attempt to the server
+				// Ensure completeRecord is defined before submitting
+				if (
+					this.currentChallengeId &&
+					this.currentParticipantId &&
+					completeRecord
+				) {
+					this.submitChallengeAttempt(completeRecord);
+				}
 			} catch (error) {
 				console.error("Error recording game round:", error);
 			}
 		},
 
-		async submitChallengeAttempt(record) { // Now called explicitly after try block
+		async submitChallengeAttempt(record) {
+			// Now called explicitly after try block
 			const { submitAttempt } = useChallengeApi(); // Get API function
 			const payload = {
 				participantId: this.currentParticipantId,
 				score: this.score, // Submit the current total score
 				sessionId: record.sessionId, // Include session ID
 				deviceId: this.deviceId, // Include device ID for verification
-				metadata: { // Construct metadata based on game state/record
+				metadata: {
+					// Construct metadata based on game state/record
 					rounds: record.round, // Current round number
 					mode: this.mode,
 					gameType: this.gameType,
 					precision: this.precision,
 					// Add other relevant metadata from the record or game mode if needed
 					// e.g., record.guessedColor, record.actualColor for standard mode
-				}
+				},
 			};
 
 			try {
-				console.log(`Submitting attempt for challenge ${this.currentChallengeId}`, payload);
+				console.log(
+					`Submitting attempt for challenge ${this.currentChallengeId}`,
+					payload,
+				);
 				const result = await submitAttempt(this.currentChallengeId, payload);
 				console.log("Attempt submission result:", result);
 				// Optionally update local state based on result, though leaderboard handles display
