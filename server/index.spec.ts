@@ -751,10 +751,14 @@ describe("Challenge API", () => {
 			expect(createRes.status).toBe(201);
 
 			const initialChallengeState = store.getChallengeById(createdChallenge.id);
-			if (!initialChallengeState || initialChallengeState.participants.length === 0)
+			if (
+				!initialChallengeState ||
+				initialChallengeState.participants.length === 0
+			)
 				throw new Error("Setup failed: Creator not found");
 			const creatorP = initialChallengeState.participants[0];
-			if (!creatorP) throw new Error("Setup failed: Creator participant is undefined");
+			if (!creatorP)
+				throw new Error("Setup failed: Creator participant is undefined");
 			creator = creatorP;
 		});
 
@@ -799,5 +803,4 @@ describe("Challenge API", () => {
 			expect(textBody).toContain("Challenge not found");
 		});
 	});
-
 });

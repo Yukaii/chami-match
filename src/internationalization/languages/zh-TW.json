@@ -1,170 +1,170 @@
 {
-  "challenge": {
-    "createTitle": "建立挑戰",
-    "createdTitle": "挑戰已建立！",
-    "name": "挑戰名稱",
-    "nameRequired": "請輸入挑戰名稱",
-    "expiresIn": "有效期限",
-    "shareCode": "分享邀請碼給你的朋友：",
-    "copyCode": "複製邀請碼",
-    "done": "完成",
-    "setupInfo": "以目前的遊戲設定建立挑戰"
-  },
-  "challengeMode": "挑戰模式",
-  "challengeFriends": "挑戰好友",
-  "viewLeaderboard": "排行榜",
-  "loading": "建立中...",
-  "create": "建立",
-  "joinChallenge": "加入挑戰",
-  "accessCode": "邀請碼",
-  "join": "加入",
-"joinedChallengesTitle": "已加入的挑戰",
-"viewPlay": "查看/遊玩",
-"you": "你",
-  
-  "title": "查米配色 - 辨識顏色！",
-  "mainTitle": "查米配色",
-  "subtitle": "辨識顏色！",
-  "description": "一個簡單有趣的顏色辨識訓練遊戲！",
-  "startStandardGame": "標準模式",
-  "startContextualGame": "情境模式",
-  "startRelativeGame": "亮度差異模式",
-  "startColorGame": "圖片顏色模式",
-  "startRecallGame": "記憶模式",
-  "startGame": "開始遊戲",
-  "start": "開始",
-  "quickStart": "快速開始上次遊戲",
-  "startOver": "重新開始",
-  "home": "首頁",
-  "submit": "提交",
-  "close": "關閉",
-  "cancel": "取消",
-  "gameRecord": {
-    "title": "遊戲紀錄",
-    "emptyContent": "目前沒有遊戲紀錄"
-  },
-  "totalRounds": "總回合數",
-  "allGameTypes": "所有遊戲類型",
-  "loadMore": "載入更多",
-  "unknownRecordType": "未知紀錄類型",
-  "actualColor": "正確顏色",
-  "guessedColor": "你的選擇",
-  "actualDifference": "正確差異",
-  "guessedDifference": "你的選擇",
-  "comboCount": "連擊次數",
-  "winningRate": "勝率",
-  "roundCount": "回合數",
-  "sessionDate": "遊戲時間",
-  "allSessions": "所有遊戲",
-  "currentSession": "目前遊戲",
-  "settings": {
-    "title": "設定",
-    "UIOptions": "介面設定",
-    "gameOptions": "遊戲設定",
-    "language": "語言",
-    "theme": {
-      "title": "主題",
-      "system": "系統",
-      "dark": "深色模式",
-      "light": "淺色模式"
-    },
-    "confetti": {
-      "label": "慶祝特效",
-      "on": "開啟",
-      "off": "關閉"
-    },
-    "precision": {
-      "label": "精確度"
-    },
-    "colorMode": {
-      "label": "顏色模式"
-    },
-    "colorSpace": {
-      "label": "色彩空間"
-    },
-    "maxTries": {
-      "label": "最大嘗試次數"
-    },
-    "realtimePreview": {
-      "label": "即時預覽"
-    },
-    "recallTimeout": {
-      "label": "記憶時間"
-    },
-    "notice": "套用遊戲設定將開始新的回合",
-    "cta": "套用",
-    "danger": "危險區域",
-    "confirmReset": "重設將會清除所有遊戲資料與設定。此動作無法復原。",
-    "resetGameData": "重設遊戲資料",
-    "resetConfirmation": "重設遊戲資料",
-    "resetWarning": "確定要重設遊戲資料嗎？目前的所有進度都會遺失。"
-  },
-  "about": {
-    "title": "關於遊戲",
-    "text1": "此遊戲靈感來自{colorTest}。特別感謝{fragment}提供的絕妙點子！",
-    "text2": "更多資訊、貢獻或回報問題，請造訪{githubRepo}。",
-    "repository": "GitHub儲存庫",
-    "developerCredits": "開發者名單",
-    "developerText": "感謝所有為此專案貢獻的開發者。你們的努力讓這個遊戲變得更好。",
-    "share": "分享",
-    "close": "關閉"
-  },
-  "reset": {
-    "title": "重設遊戲資料",
-    "message": "確定要重設遊戲資料嗎？目前的所有進度都會遺失。",
-    "confirm": "是的，重設",
-    "cancel": "不要，取消"
-  },
-  "gameModes": {
-    "standard": {
-      "name": "標準模式",
-      "description": "重現左側的顏色"
-    },
-    "contextual": {
-      "name": "情境模式",
-      "description": "重現被類似顏色包圍的中央顏色 - 更具挑戰性！",
-      "instructions": "選擇與中央方塊相符的顏色",
-      "selectPrompt": "選擇相符的顏色：",
-      "lastSelection": "上次的選擇："
-    },
-    "relative": {
-      "name": "亮度差異模式",
-      "description": "判斷兩個顏色的亮度差異",
-      "instructions": "使用滑桿指出這些顏色的亮度差異（1-100）",
-      "valueDifference": "亮度差異",
-      "yourGuess": "你的選擇："
-    },
-    "color": {
-      "name": "圖片顏色模式",
-      "description": "從真實圖片中配對顏色 - 測試在實際情境中的顏色感知！",
-      "instructions": "選擇與圖片中圓圈顏色相符的顏色",
-      "selectPrompt": "選擇相符的顏色：",
-      "lastSelection": "上次的選擇：",
-      "toggleMagnifier": {
-        "show": "顯示放大鏡",
-        "hide": "隱藏放大鏡"
-      },
-      "toggleTargetCircle": {
-        "show": "顯示目標圓圈",
-        "hide": "隱藏目標圓圈"
-      }
-    },
-    "recall": {
-      "name": "記憶模式",
-      "description": "測試你的顏色記憶力 - 短暫看到顏色後重現它",
-      "instructions": "在顏色消失前記住它，然後選擇相符的顏色",
-      "selectPrompt": "選擇相符的顏色：",
-      "lastSelection": "上次的選擇：",
-      "memorizePrompt": "記住這個顏色！"
-    }
-  },
-  "colorDifferences": "顏色差異",
-  "precisionTarget": "目標值",
-  "errorBoundary": {
-    "title": "糟糕，發生錯誤了！",
-    "message": "應用程式發生了未預期的錯誤。",
-    "retry": "重試",
-    "refresh": "重新整理頁面",
-    "copyError": "複製錯誤"
-  }
+	"challenge": {
+		"createTitle": "建立挑戰",
+		"createdTitle": "挑戰已建立！",
+		"name": "挑戰名稱",
+		"nameRequired": "請輸入挑戰名稱",
+		"expiresIn": "有效期限",
+		"shareCode": "分享邀請碼給你的朋友：",
+		"copyCode": "複製邀請碼",
+		"done": "完成",
+		"setupInfo": "以目前的遊戲設定建立挑戰"
+	},
+	"challengeMode": "挑戰模式",
+	"challengeFriends": "挑戰好友",
+	"viewLeaderboard": "排行榜",
+	"loading": "建立中...",
+	"create": "建立",
+	"joinChallenge": "加入挑戰",
+	"accessCode": "邀請碼",
+	"join": "加入",
+	"joinedChallengesTitle": "已加入的挑戰",
+	"viewPlay": "查看/遊玩",
+	"you": "你",
+
+	"title": "查米配色 - 辨識顏色！",
+	"mainTitle": "查米配色",
+	"subtitle": "辨識顏色！",
+	"description": "一個簡單有趣的顏色辨識訓練遊戲！",
+	"startStandardGame": "標準模式",
+	"startContextualGame": "情境模式",
+	"startRelativeGame": "亮度差異模式",
+	"startColorGame": "圖片顏色模式",
+	"startRecallGame": "記憶模式",
+	"startGame": "開始遊戲",
+	"start": "開始",
+	"quickStart": "快速開始上次遊戲",
+	"startOver": "重新開始",
+	"home": "首頁",
+	"submit": "提交",
+	"close": "關閉",
+	"cancel": "取消",
+	"gameRecord": {
+		"title": "遊戲紀錄",
+		"emptyContent": "目前沒有遊戲紀錄"
+	},
+	"totalRounds": "總回合數",
+	"allGameTypes": "所有遊戲類型",
+	"loadMore": "載入更多",
+	"unknownRecordType": "未知紀錄類型",
+	"actualColor": "正確顏色",
+	"guessedColor": "你的選擇",
+	"actualDifference": "正確差異",
+	"guessedDifference": "你的選擇",
+	"comboCount": "連擊次數",
+	"winningRate": "勝率",
+	"roundCount": "回合數",
+	"sessionDate": "遊戲時間",
+	"allSessions": "所有遊戲",
+	"currentSession": "目前遊戲",
+	"settings": {
+		"title": "設定",
+		"UIOptions": "介面設定",
+		"gameOptions": "遊戲設定",
+		"language": "語言",
+		"theme": {
+			"title": "主題",
+			"system": "系統",
+			"dark": "深色模式",
+			"light": "淺色模式"
+		},
+		"confetti": {
+			"label": "慶祝特效",
+			"on": "開啟",
+			"off": "關閉"
+		},
+		"precision": {
+			"label": "精確度"
+		},
+		"colorMode": {
+			"label": "顏色模式"
+		},
+		"colorSpace": {
+			"label": "色彩空間"
+		},
+		"maxTries": {
+			"label": "最大嘗試次數"
+		},
+		"realtimePreview": {
+			"label": "即時預覽"
+		},
+		"recallTimeout": {
+			"label": "記憶時間"
+		},
+		"notice": "套用遊戲設定將開始新的回合",
+		"cta": "套用",
+		"danger": "危險區域",
+		"confirmReset": "重設將會清除所有遊戲資料與設定。此動作無法復原。",
+		"resetGameData": "重設遊戲資料",
+		"resetConfirmation": "重設遊戲資料",
+		"resetWarning": "確定要重設遊戲資料嗎？目前的所有進度都會遺失。"
+	},
+	"about": {
+		"title": "關於遊戲",
+		"text1": "此遊戲靈感來自{colorTest}。特別感謝{fragment}提供的絕妙點子！",
+		"text2": "更多資訊、貢獻或回報問題，請造訪{githubRepo}。",
+		"repository": "GitHub儲存庫",
+		"developerCredits": "開發者名單",
+		"developerText": "感謝所有為此專案貢獻的開發者。你們的努力讓這個遊戲變得更好。",
+		"share": "分享",
+		"close": "關閉"
+	},
+	"reset": {
+		"title": "重設遊戲資料",
+		"message": "確定要重設遊戲資料嗎？目前的所有進度都會遺失。",
+		"confirm": "是的，重設",
+		"cancel": "不要，取消"
+	},
+	"gameModes": {
+		"standard": {
+			"name": "標準模式",
+			"description": "重現左側的顏色"
+		},
+		"contextual": {
+			"name": "情境模式",
+			"description": "重現被類似顏色包圍的中央顏色 - 更具挑戰性！",
+			"instructions": "選擇與中央方塊相符的顏色",
+			"selectPrompt": "選擇相符的顏色：",
+			"lastSelection": "上次的選擇："
+		},
+		"relative": {
+			"name": "亮度差異模式",
+			"description": "判斷兩個顏色的亮度差異",
+			"instructions": "使用滑桿指出這些顏色的亮度差異（1-100）",
+			"valueDifference": "亮度差異",
+			"yourGuess": "你的選擇："
+		},
+		"color": {
+			"name": "圖片顏色模式",
+			"description": "從真實圖片中配對顏色 - 測試在實際情境中的顏色感知！",
+			"instructions": "選擇與圖片中圓圈顏色相符的顏色",
+			"selectPrompt": "選擇相符的顏色：",
+			"lastSelection": "上次的選擇：",
+			"toggleMagnifier": {
+				"show": "顯示放大鏡",
+				"hide": "隱藏放大鏡"
+			},
+			"toggleTargetCircle": {
+				"show": "顯示目標圓圈",
+				"hide": "隱藏目標圓圈"
+			}
+		},
+		"recall": {
+			"name": "記憶模式",
+			"description": "測試你的顏色記憶力 - 短暫看到顏色後重現它",
+			"instructions": "在顏色消失前記住它，然後選擇相符的顏色",
+			"selectPrompt": "選擇相符的顏色：",
+			"lastSelection": "上次的選擇：",
+			"memorizePrompt": "記住這個顏色！"
+		}
+	},
+	"colorDifferences": "顏色差異",
+	"precisionTarget": "目標值",
+	"errorBoundary": {
+		"title": "糟糕，發生錯誤了！",
+		"message": "應用程式發生了未預期的錯誤。",
+		"retry": "重試",
+		"refresh": "重新整理頁面",
+		"copyError": "複製錯誤"
+	}
 }

@@ -32,7 +32,7 @@ export const useGameStore = defineStore("game", {
 			enableConfetti: true,
 			lastPlayedGameType: null, // Track the last played game type
 			recallTimeout: 5, // Default recall timeout
-			displayName: 'Player', // Default display name
+			displayName: "Player", // Default display name
 		}),
 		history: useStorage("history", []),
 

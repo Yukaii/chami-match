@@ -115,7 +115,7 @@ const handleJoinChallenge = async () => {
 	const payload = {
 		accessCode: accessCode.value.toUpperCase(), // Ensure uppercase
 		deviceId: store.deviceId,
-		displayName: store.preferences.displayName || 'Player', // Use stored name
+		displayName: store.preferences.displayName || "Player", // Use stored name
 		// userId: store.userId, // Add if user auth exists
 	};
 
@@ -143,18 +143,18 @@ const handleJoinChallenge = async () => {
 		store.currentParticipantId = myParticipant.id;
 
 		// Add to list of joined challenges (avoid duplicates)
-		if (!store.joinedChallenges.some(c => c.id === challenge.id)) {
-				store.joinedChallenges.push({
-						id: challenge.id,
-						name: challenge.name,
-						accessCode: challenge.accessCode,
-						// Store expiration or other relevant info if needed
-				});
-				// Optional: Limit the number of stored challenges
-				// const MAX_JOINED = 10;
-				// if (store.joinedChallenges.length > MAX_JOINED) {
-				//     store.joinedChallenges = store.joinedChallenges.slice(-MAX_JOINED);
-				// }
+		if (!store.joinedChallenges.some((c) => c.id === challenge.id)) {
+			store.joinedChallenges.push({
+				id: challenge.id,
+				name: challenge.name,
+				accessCode: challenge.accessCode,
+				// Store expiration or other relevant info if needed
+			});
+			// Optional: Limit the number of stored challenges
+			// const MAX_JOINED = 10;
+			// if (store.joinedChallenges.length > MAX_JOINED) {
+			//     store.joinedChallenges = store.joinedChallenges.slice(-MAX_JOINED);
+			// }
 		}
 
 		// Set the game type based on the challenge settings
@@ -180,7 +180,7 @@ const handleJoinChallenge = async () => {
 	} catch (err) {
 		console.error("Failed to join challenge:", apiError.value);
 		alert(`Error joining challenge: ${apiError.value}`);
-  }
+	}
 };
 
 // Function to rejoin/view a previously joined challenge
@@ -199,10 +199,17 @@ const rejoinChallenge = async (challengeId) => {
 		if (!myParticipant) {
 			// This could happen if the user cleared their data or is on a new device
 			// For now, treat as an error. Could potentially prompt to rejoin with display name.
-			console.error("Could not find own participant record in challenge:", challengeId);
-			alert("Error: You don't seem to be a participant in this challenge anymore.");
+			console.error(
+				"Could not find own participant record in challenge:",
+				challengeId,
+			);
+			alert(
+				"Error: You don't seem to be a participant in this challenge anymore.",
+			);
 			// Maybe remove from local list?
-			store.joinedChallenges = store.joinedChallenges.filter(c => c.id !== challengeId);
+			store.joinedChallenges = store.joinedChallenges.filter(
+				(c) => c.id !== challengeId,
+			);
 			return;
 		}
 
@@ -230,13 +237,11 @@ const rejoinChallenge = async (challengeId) => {
 
 		// Navigate to the correct game screen to start the challenge attempt
 		router.push(gameModeRoute);
-
 	} catch (err) {
 		console.error("Failed to rejoin challenge:", apiError.value);
 		alert(`Error rejoining challenge: ${apiError.value || err.message}`);
 	}
 };
-
 
 // Initialize the carousel to show the last played game (if available)
 onMounted(() => {

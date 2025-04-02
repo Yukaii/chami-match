@@ -246,7 +246,7 @@ const settings = reactive({
 	realtimePreview: store.realtimePreview,
 	enableConfetti: store.preferences.enableConfetti || true,
 	recallTimeout: store.recallTimeout,
-	displayName: store.preferences.displayName || 'Player', // Add displayName
+	displayName: store.preferences.displayName || "Player", // Add displayName
 });
 
 // Theme handling
@@ -295,7 +295,7 @@ watch(
 			settings.realtimePreview = store.realtimePreview;
 			settings.enableConfetti = store.preferences.enableConfetti ?? true;
 			settings.recallTimeout = store.recallTimeout;
-			settings.displayName = store.preferences.displayName || 'Player'; // Sync display name
+			settings.displayName = store.preferences.displayName || "Player"; // Sync display name
 		}
 	},
 );

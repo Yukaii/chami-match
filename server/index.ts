@@ -358,7 +358,6 @@ app.get("/api/challenges/:id", (c) => {
 	return c.json(challenge);
 });
 
-
 // Export the app instance for testing
 export const appInstance = app;
 
