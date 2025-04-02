@@ -64,7 +64,7 @@
 
       <!-- Display Name -->
       <div class="mb-4">
-        <label for="displayName" class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.displayName') || 'Display Name' }}</label>
+        <label for="displayName" class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.displayName') }}</label>
         <input
           type="text"
           id="displayName"
@@ -280,6 +280,8 @@ function setTheme(theme) {
 }
 
 const onClose = () => {
+	// Save display name when closing, regardless of mode
+	store.updateDisplayName(settings.displayName);
 	store.toggleSettingsPopup();
 };
 
@@ -318,8 +320,9 @@ const handleChangeLanguage = (lang) => {
 	locale.value = lang;
 	localStorage.setItem("lang", lang);
 
-	// Also save confetti setting when changing language
+	// Also save confetti and display name setting when changing language
 	store.updateConfetti(settings.enableConfetti);
+	store.updateDisplayName(settings.displayName);
 };
 
 onMounted(() => {

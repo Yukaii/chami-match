@@ -60,6 +60,7 @@
 	"settings": {
 		"title": "設定",
 		"UIOptions": "UI設定",
+		"displayName": "表示名",
 		"gameOptions": "ゲーム設定",
 		"language": "言語",
 		"theme": {
