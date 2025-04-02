@@ -5,7 +5,7 @@ import ImageGameScreen from "./components/ImageGameScreen.vue";
 import RecallGameScreen from "./components/RecallGameScreen.vue";
 import RelativeGameScreen from "./components/RelativeGameScreen.vue";
 import WelcomeScreen from "./components/WelcomeScreen.vue";
-const ChallengePage = () => import("./pages/challenge/[id].vue"); // Lazy load challenge page
+// const ChallengePage = () => import("./pages/challenge/[id].vue"); // No longer needed
 
 // Base routes that are always available
 const routes = [
@@ -33,12 +33,12 @@ const routes = [
 		path: "/recall-game",
 		component: RecallGameScreen,
 	},
-	{
-		path: "/challenge/:id", // Dynamic route for challenge leaderboard
-		name: "ChallengeLeaderboard",
-		component: ChallengePage,
-		props: true, // Pass route params as props
-	},
+	// { // Remove challenge page route
+	// 	path: "/challenge/:id",
+	// 	name: "ChallengeLeaderboard",
+	// 	component: ChallengePage,
+	// 	props: true,
+	// },
 ];
 
 // Add test error page route only in non-production environments

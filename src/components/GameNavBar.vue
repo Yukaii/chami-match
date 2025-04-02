@@ -20,12 +20,10 @@ function startOver() {
 }
 
 function viewLeaderboard() {
-	if (store.currentChallengeId) {
-		router.push({
-			name: "ChallengeLeaderboard",
-			params: { id: store.currentChallengeId },
-		});
-	}
+  if (store.currentChallengeId) {
+    // router.push({ name: 'ChallengeLeaderboard', params: { id: store.currentChallengeId } }); // No longer navigate
+    store.toggleLeaderboardPopup(); // Toggle the popup instead
+  }
 }
 
 function startChallenge() {

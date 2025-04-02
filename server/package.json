@@ -10,6 +10,8 @@
 		"typescript": "^5"
 	},
 	"scripts": {
+		"build": "bun build ./index.ts --outdir ./build --target node",
+		"start": "node ./build/index.js",
 		"test": "bun test",
 		"dev": "bun run --watch index.ts"
 	},

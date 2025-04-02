@@ -6,7 +6,8 @@ import ErrorBoundary from "./components/ErrorBoundary.vue";
 import RecordPopup from "./components/RecordPopup.vue";
 import ResetPopup from "./components/ResetPopup.vue";
 import SettingsPopup from "./components/SettingsPopup.vue";
-import CreateChallengePopup from "./components/CreateChallengePopup.vue"; // Import the new popup
+import CreateChallengePopup from "./components/CreateChallengePopup.vue";
+import LeaderboardPopup from "./components/LeaderboardPopup.vue"; // Import Leaderboard Popup
 import { useGameStore } from "./stores/game"; // Import store
 
 const { t, locale } = useI18n();
@@ -73,6 +74,11 @@ watch(
     <!-- Conditionally render the Create Challenge Popup -->
     <ErrorBoundary>
        <CreateChallengePopup v-if="store.createChallengePopupOpen" @close="store.toggleCreateChallengePopup" />
+    </ErrorBoundary>
+
+    <!-- Conditionally render the Leaderboard Popup -->
+    <ErrorBoundary>
+       <LeaderboardPopup v-if="store.leaderboardPopupOpen" @close="store.toggleLeaderboardPopup" />
     </ErrorBoundary>
   </div>
 </template>
