@@ -732,4 +732,72 @@ describe("Challenge API", () => {
 			expect(textBody).toContain("Challenge not found");
 		});
 	});
+
+	describe("GET /api/challenges/:id", () => {
+		let createdChallenge: CreateSuccessResponse;
+		let creator: Participant;
+
+		beforeEach(async () => {
+			store.resetStore();
+			// Create a challenge
+			const createPayload = createValidPayload({ name: "Get Details Test" });
+			const createReq = new Request("http://localhost/api/challenges", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(createPayload),
+			});
+			const createRes = await app.request(createReq);
+			createdChallenge = (await createRes.json()) as CreateSuccessResponse;
+			expect(createRes.status).toBe(201);
+
+			const initialChallengeState = store.getChallengeById(createdChallenge.id);
+			if (!initialChallengeState || initialChallengeState.participants.length === 0)
+				throw new Error("Setup failed: Creator not found");
+			const creatorP = initialChallengeState.participants[0];
+			if (!creatorP) throw new Error("Setup failed: Creator participant is undefined");
+			creator = creatorP;
+		});
+
+		it("should return the full challenge details for a valid ID", async () => {
+			const req = new Request(
+				`http://localhost/api/challenges/${createdChallenge.id}`,
+				{
+					method: "GET",
+				},
+			);
+			const res = await app.request(req);
+			expect(res.status).toBe(200);
+
+			const body = (await res.json()) as Challenge;
+			expect(body.id).toBe(createdChallenge.id);
+			expect(body.name).toBe("Get Details Test");
+			expect(body.accessCode).toBe(createdChallenge.accessCode);
+			expect(body.participants).toBeInstanceOf(Array);
+			expect(body.participants.length).toBe(1);
+			const participant = body.participants[0];
+			expect(participant).toBeDefined();
+			if (participant) {
+				expect(participant.id).toBe(creator.id);
+				expect(participant.displayName).toBe("Tester");
+			}
+			expect(body.attempts).toBeInstanceOf(Array);
+			expect(body.attempts.length).toBe(0);
+			expect(body.settings.gameType).toBe("Color");
+		});
+
+		it("should return 404 for a non-existent challenge ID", async () => {
+			const nonExistentId = uuidv4(); // Generate a valid but non-existent UUID
+			const req = new Request(
+				`http://localhost/api/challenges/${nonExistentId}`,
+				{
+					method: "GET",
+				},
+			);
+			const res = await app.request(req);
+			expect(res.status).toBe(404);
+			const textBody = await res.text();
+			expect(textBody).toContain("Challenge not found");
+		});
+	});
+
 });

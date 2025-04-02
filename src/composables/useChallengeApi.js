@@ -2,14 +2,15 @@ import { ref } from "vue";
 import { useGameStore } from "../stores/game"; // Assuming Pinia store path
 
 export function useChallengeApi() {
-	const gameStore = useGameStore();
+	const store = useGameStore(); // Use store instead of gameStore for consistency
 	const isLoading = ref(false);
 	const error = ref(null);
 
+	// Generic API call helper
 	const callApi = async (endpoint, method = "GET", body = null) => {
 		isLoading.value = true;
 		error.value = null;
-		const url = `${gameStore.challengeServerUrl}${endpoint}`; // Use URL from store
+		const url = `${store.challengeServerUrl}${endpoint}`; // Use URL from store
 
 		try {
 			const options = {
@@ -47,9 +48,6 @@ export function useChallengeApi() {
 		} catch (err) {
 			console.error(`API call failed: ${method} ${endpoint}`, err);
 			error.value = err.message || "An unknown error occurred";
-			// Log the full error object for more details
-			console.error(`API call failed: ${method} ${endpoint}`, err);
-			error.value = err.message || "An unknown error occurred";
 			throw err; // Re-throw to allow caller to handle
 		} finally {
 			isLoading.value = false;
@@ -59,25 +57,25 @@ export function useChallengeApi() {
 	// --- Specific API Functions ---
 
 	const createChallenge = async (payload) => {
-		// Add deviceId and displayName from store if not provided?
-		// The server schema requires them. Let's assume they are passed in payload for now.
 		return callApi("/api/challenges", "POST", payload);
 	};
 
 	const joinChallenge = async (payload) => {
-		// Add deviceId and displayName from store if not provided?
-		// Server schema requires them. Assume passed in payload.
 		return callApi("/api/challenges/join", "POST", payload);
 	};
 
 	const submitAttempt = async (challengeId, payload) => {
-		// Add deviceId from store for verification?
-		// Server schema requires it. Assume passed in payload.
 		return callApi(`/api/challenges/${challengeId}/attempts`, "POST", payload);
 	};
 
 	const getLeaderboard = async (challengeId) => {
 		return callApi(`/api/challenges/${challengeId}/leaderboard`, "GET");
+	};
+
+	// Function to get challenge details by ID (Correctly placed)
+	const getChallengeById = async (challengeId) => {
+		// Use callApi helper for consistency
+		return callApi(`/api/challenges/${challengeId}`, "GET");
 	};
 
 	return {
@@ -87,5 +85,6 @@ export function useChallengeApi() {
 		joinChallenge,
 		submitAttempt,
 		getLeaderboard,
+		getChallengeById, // Add the new function here
 	};
 }

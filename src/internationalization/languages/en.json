@@ -17,6 +17,8 @@
 "joinChallenge": "Join a Challenge",
 "accessCode": "Access Code",
 "join": "Join",
+"joinedChallengesTitle": "Joined Challenges",
+"viewPlay": "View/Play",
 	"challengeMode": "Challenge Mode",
 	"startStandardGame": "Standard Mode",
 	"startContextualGame": "Contextual Mode",

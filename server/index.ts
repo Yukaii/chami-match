@@ -104,13 +104,14 @@ app.post(
 
 		try {
 			store.addChallenge(newChallenge);
-			// Return the essential info needed to join/share
+			// Return the essential info needed, including the creator's participant ID
 			return c.json(
 				{
 					id: newChallenge.id,
 					accessCode: newChallenge.accessCode,
 					name: newChallenge.name,
 					expiresAt: newChallenge.expiresAt,
+					participantId: creator.id, // Add creator's participant ID
 				},
 				201,
 			);
@@ -342,6 +343,21 @@ app.get("/api/challenges/:id/leaderboard", (c) => {
 		leaderboard: leaderboard,
 	});
 });
+
+// GET /api/challenges/:id (get specific challenge details)
+app.get("/api/challenges/:id", (c) => {
+	const challengeId = c.req.param("id");
+	const challenge = store.getChallengeById(challengeId);
+
+	if (!challenge) {
+		throw new HTTPException(404, { message: "Challenge not found" });
+	}
+
+	// Return the full challenge details
+	// Consider filtering sensitive data if necessary in the future
+	return c.json(challenge);
+});
+
 
 // Export the app instance for testing
 export const appInstance = app;

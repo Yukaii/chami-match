@@ -11,6 +11,8 @@ const store = useGameStore();
 const router = useRouter();
 const {
 	joinChallenge,
+	// joinChallenge, // Removed duplicate
+	getChallengeById, // Add getChallengeById
 	isLoading: isApiLoading,
 	error: apiError,
 } = useChallengeApi(); // Use challenge API
@@ -140,6 +142,21 @@ const handleJoinChallenge = async () => {
 		store.currentChallengeId = challenge.id;
 		store.currentParticipantId = myParticipant.id;
 
+		// Add to list of joined challenges (avoid duplicates)
+		if (!store.joinedChallenges.some(c => c.id === challenge.id)) {
+				store.joinedChallenges.push({
+						id: challenge.id,
+						name: challenge.name,
+						accessCode: challenge.accessCode,
+						// Store expiration or other relevant info if needed
+				});
+				// Optional: Limit the number of stored challenges
+				// const MAX_JOINED = 10;
+				// if (store.joinedChallenges.length > MAX_JOINED) {
+				//     store.joinedChallenges = store.joinedChallenges.slice(-MAX_JOINED);
+				// }
+		}
+
 		// Set the game type based on the challenge settings
 		store.updateGameType(challenge.settings.gameType);
 		// Optionally update other settings like precision, maxLife based on challenge.settings?
@@ -163,8 +180,63 @@ const handleJoinChallenge = async () => {
 	} catch (err) {
 		console.error("Failed to join challenge:", apiError.value);
 		alert(`Error joining challenge: ${apiError.value}`);
+  }
+};
+
+// Function to rejoin/view a previously joined challenge
+const rejoinChallenge = async (challengeId) => {
+	apiError.value = null; // Clear previous errors
+	try {
+		console.log("Rejoining challenge:", challengeId);
+		const challenge = await getChallengeById(challengeId); // Fetch challenge details
+		console.log("Fetched challenge details:", challenge);
+
+		// Find the participant record for the current device
+		const myParticipant = challenge.participants.find(
+			(p) => p.deviceId === store.deviceId,
+		);
+
+		if (!myParticipant) {
+			// This could happen if the user cleared their data or is on a new device
+			// For now, treat as an error. Could potentially prompt to rejoin with display name.
+			console.error("Could not find own participant record in challenge:", challengeId);
+			alert("Error: You don't seem to be a participant in this challenge anymore.");
+			// Maybe remove from local list?
+			store.joinedChallenges = store.joinedChallenges.filter(c => c.id !== challengeId);
+			return;
+		}
+
+		// Store challenge context in Pinia
+		store.currentChallengeId = challenge.id;
+		store.currentParticipantId = myParticipant.id;
+
+		// Set the game type based on the challenge settings
+		store.updateGameType(challenge.settings.gameType);
+		// Optionally update other settings like precision, maxLife based on challenge.settings?
+		// store.updatePrecision(challenge.settings.precision);
+		// store.updateMaxLife(challenge.settings.maxLife); // Lives are handled differently
+
+		// Find the route for the challenge's game type
+		const gameModeRoute =
+			gameModes.find((mode) => mode.type === challenge.settings.gameType)
+				?.route || "/game"; // Default to standard game
+
+		// Start a new game session for the challenge
+		store.startOver(); // This resets score/round and sets challenge IDs to null, need to re-set them
+
+		// Re-set challenge context after startOver clears it
+		store.currentChallengeId = challenge.id;
+		store.currentParticipantId = myParticipant.id;
+
+		// Navigate to the correct game screen to start the challenge attempt
+		router.push(gameModeRoute);
+
+	} catch (err) {
+		console.error("Failed to rejoin challenge:", apiError.value);
+		alert(`Error rejoining challenge: ${apiError.value || err.message}`);
 	}
 };
+
 
 // Initialize the carousel to show the last played game (if available)
 onMounted(() => {
@@ -285,6 +357,19 @@ onMounted(() => {
             </BaseButton>
          </div>
          <p v-if="apiError" class="text-red-500 text-sm mt-1 text-center">{{ apiError }}</p>
+      </div>
+
+      <!-- Joined Challenges List -->
+      <div v-if="store.joinedChallenges.length > 0" class="mt-6 border-t pt-4 dark:border-gray-700">
+        <h3 class="text-lg font-semibold mb-2 text-center text-gray-700 dark:text-gray-300">{{ $t('joinedChallengesTitle') || 'Joined Challenges' }}</h3>
+        <ul class="space-y-2 max-h-40 overflow-y-auto"> {/* Added max-height and scroll */}
+          <li v-for="challenge in store.joinedChallenges" :key="challenge.id" class="flex justify-between items-center p-2 bg-gray-100 dark:bg-gray-700 rounded">
+            <span class="truncate mr-2">{{ challenge.name }} ({{ challenge.accessCode }})</span>
+            <BaseButton variant="outline" size="xs" @click="rejoinChallenge(challenge.id)">
+              {{ $t('viewPlay') || 'View/Play' }}
+            </BaseButton>
+          </li>
+        </ul>
       </div>
 
     </div>
