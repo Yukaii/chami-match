@@ -1,3 +1,14 @@
 name = "chami-match-game-server"
-main = "src/index.ts"
-compatibility_date = "2023-07-01" # todo - change this
+main = "index.ts"
+compatibility_date = "2024-04-03" # Updated compatibility date
+
+# KV Namespace binding
+# Make sure to create a KV namespace in your Cloudflare dashboard
+# and replace the id/preview_id below, or let wrangler create it.
+
+[env.production]
+# KV Namespace binding for the production environment
+[[kv_namespaces]]
+binding = "CHALLENGE_KV"
+id = "f534fd3114fa4f8cab88d986a00fa8b9"
+preview_id = "25e536a4b83c400984429ad9a0ade85f"

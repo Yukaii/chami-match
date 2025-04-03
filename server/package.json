@@ -4,7 +4,6 @@
   "type": "module",
   "private": true,
   "devDependencies": {
-    "@hono/vite-cloudflare-pages": "^0.4.2",
     "@hono/vite-dev-server": "^0.19.0",
     "@types/bun": "latest",
     "vite": "^6.2.4"
@@ -13,9 +12,7 @@
     "typescript": "^5"
   },
   "scripts": {
-    "build": "vite build",
-    "deploy": "wrangler pages deploy ./dist",
-    "dev": "bunx --bun vite --port 8787",
+    "dev": "bunx wrangler dev",
     "test": "bun test"
   },
   "dependencies": {
