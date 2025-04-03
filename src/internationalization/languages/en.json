@@ -24,7 +24,9 @@
 	"accessCode": "Access Code",
 	"join": "Join",
 	"joinedChallengesTitle": "Joined Challenges",
-	"viewPlay": "View/Play",
+	"expiredChallengesTitle": "Expired Challenges",
+	"play": "Play",
+	"remove": "Remove",
 	"you": "You",
 	"challengeMode": "Challenge Mode",
 	"startStandardGame": "Standard Mode",
@@ -190,5 +192,7 @@
 		"joinFailed": "Error joining challenge",
 		"rejoinParticipantNotFound": "Error: You don't seem to be a participant in this challenge anymore.",
 		"rejoinFailed": "Error rejoining challenge"
-	}
+	},
+	"confirmRemoveChallengeNotFoundMessage": "You were not found in \"{name}\". Remove it from your list?",
+	"confirm": "Confirm"
 }

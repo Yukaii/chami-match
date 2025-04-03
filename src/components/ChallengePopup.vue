@@ -29,14 +29,27 @@
       </div>
 
       <!-- Joined Challenges List -->
-      <div v-if="store.joinedChallenges.length > 0" class="border-t pt-4 dark:border-gray-700">
+      <div v-if="activeChallenges.length > 0" class="border-t pt-4 dark:border-gray-700">
         <h3 class="text-lg font-semibold mb-2 text-center text-gray-700 dark:text-gray-300">{{ $t('joinedChallengesTitle') || 'Joined Challenges' }}</h3>
         <ul class="space-y-2 max-h-40 overflow-y-auto">
-          <li v-for="challenge in store.joinedChallenges" :key="challenge.id" class="flex justify-between items-center p-2 bg-gray-100 dark:bg-gray-700 rounded">
+          <li v-for="challenge in activeChallenges" :key="challenge.id" class="flex justify-between items-center p-2 bg-gray-100 dark:bg-gray-700 rounded">
             <span class="truncate mr-2">{{ challenge.name }} ({{ challenge.accessCode }})</span>
             <BaseButton variant="outline" size="xs" @click="rejoinChallenge(challenge.id)">
-              {{ $t('viewPlay') || 'View/Play' }}
+              {{ $t('play') || 'Play' }}
             </BaseButton>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Expired/Unavailable Challenges List -->
+      <div v-if="expiredChallenges.length > 0" class="border-t pt-4 dark:border-gray-700">
+        <h3 class="text-lg font-semibold mb-2 text-center text-gray-500 dark:text-gray-400">{{ $t('expiredChallengesTitle') || 'Expired Challenges' }}</h3>
+        <ul class="space-y-2 max-h-20 overflow-y-auto">
+          <li v-for="challenge in expiredChallenges" :key="challenge.id" class="flex justify-between items-center p-2 bg-gray-200 dark:bg-gray-800 rounded opacity-60">
+            <span class="truncate mr-2 text-gray-500 dark:text-gray-400">{{ challenge.name }} ({{ challenge.accessCode }})</span>
+             <BaseButton variant="danger_outline" size="xs" @click="removeChallenge(challenge.id)">
+               {{ $t('remove') || 'Remove' }}
+             </BaseButton>
           </li>
         </ul>
       </div>
@@ -55,11 +68,26 @@
          {{ $t('close') || 'Close' }}
        </BaseButton>
     </div>
+
+    <!-- Confirmation Dialog Section -->
+    <div v-if="challengeToRemoveId" class="mt-4 p-4 border border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20 rounded">
+      <p class="text-sm text-red-700 dark:text-red-300 mb-3">
+        {{ $t('confirmRemoveChallengeNotFoundMessage', { name: challengeToRemoveName }) || `You were not found in "${challengeToRemoveName}". Remove it from your list?` }}
+      </p>
+      <div class="flex justify-end gap-2">
+        <BaseButton variant="danger" size="sm" @click="confirmRemoveChallenge">
+          {{ $t('confirm') || 'Confirm' }}
+        </BaseButton>
+        <BaseButton variant="secondary" size="sm" @click="cancelRemoveChallenge">
+          {{ $t('cancel') || 'Cancel' }}
+        </BaseButton>
+      </div>
+    </div>
   </Modal>
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue"; // Added computed
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 import { useChallengeApi } from "../composables/useChallengeApi";
@@ -71,6 +99,70 @@ const { t: $t } = useI18n();
 const store = useGameStore();
 const router = useRouter();
 const route = useRoute(); // Keep route if needed for URL params within the modal logic
+
+// Computed property to get the current time as a Date object
+const now = computed(() => new Date());
+
+// Computed property for active challenges
+const activeChallenges = computed(() => {
+	return store.joinedChallenges.filter((challenge) => {
+		if (!challenge.expiresAt) return true; // Assume active if no expiry date
+		try {
+			// Attempt to parse expiresAt, assuming it might be ISO string or timestamp number
+			const expiryTimestamp =
+				typeof challenge.expiresAt === "string"
+					? Date.parse(challenge.expiresAt)
+					: Number(challenge.expiresAt) * 1000; // Assume seconds timestamp if number
+
+			if (Number.isNaN(expiryTimestamp)) {
+				console.error(
+					"Invalid date format for expiresAt:",
+					challenge.expiresAt,
+				);
+				return true; // Treat as active if parsing fails
+			}
+			return expiryTimestamp > now.value.getTime();
+		} catch (e) {
+			console.error(
+				"Error processing challenge expiry date:",
+				challenge.expiresAt,
+				e,
+			);
+			return true; // Treat as active on error
+		}
+	});
+});
+
+// Computed property for expired or unavailable challenges
+const expiredChallenges = computed(() => {
+	return store.joinedChallenges.filter((challenge) => {
+		if (!challenge.expiresAt) return false; // Not expired if no expiry date
+		try {
+			// Attempt to parse expiresAt, assuming it might be ISO string or timestamp number
+			const expiryTimestamp =
+				typeof challenge.expiresAt === "string"
+					? Date.parse(challenge.expiresAt)
+					: Number(challenge.expiresAt) * 1000; // Assume seconds timestamp if number
+
+			if (Number.isNaN(expiryTimestamp)) {
+				console.error(
+					"Invalid date format for expiresAt:",
+					challenge.expiresAt,
+				);
+				return false; // Treat as not expired if parsing fails
+			}
+			return expiryTimestamp <= now.value.getTime();
+		} catch (e) {
+			console.error(
+				"Error processing challenge expiry date:",
+				challenge.expiresAt,
+				e,
+			);
+			return false; // Treat as not expired on error
+		}
+	});
+});
+
 const {
 	joinChallenge,
 	getChallengeById,
@@ -79,6 +171,38 @@ const {
 } = useChallengeApi();
 
 const accessCode = ref("");
+const challengeToRemoveId = ref(null); // State for confirmation
+
+// Computed property to get the name of the challenge to remove
+const challengeToRemoveName = computed(() => {
+	if (!challengeToRemoveId.value) return "";
+	const challenge = store.joinedChallenges.find(
+		(c) => c.id === challengeToRemoveId.value,
+	);
+	return challenge ? challenge.name : "this challenge";
+});
+
+// Function to remove challenge from store
+const removeChallenge = (challengeId) => {
+	store.joinedChallenges = store.joinedChallenges.filter(
+		(c) => c.id !== challengeId,
+	);
+};
+
+// Function to handle confirmation of removal
+const confirmRemoveChallenge = () => {
+	if (challengeToRemoveId.value) {
+		removeChallenge(challengeToRemoveId.value);
+		apiError.value = null; // Clear error after removal
+		challengeToRemoveId.value = null; // Reset confirmation state
+	}
+};
+
+// Function to cancel removal
+const cancelRemoveChallenge = () => {
+	challengeToRemoveId.value = null; // Reset confirmation state
+	apiError.value = null; // Also clear the error message on cancel
+};
 
 // --- Logic moved from WelcomeScreen ---
 
@@ -122,12 +246,13 @@ const handleJoinChallenge = async () => {
 		store.currentChallengeId = challenge.id;
 		store.currentParticipantId = myParticipant.id;
 
-		// Add to list of joined challenges (avoid duplicates)
+		// Add to list of joined challenges (avoid duplicates), including expiration
 		if (!store.joinedChallenges.some((c) => c.id === challenge.id)) {
 			store.joinedChallenges.push({
 				id: challenge.id,
 				name: challenge.name,
 				accessCode: challenge.accessCode,
+				expiresAt: challenge.expiresAt, // Store the expiration time
 			});
 		}
 
@@ -176,13 +301,28 @@ const rejoinChallenge = async (challengeId) => {
 				"Could not find own participant record in challenge:",
 				challengeId,
 			);
+			// Set the specific error message
 			apiError.value =
 				$t("error.rejoinParticipantNotFound") ||
 				"Error: You don't seem to be a participant in this challenge anymore.";
-			store.joinedChallenges = store.joinedChallenges.filter(
-				(c) => c.id !== challengeId,
+
+			// Ask user for confirmation before removing
+			const challengeToRemove = store.joinedChallenges.find(
+				(c) => c.id === challengeId,
 			);
-			return;
+			const challengeName = challengeToRemove
+				? challengeToRemove.name
+				: "this challenge";
+			const confirmMessage =
+				$t("confirmRemoveChallengeNotFound", { name: challengeName }) ||
+				`You were not found in "${challengeName}". Remove it from your list?`;
+
+			if (window.confirm(confirmMessage)) {
+				store.joinedChallenges = store.joinedChallenges.filter(
+					(c) => c.id !== challengeId,
+				);
+			}
+			return; // Prevent further execution after handling the error
 		}
 
 		// Store challenge context in Pinia
@@ -208,11 +348,29 @@ const rejoinChallenge = async (challengeId) => {
 		onClose();
 		router.push(gameModeRoute);
 	} catch (err) {
-		// apiError should be set by the composable, but log the error just in case
-		console.error("Failed to rejoin challenge:", err, apiError.value);
-		// Ensure apiError has a fallback message if the composable didn't set one
-		if (!apiError.value) {
-			apiError.value = $t("error.rejoinFailed") || "Error rejoining challenge";
+		// Log the raw error first
+		// Log the raw error first
+		console.error("Failed to rejoin challenge:", err);
+
+		// Check the caught error's message directly for 'Not Found' (case-insensitive) using optional chaining
+		const isNotFoundError =
+			err?.message &&
+			typeof err.message === "string" &&
+			err.message.toLowerCase().includes("not found");
+
+		if (isNotFoundError) {
+			// Set the user-facing error message
+			apiError.value =
+				$t("error.rejoinParticipantNotFound") ||
+				"Error: You don't seem to be a participant in this challenge anymore.";
+			// Set the ID of the challenge needing removal confirmation
+			challengeToRemoveId.value = challengeId;
+		} else {
+			// Handle other potential errors from the API call
+			// Use the error message from the caught error (with optional chaining), or a generic fallback
+			apiError.value =
+				err?.message || $t("error.rejoinFailed") || "Error rejoining challenge";
+			console.error("Rejoin API Error (Other):", apiError.value);
 		}
 	}
 };

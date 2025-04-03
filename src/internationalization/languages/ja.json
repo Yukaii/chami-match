@@ -26,7 +26,9 @@
 	"accessCode": "アクセスコード",
 	"join": "参加",
 	"joinedChallengesTitle": "参加したチャレンジ",
-	"viewPlay": "表示/プレイ",
+	"expiredChallengesTitle": "期限切れのチャレンジ",
+	"play": "プレイ",
+	"remove": "削除",
 	"you": "あなた",
 
 	"title": "チャミマッチ - 色を再現してみよう！",
@@ -191,5 +193,7 @@
 		"joinFailed": "チャレンジ参加エラー",
 		"rejoinParticipantNotFound": "エラー：このチャレンジの参加者ではないようです。",
 		"rejoinFailed": "チャレンジ再参加エラー"
-	}
+	},
+	"confirmRemoveChallengeNotFoundMessage": "チャレンジ「{name}」に参加者として見つかりませんでした。リストから削除しますか？",
+	"confirm": "確認"
 }

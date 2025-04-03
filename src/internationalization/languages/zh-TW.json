@@ -26,7 +26,9 @@
 	"accessCode": "邀請碼",
 	"join": "加入",
 	"joinedChallengesTitle": "已加入的挑戰",
-	"viewPlay": "查看/遊玩",
+	"expiredChallengesTitle": "已過期的挑戰",
+	"play": "遊玩",
+	"remove": "移除",
 	"you": "你",
 
 	"title": "查米配色 - 辨識顏色！",
@@ -191,5 +193,7 @@
 		"joinFailed": "加入挑戰時發生錯誤",
 		"rejoinParticipantNotFound": "錯誤：您似乎已不再是此挑戰的參與者。",
 		"rejoinFailed": "重新加入挑戰時發生錯誤"
-	}
+	},
+	"confirmRemoveChallengeNotFoundMessage": "在挑戰「{name}」中找不到您的參與紀錄。要將其從列表中移除嗎？",
+	"confirm": "確認"
 }
