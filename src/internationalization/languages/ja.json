@@ -10,11 +10,13 @@
 		"copyLink": "リンクをコピー",
 		"copied": "コピーしました！",
 		"done": "完了",
-		"setupInfo": "現在の設定でチャレンジを作成します。"
+		"setupInfo": "現在の設定でチャレンジを作成します。",
+		"expiresAt": "有効期限"
 	},
 	"challengeMode": "チャレンジモード",
 	"challengeFriends": "フレンドをチャレンジ",
 	"viewLeaderboard": "リーダーボード",
+	"refresh": "更新",
 	"loading": "作成中...",
 	"create": "作成",
 	"joinChallenge": "チャレンジに参加",

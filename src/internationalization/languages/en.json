@@ -14,7 +14,8 @@
 		"copyLink": "Copy Link",
 		"copied": "Copied!",
 		"done": "Done",
-		"setupInfo": "Set up a challenge for your friends based on the current game settings."
+		"setupInfo": "Set up a challenge for your friends based on the current game settings.",
+		"expiresAt": "Expires At"
 	},
 	"joinChallenge": "Join a Challenge",
 	"joinChallengeConfirmTitle": "Join Challenge?",
@@ -39,6 +40,7 @@
 	"submit": "Submit",
 	"challengeFriends": "Challenge Friends",
 	"viewLeaderboard": "View Leaderboard",
+	"refresh": "Refresh",
 	"close": "Close",
 	"cancel": "Cancel",
 	"create": "Create",

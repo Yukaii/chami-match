@@ -52,7 +52,7 @@ const closePopup = () => {
   <Modal :is-open="true" @close="closePopup">
     <template #header>
       <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">
-        {{ challenge?.challengeName || $t('challengeMode') }} {/* Use challengeName from response */}
+        {{ challenge?.challengeName || $t('challengeMode') }} <!-- Use challengeName from response -->
       </h3>
     </template>
 
@@ -65,7 +65,7 @@ const closePopup = () => {
     </div>
 
     <div v-else-if="challenge" class="mt-2">
-      <div v-if="challenge.expiresAt" class="mb-4"> {/* Conditionally show expiration */}
+      <div v-if="challenge.expiresAt" class="mb-4"> <!-- Conditionally show expiration -->
         <p class="text-sm text-gray-500 dark:text-gray-400">
           {{ $t('challenge.expiresAt') }}: {{ formatDate(challenge.expiresAt) }}
         </p>
@@ -73,7 +73,7 @@ const closePopup = () => {
 
       <!-- Leaderboard -->
       <div class="space-y-2">
-        {/* Iterate over challenge.leaderboard instead of challenge.participants */}
+        <!-- Iterate over challenge.leaderboard instead of challenge.participants -->
         <div v-for="(entry, index) in challenge.leaderboard" 
              :key="entry.participantId"
              :class="{
@@ -84,13 +84,13 @@ const closePopup = () => {
         >
           <div class="flex items-center gap-2">
             <span class="font-bold">{{ index + 1 }}.</span>
-            <span>{{ entry.displayName }}</span> {/* Use entry.displayName */}
+            <span>{{ entry.displayName }}</span> <!-- Use entry.displayName -->
             <span v-if="entry.participantId === store.currentParticipantId" 
                   class="text-xs text-purple-600 dark:text-purple-400">
-              ({{ $t('you') || 'You' }}) {/* Add fallback for 'you' */}
+              ({{ $t('you') || 'You' }}) <!-- Add fallback for 'you' -->
             </span>
           </div>
-          <div class="font-bold">{{ entry.score }}</div> {/* Use entry.score */}
+          <div class="font-bold">{{ entry.score }}</div> <!-- Use entry.score -->
         </div>
       </div>
 

@@ -10,11 +10,13 @@
 		"copyLink": "複製連結",
 		"copied": "已複製！",
 		"done": "完成",
-		"setupInfo": "以目前的遊戲設定建立挑戰"
+		"setupInfo": "以目前的遊戲設定建立挑戰",
+		"expiresAt": "有效期限"
 	},
 	"challengeMode": "挑戰模式",
 	"challengeFriends": "挑戰好友",
 	"viewLeaderboard": "排行榜",
+	"refresh": "重新整理",
 	"loading": "建立中...",
 	"create": "建立",
 	"joinChallenge": "加入挑戰",
