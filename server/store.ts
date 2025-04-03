@@ -48,6 +48,28 @@ export const store = {
 		console.log("In-memory store reset.");
 	},
 
-	// TODO: Add methods for adding participants, attempts, etc.
-	// TODO: Add cleanup logic for expired challenges
+	// Function to remove expired challenges
+	cleanupExpiredChallenges: (): void => {
+		const now = Date.now();
+		let cleanedCount = 0;
+		for (const [id, challenge] of challenges.entries()) {
+			if (challenge.expiresAt && now > challenge.expiresAt) {
+				// Remove from access code index first
+				accessCodeIndex.delete(challenge.accessCode);
+				// Remove from challenges map
+				challenges.delete(id);
+				cleanedCount++;
+				console.log(
+					`Cleaned up expired challenge: ${id} (Access Code: ${challenge.accessCode})`,
+				);
+			}
+		}
+		if (cleanedCount > 0) {
+			console.log(
+				`Expired challenge cleanup complete. Removed ${cleanedCount} challenges.`,
+			);
+		} else {
+			console.log("No expired challenges found during cleanup.");
+		}
+	},
 };

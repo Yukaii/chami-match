@@ -395,3 +395,15 @@ export default {
 	port: 8787, // Specify the port
 	fetch: app.fetch,
 };
+
+// --- Periodic Cleanup ---
+const CLEANUP_INTERVAL_MS = 60 * 60 * 1000; // 1 hour
+
+setInterval(() => {
+	console.log("Running periodic cleanup of expired challenges...");
+	store.cleanupExpiredChallenges();
+}, CLEANUP_INTERVAL_MS);
+
+console.log(
+	`Scheduled expired challenge cleanup every ${CLEANUP_INTERVAL_MS / 1000 / 60} minutes.`,
+);
