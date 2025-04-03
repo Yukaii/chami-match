@@ -158,7 +158,6 @@ onMounted(() => {
          {{ $t('serverUnavailableShort') || 'Challenge server unavailable' }}
        </div>
 
-
       <!-- Settings and About buttons -->
       <div class="mt-4 flex flex-col gap-2">
         <BaseButton
