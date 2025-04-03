@@ -83,11 +83,11 @@ const accessCode = ref("");
 // --- Logic moved from WelcomeScreen ---
 
 const handleJoinChallenge = async () => {
+	apiError.value = null; // Clear previous errors
 	if (!accessCode.value || accessCode.value.length !== 6) {
-		alert(
+		apiError.value =
 			$t("error.invalidAccessCode") ||
-				"Please enter a valid 6-character access code.",
-		);
+			"Please enter a valid 6-character access code.";
 		return;
 	}
 
@@ -112,10 +112,9 @@ const handleJoinChallenge = async () => {
 			console.error(
 				"Could not find own participant record after joining challenge.",
 			);
-			alert(
+			apiError.value =
 				$t("error.joinVerificationFailed") ||
-					"Error: Could not verify participation after joining.",
-			);
+				"Error: Could not verify participation after joining.";
 			return;
 		}
 
@@ -151,10 +150,12 @@ const handleJoinChallenge = async () => {
 		onClose();
 		router.push(gameModeRoute);
 	} catch (err) {
-		console.error("Failed to join challenge:", apiError.value);
-		alert(
-			`${$t("error.joinFailed") || "Error joining challenge"}: ${apiError.value}`,
-		);
+		// apiError should be set by the composable, but log the error just in case
+		console.error("Failed to join challenge:", err, apiError.value);
+		// Ensure apiError has a fallback message if the composable didn't set one
+		if (!apiError.value) {
+			apiError.value = $t("error.joinFailed") || "Error joining challenge";
+		}
 	}
 };
 
@@ -175,10 +176,9 @@ const rejoinChallenge = async (challengeId) => {
 				"Could not find own participant record in challenge:",
 				challengeId,
 			);
-			alert(
+			apiError.value =
 				$t("error.rejoinParticipantNotFound") ||
-					"Error: You don't seem to be a participant in this challenge anymore.",
-			);
+				"Error: You don't seem to be a participant in this challenge anymore.";
 			store.joinedChallenges = store.joinedChallenges.filter(
 				(c) => c.id !== challengeId,
 			);
@@ -208,10 +208,12 @@ const rejoinChallenge = async (challengeId) => {
 		onClose();
 		router.push(gameModeRoute);
 	} catch (err) {
-		console.error("Failed to rejoin challenge:", apiError.value);
-		alert(
-			`${$t("error.rejoinFailed") || "Error rejoining challenge"}: ${apiError.value || err.message}`,
-		);
+		// apiError should be set by the composable, but log the error just in case
+		console.error("Failed to rejoin challenge:", err, apiError.value);
+		// Ensure apiError has a fallback message if the composable didn't set one
+		if (!apiError.value) {
+			apiError.value = $t("error.rejoinFailed") || "Error rejoining challenge";
+		}
 	}
 };
 

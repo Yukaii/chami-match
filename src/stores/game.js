@@ -621,6 +621,49 @@ export const useGameStore = defineStore("game", {
 			}
 		},
 
+		// Action to update participant details on the server (e.g., displayName)
+		async updateChallengeParticipantDetails() {
+			if (!this.currentChallengeId || !this.currentParticipantId) {
+				console.log(
+					"Not currently in a challenge, skipping participant update.",
+				);
+				return;
+			}
+
+			// Find the access code for the current challenge
+			const currentChallengeInfo = this.joinedChallenges.find(
+				(c) => c.id === this.currentChallengeId,
+			);
+
+			if (!currentChallengeInfo?.accessCode) {
+				console.error(
+					"Could not find access code for the current challenge. Cannot update participant details.",
+				);
+				return;
+			}
+
+			const { joinChallenge } = useChallengeApi(); // Get API function
+
+			try {
+				console.log(
+					`Attempting to update participant details for challenge ${this.currentChallengeId} with new name: ${this.preferences.displayName}`,
+				);
+				// Call joinChallenge again - the server will handle updating the name
+				await joinChallenge({
+					accessCode: currentChallengeInfo.accessCode,
+					displayName: this.preferences.displayName,
+					deviceId: this.deviceId,
+					// userId might be needed if your backend uses it for matching
+				});
+				console.log("Participant details update request sent successfully.");
+				// Optionally trigger a leaderboard refresh if the popup is open
+				// if (this.leaderboardPopupOpen) { ... }
+			} catch (error) {
+				console.error("Failed to update participant details on server:", error);
+				// Handle error appropriately, maybe notify the user
+			}
+		},
+
 		// Initialize the store
 		async initStore() {
 			await this.checkServerAvailability();
@@ -650,6 +693,20 @@ export const useGameStore = defineStore("game", {
 							? 2
 							: this.preferences.maxLife || 5;
 				},
+			);
+
+			// Watch for display name changes to update server
+			watch(
+				() => this.preferences.displayName,
+				(newName, oldName) => {
+					if (newName !== oldName && this.currentChallengeId) {
+						console.log(
+							`Display name changed from "${oldName}" to "${newName}", updating server...`,
+						);
+						this.updateChallengeParticipantDetails();
+					}
+				},
+				{ immediate: false }, // Don't run immediately on store init
 			);
 		},
 	},

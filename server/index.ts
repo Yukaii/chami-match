@@ -188,9 +188,32 @@ app.post(
 		} else {
 			// Optional: Update display name if participant rejoins with a different name?
 			// For now, we just recognize them.
+			// Update display name if participant rejoins with a different name
+			if (participant.displayName !== payload.displayName) {
+				console.log(
+					`Updating displayName for participant ${participant.id} from "${participant.displayName}" to "${payload.displayName}"`,
+				);
+				participant.displayName = payload.displayName;
+				// No need to call store.updateChallenge here yet, it happens below if needed
+			}
 			console.log(
 				`Participant ${participant.id} (${payload.deviceId}) rejoined challenge ${challenge.id}`,
 			);
+		}
+
+		// Save changes if a new participant was added OR an existing one was updated
+		if (
+			!challenge.participants.find((p) => p.id === participant.id) ||
+			participant.displayName === payload.displayName
+		) {
+			try {
+				store.updateChallenge(challenge); // Save the updated challenge
+			} catch (error) {
+				console.error("Error updating challenge store:", error);
+				throw new HTTPException(500, {
+					message: "Internal Server Error: Failed to save participant update",
+				});
+			}
 		}
 
 		// Return the full challenge details needed by the client
