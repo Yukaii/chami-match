@@ -18,13 +18,16 @@ import { calculateExpiresAt, generateAccessCode } from "./utils";
 const app = new Hono();
 
 // Enable CORS for all routes
+const CORS_ORIGIN = process.env.CORS_ORIGIN || "*";
+console.log(`CORS Origin: ${CORS_ORIGIN}`);
+
 app.use(
   "*",
   cors({
-    origin: "*", // Allow requests from any origin since server URL is configurable
+    origin: CORS_ORIGIN,
     allowMethods: ["GET", "POST", "OPTIONS"],
-    allowHeaders: ["Content-Type"], // Allow necessary headers
-    exposeHeaders: ["Content-Length", "Content-Type"], // Expose necessary headers
+    allowHeaders: ["Content-Type"],
+    exposeHeaders: ["Content-Length", "Content-Type"],
   }),
 );
 
@@ -422,9 +425,12 @@ app.get("/api/challenges/:id", (c) => {
 // Export the app instance for testing
 export const appInstance = app;
 
+const PORT = process.env.PORT ? Number.parseInt(process.env.PORT, 10) : 8787;
+
+// Export for both development and production
 export default {
-  port: 8787, // Specify the port
-  fetch: app.fetch,
+  port: PORT,
+  fetch: app.fetch.bind(app),
 };
 
 // --- Periodic Cleanup ---
