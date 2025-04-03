@@ -368,24 +368,25 @@ const rejoinChallenge = async (challengeId) => {
   } catch (err) {
     // Log the raw error first
     // Log the raw error first
-    console.error("Failed to rejoin challenge:", err);
+    console.error("Failed to rejoin challenge:", err); // Keep logging raw error
 
-    // Check the caught error's message directly for 'Not Found' (case-insensitive) using optional chaining
+    // Check specifically for 404 status or 'not found' message
     const isNotFoundError =
-      err?.message &&
-      typeof err.message === "string" &&
-      err.message.toLowerCase().includes("not found");
+      err?.response?.status === 404 ||
+      (err?.message &&
+        typeof err.message === "string" &&
+        err.message.toLowerCase().includes("not found"));
 
     if (isNotFoundError) {
-      // Set the user-facing error message
-      apiError.value =
-        $t("error.rejoinParticipantNotFound") ||
-        "Error: You don't seem to be a participant in this challenge anymore.";
-      // Set the ID of the challenge needing removal confirmation
+      // Clear the general API error message
+      apiError.value = null;
+      // Set the ID to trigger the confirmation dialog
       challengeToRemoveId.value = challengeId;
     } else {
-      // Handle other potential errors from the API call
-      // Use the error message from the caught error (with optional chaining), or a generic fallback
+      // Handle other potential errors
+      // Ensure confirmation state is reset
+      challengeToRemoveId.value = null;
+      // Set the general API error message
       apiError.value =
         err?.message || $t("error.rejoinFailed") || "Error rejoining challenge";
       console.error("Rejoin API Error (Other):", apiError.value);
