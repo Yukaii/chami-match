@@ -2,8 +2,8 @@
 import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { Carousel, Navigation, Pagination, Slide } from "vue3-carousel";
-import { useGameStore } from "../stores/game";
 import { useChallengeApi } from "../composables/useChallengeApi"; // Import challenge API
+import { useGameStore } from "../stores/game";
 import BaseButton from "./base/BaseButton.vue";
 import "vue3-carousel/dist/carousel.css";
 

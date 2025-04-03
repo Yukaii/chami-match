@@ -1,19 +1,19 @@
-import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
+import { Hono } from "hono";
+import { cors } from "hono/cors"; // Import cors
+import { HTTPException } from "hono/http-exception";
+import { v4 as uuidv4 } from "uuid"; // Import uuid
+import { store } from "./store";
 import {
 	type Attempt, // Import Attempt type
 	type Challenge,
-	type Participant,
 	CreateChallengePayloadSchema,
 	JoinChallengePayloadSchema,
-	SubmitAttemptPayloadSchema,
 	type LeaderboardEntry, // Import LeaderboardEntry type
+	type Participant,
+	SubmitAttemptPayloadSchema,
 } from "./types";
-import { store } from "./store";
-import { generateAccessCode, calculateExpiresAt } from "./utils";
-import { HTTPException } from "hono/http-exception";
-import { v4 as uuidv4 } from "uuid"; // Import uuid
-import { cors } from "hono/cors"; // Import cors
+import { calculateExpiresAt, generateAccessCode } from "./utils";
 
 const app = new Hono();
 

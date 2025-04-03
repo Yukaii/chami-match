@@ -1,7 +1,7 @@
 <script setup>
 import { computed, onMounted, ref, watch } from "vue";
-import { useGameStore } from "../stores/game";
 import { useChallengeApi } from "../composables/useChallengeApi"; // Import the composable
+import { useGameStore } from "../stores/game";
 import GameNavBar from "./GameNavBar.vue";
 import BaseButton from "./base/BaseButton.vue";
 import BaseSlider from "./base/BaseSlider.vue";

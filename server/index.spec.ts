@@ -1,16 +1,16 @@
-import { describe, it, expect, beforeEach, afterEach } from "bun:test";
+import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { v4 as uuidv4 } from "uuid"; // Import uuid for generating test IDs
 import { appInstance as app } from "./index"; // Import named export for testing
 import { store } from "./store";
 import type {
+	Attempt,
 	Challenge,
 	CreateChallengePayload,
 	JoinChallengePayload,
-	SubmitAttemptPayload, // Add SubmitAttemptPayload
-	Attempt,
-	Participant,
 	LeaderboardEntry, // Add LeaderboardEntry
 	LeaderboardResponse, // Add LeaderboardResponse
+	Participant,
+	SubmitAttemptPayload, // Add SubmitAttemptPayload
 } from "./types";
 
 // Define expected response types for clarity in tests

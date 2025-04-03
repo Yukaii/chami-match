@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
-import { useGameStore } from "../stores/game";
 import { useChallengeApi } from "../composables/useChallengeApi";
+import { useGameStore } from "../stores/game";
 import Modal from "./Modal.vue";
 import BaseButton from "./base/BaseButton.vue";
 

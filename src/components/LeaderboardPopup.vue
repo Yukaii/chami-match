@@ -1,7 +1,7 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
-import { useGameStore } from "../stores/game";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useChallengeApi } from "../composables/useChallengeApi";
+import { useGameStore } from "../stores/game";
 import Modal from "./Modal.vue";
 import BaseButton from "./base/BaseButton.vue";
 

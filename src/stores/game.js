@@ -1,8 +1,8 @@
 import { useStorage } from "@vueuse/core";
 import { nanoid } from "nanoid";
 import { defineStore } from "pinia";
-import { computed, watch } from "vue";
 import { v4 as uuidv4 } from "uuid"; // Import uuid
+import { computed, watch } from "vue";
 import { useChallengeApi } from "../composables/useChallengeApi"; // Import challenge API
 import { celebrateFirstTry } from "../utils/confetti";
 import { createGameMode } from "./modes";

@@ -2,12 +2,12 @@
 import { onMounted } from "vue";
 import { useI18n } from "vue-i18n";
 import AboutPopup from "./components/AboutPopup.vue";
+import CreateChallengePopup from "./components/CreateChallengePopup.vue";
 import ErrorBoundary from "./components/ErrorBoundary.vue";
+import LeaderboardPopup from "./components/LeaderboardPopup.vue"; // Import Leaderboard Popup
 import RecordPopup from "./components/RecordPopup.vue";
 import ResetPopup from "./components/ResetPopup.vue";
 import SettingsPopup from "./components/SettingsPopup.vue";
-import CreateChallengePopup from "./components/CreateChallengePopup.vue";
-import LeaderboardPopup from "./components/LeaderboardPopup.vue"; // Import Leaderboard Popup
 import { useGameStore } from "./stores/game"; // Import store
 
 const { t, locale } = useI18n();
