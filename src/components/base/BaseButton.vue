@@ -25,7 +25,7 @@ const props = defineProps({
 	size: {
 		type: String,
 		default: "md",
-		validator: (value) => ["sm", "md", "lg"].includes(value),
+		validator: (value) => ["xs", "sm", "md", "lg"].includes(value),
 	},
 	type: {
 		type: String,
@@ -69,6 +69,7 @@ const variantClasses = computed(() => ({
 }));
 
 const sizeClasses = computed(() => ({
+	xs: "px-1.5 py-0.5 text-xs",
 	sm: "px-2 py-1 text-sm",
 	md: "px-4 py-2",
 	lg: "px-6 py-3 text-lg",
@@ -82,7 +83,9 @@ const buttonClasses = computed(() => {
 		"hover:-translate-y-1 hover:scale-[1.02] focus:-translate-y-1 focus:scale-[1.02] active:translate-y-1",
 		sizeClasses.value[props.size],
 		props.fullWidth ? "w-full" : "",
-		props.is3d ? "3d-button" : "",
+		props.is3d
+			? "shadow-[0_6px_0_rgba(0,0,0,0.2),0_8px_10px_rgba(0,0,0,0.15)] [transform-style:preserve-3d] transition-all duration-150 ease-in hover:shadow-[0_4px_0_rgba(0,0,0,0.2),0_5px_8px_rgba(0,0,0,0.15)] active:shadow-[0_2px_0_rgba(0,0,0,0.2),0_3px_5px_rgba(0,0,0,0.15)] active:border-b-2 dark:shadow-[0_6px_0_rgba(0,0,0,0.15),0_8px_10px_rgba(0,0,0,0.1)]"
+			: "",
 		props.disabled ? "cursor-not-allowed opacity-50" : "",
 	];
 
@@ -99,28 +102,8 @@ defineEmits(["click"]);
 </script>
 
 <style scoped>
-.3d-button {
-  box-shadow: 0px 6px 0px rgba(0, 0, 0, 0.2), 0px 8px 10px rgba(0, 0, 0, 0.15);
-  transform-style: preserve-3d;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, border-width 0.15s ease;
-}
-
-.3d-button:hover {
-  box-shadow: 0px 4px 0px rgba(0, 0, 0, 0.2), 0px 5px 8px rgba(0, 0, 0, 0.15);
-}
-
-.3d-button:active {
-  box-shadow: 0px 2px 0px rgba(0, 0, 0, 0.2), 0px 3px 5px rgba(0, 0, 0, 0.15);
-  border-bottom-width: 2px;
-}
-
 /* Improve the focus ring visibility for both light and dark modes */
 button:focus {
   @apply outline-none ring-2 ring-offset-2;
-}
-
-/* Light mode adjustments */
-.light button.3d-button {
-  box-shadow: 0px 6px 0px rgba(0, 0, 0, 0.15), 0px 8px 10px rgba(0, 0, 0, 0.1);
 }
 </style>

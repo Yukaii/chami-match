@@ -17,7 +17,7 @@
             @keyup.enter="handleJoinChallenge"
           />
           <BaseButton
-            variant="success"
+            variant="primary"
             is3d
             :disabled="isApiLoading || accessCode.length !== 6"
             @click="handleJoinChallenge"
