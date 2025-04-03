@@ -7,6 +7,7 @@
 		"expiresIn": "有効期限",
 		"shareCode": "アクセスコードを友達とシェアしよう：",
 		"copyCode": "コードをコピー",
+		"copyLink": "リンクをコピー",
 		"copied": "コピーしました！",
 		"done": "完了",
 		"setupInfo": "現在の設定でチャレンジを作成します。"
@@ -17,6 +18,9 @@
 	"loading": "作成中...",
 	"create": "作成",
 	"joinChallenge": "チャレンジに参加",
+	"joinChallengeConfirmTitle": "チャレンジに参加しますか？",
+	"joinChallengeConfirmMessage": "コード {code} のチャレンジに参加しますか？",
+	"confirmJoin": "確認して参加",
 	"accessCode": "アクセスコード",
 	"join": "参加",
 	"joinedChallengesTitle": "参加したチャレンジ",

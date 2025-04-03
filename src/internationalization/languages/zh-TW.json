@@ -7,6 +7,7 @@
 		"expiresIn": "有效期限",
 		"shareCode": "分享邀請碼給你的朋友：",
 		"copyCode": "複製邀請碼",
+		"copyLink": "複製連結",
 		"copied": "已複製！",
 		"done": "完成",
 		"setupInfo": "以目前的遊戲設定建立挑戰"
@@ -17,6 +18,9 @@
 	"loading": "建立中...",
 	"create": "建立",
 	"joinChallenge": "加入挑戰",
+	"joinChallengeConfirmTitle": "要加入挑戰嗎？",
+	"joinChallengeConfirmMessage": "您想加入邀請碼為 {code} 的挑戰嗎？",
+	"confirmJoin": "確認並加入",
 	"accessCode": "邀請碼",
 	"join": "加入",
 	"joinedChallengesTitle": "已加入的挑戰",

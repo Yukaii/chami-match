@@ -1,6 +1,6 @@
 <script setup>
-import { ref, computed } from "vue";
 import { PhCheck } from "@phosphor-icons/vue";
+import { computed, ref } from "vue";
 import { useChallengeApi } from "../composables/useChallengeApi";
 import { useGameStore } from "../stores/game";
 import Modal from "./Modal.vue";
@@ -67,9 +67,11 @@ const submitCreateChallenge = async () => {
 };
 
 // Function to copy text to clipboard
-const copyToClipboard = async (text) => {
+const copyToClipboard = async () => {
+	const url = getChallengeUrl();
+	if (!url) return;
 	try {
-		await navigator.clipboard.writeText(text);
+		await navigator.clipboard.writeText(url);
 		showCopiedMessage.value = true;
 		setTimeout(() => {
 			showCopiedMessage.value = false;
@@ -81,8 +83,12 @@ const copyToClipboard = async (text) => {
 };
 
 const getChallengeUrl = () => {
-	if (!createdChallengeInfo.value) return "";
-	return `Access Code: ${createdChallengeInfo.value.accessCode}`;
+	if (!createdChallengeInfo.value?.accessCode) return "";
+	// Construct the URL with the current origin and root path, adding the challenge code as a query parameter
+	const baseUrl = `${window.location.origin}/`; // Use root path with template literal
+	const url = new URL(baseUrl);
+	url.searchParams.set("challengeCode", createdChallengeInfo.value.accessCode);
+	return url.toString();
 };
 </script>
 
@@ -145,8 +151,8 @@ const getChallengeUrl = () => {
             Expires: {{ new Date(createdChallengeInfo.expiresAt).toLocaleString() }}
          </p>
          <div class="flex justify-center space-x-2">
-             <BaseButton variant="secondary" @click="copyToClipboard(createdChallengeInfo.accessCode)" class="relative">
-                {{ $t('challenge.copyCode') }}
+             <BaseButton variant="secondary" @click="copyToClipboard()" class="relative">
+                {{ $t('challenge.copyLink') }} <!-- Changed text to Copy Link -->
                 <span v-if="showCopiedMessage" class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-2 py-1 rounded text-sm flex items-center gap-1">
                   <PhCheck class="h-4 w-4" weight="bold" />
                   {{ $t('challenge.copied') }}

@@ -1,14 +1,16 @@
 <script setup>
 import { computed, onMounted, ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router"; // Import useRoute
 import { Carousel, Navigation, Pagination, Slide } from "vue3-carousel";
 import { useChallengeApi } from "../composables/useChallengeApi"; // Import challenge API
 import { useGameStore } from "../stores/game";
+import Modal from "./Modal.vue"; // Import Modal
 import BaseButton from "./base/BaseButton.vue";
 import "vue3-carousel/dist/carousel.css";
 
 const store = useGameStore();
 const router = useRouter();
+const route = useRoute(); // Use route
 const {
 	joinChallenge,
 	// joinChallenge, // Removed duplicate
@@ -74,6 +76,8 @@ const gameModes = [
 // Current slide index
 const currentSlide = ref(0);
 const accessCode = ref(""); // For join challenge input
+const showJoinConfirmPopup = ref(false); // State for confirmation popup
+const challengeCodeFromUrl = ref(null); // State for code from URL
 
 // Get the current game mode based on slide index
 const currentGameMode = computed(() => {
@@ -183,6 +187,16 @@ const handleJoinChallenge = async () => {
 	}
 };
 
+// Function called when confirming join from URL popup
+const confirmAndJoinChallenge = async () => {
+	if (challengeCodeFromUrl.value) {
+		accessCode.value = challengeCodeFromUrl.value; // Set the input field value
+		showJoinConfirmPopup.value = false; // Close the popup
+		await handleJoinChallenge(); // Call the existing join logic
+		challengeCodeFromUrl.value = null; // Clear the code after attempting join
+	}
+};
+
 // Function to rejoin/view a previously joined challenge
 const rejoinChallenge = async (challengeId) => {
 	apiError.value = null; // Clear previous errors
@@ -251,6 +265,19 @@ onMounted(() => {
 		if (lastIndex !== -1) {
 			currentSlide.value = lastIndex;
 		}
+	}
+
+	// Check for challenge code in URL query params
+	const codeFromQuery = route.query.challengeCode;
+	if (
+		codeFromQuery &&
+		typeof codeFromQuery === "string" &&
+		codeFromQuery.length === 6
+	) {
+		challengeCodeFromUrl.value = codeFromQuery.toUpperCase();
+		showJoinConfirmPopup.value = true;
+		// Clear the query param from URL without reloading page (optional, for cleaner URL)
+		// router.replace({ query: { ...route.query, challengeCode: undefined } });
 	}
 });
 </script>
@@ -374,6 +401,29 @@ onMounted(() => {
       </template>
 
     </div>
+
+    <!-- Join Challenge Confirmation Popup -->
+    <Modal :is-open="showJoinConfirmPopup" @close="showJoinConfirmPopup = false">
+        <template #header>
+            <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white">
+                {{ $t('joinChallengeConfirmTitle') || 'Join Challenge?' }}
+            </h3>
+        </template>
+        <div class="mt-2">
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-4">
+                {{ $t('joinChallengeConfirmMessage', { code: challengeCodeFromUrl }) || `Do you want to join the challenge with code ${challengeCodeFromUrl}?` }}
+            </p>
+            <div class="mt-4 flex justify-end space-x-2">
+                <BaseButton variant="secondary" @click="showJoinConfirmPopup = false">
+                    {{ $t('cancel') }}
+                </BaseButton>
+                <BaseButton variant="primary" @click="confirmAndJoinChallenge" :disabled="isApiLoading">
+                    {{ isApiLoading ? $t('loading') : $t('confirmJoin') || 'Confirm & Join' }}
+                </BaseButton>
+            </div>
+        </div>
+    </Modal>
+
   </div>
 </template>
 
