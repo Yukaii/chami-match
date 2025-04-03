@@ -308,6 +308,8 @@ function setTheme(theme) {
 
 const onClose = () => {
   // Save display name when closing, regardless of mode
+  // Save server URL and display name when closing, regardless of mode
+  store.updateChallengeServerUrl(settings.serverUrl); // Save server URL
   store.updateDisplayName(settings.displayName);
   store.toggleSettingsPopup();
 };
@@ -325,6 +327,7 @@ watch(
       settings.enableConfetti = store.preferences.enableConfetti ?? true;
       settings.recallTimeout = store.recallTimeout;
       settings.displayName = store.preferences.displayName || "Player"; // Sync display name
+      settings.serverUrl = store.challengeServerUrl; // Sync server URL
     }
   },
 );
