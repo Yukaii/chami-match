@@ -61,8 +61,24 @@ const submitCreateChallenge = async () => {
 		// Also store the challenge context in Pinia for the creator
 		store.currentChallengeId = result.id;
 		store.currentParticipantId = result.participantId; // Get participant ID from response
+
+		// Add the newly created challenge to the joined challenges list
+		if (!store.joinedChallenges.some((c) => c.id === result.id)) {
+			store.joinedChallenges.push({
+				id: result.id,
+				name: result.name,
+				accessCode: result.accessCode,
+				expiresAt: result.expiresAt, // Store the expiration time
+				gameMode: store.gameType, // Use the game type selected for creation
+			});
+		}
 	} catch (err) {
-		console.error("Failed to create challenge:", error.value);
+		// error should be set by the composable, but log just in case
+		console.error("Failed to create challenge:", err, error.value);
+		// Ensure error has a fallback if not set by composable
+		if (!error.value) {
+			error.value = $t("error.createFailed") || "Error creating challenge";
+		}
 	}
 };
 
