@@ -278,10 +278,10 @@
 import { computed, onMounted, ref, watch } from "vue";
 import { useGameStore } from "../stores/game";
 import {
-	hsvToOklab,
-	hsvToRgb,
-	oklabToHsv,
-	rgbToHsv,
+  hsvToOklab,
+  hsvToRgb,
+  oklabToHsv,
+  rgbToHsv,
 } from "../utils/colorSpaceUtils";
 import Modal from "./Modal.vue";
 
@@ -294,351 +294,351 @@ const rawRecords = ref([]);
 
 // Function to extract records from the Pinia store
 function extractRecords() {
-	try {
-		// Get records directly from the store's getter
-		rawRecords.value = store.lastTriesOfEachRound || [];
-		console.log("Extracted records:", rawRecords.value);
-		recordsLoaded.value = true;
-		return rawRecords.value;
-	} catch (error) {
-		console.error("Error extracting records:", error);
-		rawRecords.value = [];
-		return [];
-	}
+  try {
+    // Get records directly from the store's getter
+    rawRecords.value = store.lastTriesOfEachRound || [];
+    console.log("Extracted records:", rawRecords.value);
+    recordsLoaded.value = true;
+    return rawRecords.value;
+  } catch (error) {
+    console.error("Error extracting records:", error);
+    rawRecords.value = [];
+    return [];
+  }
 }
 
 // Helper function to check if we have any records
 const hasRecords = computed(() => {
-	const records = rawRecords.value;
-	const result = Array.isArray(records) && records.length > 0;
-	console.log(
-		"RecordPopup - hasRecords:",
-		result,
-		"Count:",
-		records?.length || 0,
-	);
-	return result;
+  const records = rawRecords.value;
+  const result = Array.isArray(records) && records.length > 0;
+  console.log(
+    "RecordPopup - hasRecords:",
+    result,
+    "Count:",
+    records?.length || 0,
+  );
+  return result;
 });
 
 // Get total record count
 const recordCount = computed(() => {
-	const count = rawRecords.value?.length || 0;
-	console.log("RecordPopup - recordCount:", count);
-	return count;
+  const count = rawRecords.value?.length || 0;
+  console.log("RecordPopup - recordCount:", count);
+  return count;
 });
 
 // Session filtering
 const sessionFilter = ref("all"); // 'all' or specific sessionId
 const availableSessions = computed(() => {
-	if (!Array.isArray(rawRecords.value) || rawRecords.value.length === 0)
-		return [];
+  if (!Array.isArray(rawRecords.value) || rawRecords.value.length === 0)
+    return [];
 
-	// Extract unique sessions from records
-	const sessions = {};
-	rawRecords.value.forEach((record) => {
-		if (record.session && record.sessionId) {
-			sessions[record.sessionId] = record.session;
-		}
-	});
+  // Extract unique sessions from records
+  const sessions = {};
+  rawRecords.value.forEach((record) => {
+    if (record.session && record.sessionId) {
+      sessions[record.sessionId] = record.session;
+    }
+  });
 
-	return Object.entries(sessions).map(([id, session]) => ({
-		id,
-		name: formatSessionDate(session.startedAt),
-		isCurrent: id === store.currentSession?.id,
-	}));
+  return Object.entries(sessions).map(([id, session]) => ({
+    id,
+    name: formatSessionDate(session.startedAt),
+    isCurrent: id === store.currentSession?.id,
+  }));
 });
 
 // Format session date for display
 function formatSessionDate(timestamp) {
-	try {
-		if (!timestamp) return "Unknown";
-		const date = new Date(timestamp * 1000);
-		return date.toLocaleString();
-	} catch (e) {
-		return "Invalid Date";
-	}
+  try {
+    if (!timestamp) return "Unknown";
+    const date = new Date(timestamp * 1000);
+    return date.toLocaleString();
+  } catch (e) {
+    return "Invalid Date";
+  }
 }
 
 // Filter records by session and game type
 const filteredRecords = computed(() => {
-	console.log("RecordPopup - Computing filteredRecords");
+  console.log("RecordPopup - Computing filteredRecords");
 
-	if (!hasRecords.value) {
-		console.log("RecordPopup - No records to filter");
-		return [];
-	}
+  if (!hasRecords.value) {
+    console.log("RecordPopup - No records to filter");
+    return [];
+  }
 
-	const records = rawRecords.value;
-	console.log("RecordPopup - Raw records for filtering:", records);
+  const records = rawRecords.value;
+  console.log("RecordPopup - Raw records for filtering:", records);
 
-	// Apply session filter first
-	let filtered = records;
-	if (sessionFilter.value !== "all") {
-		filtered = filtered.filter(
-			(record) => record.sessionId === sessionFilter.value,
-		);
-	}
+  // Apply session filter first
+  let filtered = records;
+  if (sessionFilter.value !== "all") {
+    filtered = filtered.filter(
+      (record) => record.sessionId === sessionFilter.value,
+    );
+  }
 
-	// Then apply game type filter
-	if (filterType.value !== "all") {
-		filtered = filtered.filter((record) => {
-			// Handle both old and new format records
-			const recordType = record?.gameType || "standard";
-			return recordType === filterType.value;
-		});
-	}
+  // Then apply game type filter
+  if (filterType.value !== "all") {
+    filtered = filtered.filter((record) => {
+      // Handle both old and new format records
+      const recordType = record?.gameType || "standard";
+      return recordType === filterType.value;
+    });
+  }
 
-	const paged = filtered.slice(0, recordsPerPage * currentPage.value);
-	console.log("RecordPopup - Filtered records count:", paged.length);
-	return paged;
+  const paged = filtered.slice(0, recordsPerPage * currentPage.value);
+  console.log("RecordPopup - Filtered records count:", paged.length);
+  return paged;
 });
 
 // Watch for popup opening and refresh data
 watch(
-	() => store.recordPopupOpen,
-	(isOpen) => {
-		if (isOpen) {
-			console.log("RecordPopup opened - forcing record refresh");
-			// Force records to refresh when popup opens
-			setTimeout(() => {
-				extractRecords();
-			}, 100); // Small delay to ensure store is updated
+  () => store.recordPopupOpen,
+  (isOpen) => {
+    if (isOpen) {
+      console.log("RecordPopup opened - forcing record refresh");
+      // Force records to refresh when popup opens
+      setTimeout(() => {
+        extractRecords();
+      }, 100); // Small delay to ensure store is updated
 
-			// Reset filter values when opening the popup to maintain consistent state
-			sessionFilter.value = "all";
-			filterType.value = "all";
-		}
-	},
+      // Reset filter values when opening the popup to maintain consistent state
+      sessionFilter.value = "all";
+      filterType.value = "all";
+    }
+  },
 );
 
 // Debug function to manually reload data
 function forceRefreshData() {
-	console.log("Manual refresh triggered");
-	store.refreshGameRecords(); // Use the store's refresh method
-	extractRecords();
+  console.log("Manual refresh triggered");
+  store.refreshGameRecords(); // Use the store's refresh method
+  extractRecords();
 }
 
 onMounted(() => {
-	console.log("RecordPopup mounted");
-	extractRecords(); // Try to load records on mount
+  console.log("RecordPopup mounted");
+  extractRecords(); // Try to load records on mount
 });
 
 // Helper functions to check record types safely with support for old record format
 function isColorRecord(record) {
-	if (!record) return false;
+  if (!record) return false;
 
-	// Check if it's explicitly a color record
-	if (record.type === "color") return true;
+  // Check if it's explicitly a color record
+  if (record.type === "color") return true;
 
-	// Check for implicit color record without type field
-	if (!record.type) {
-		// Has both color objects
-		if (record.actualColor && record.guessedColor) return true;
+  // Check for implicit color record without type field
+  if (!record.type) {
+    // Has both color objects
+    if (record.actualColor && record.guessedColor) return true;
 
-		// Check if actualColor has any color space properties
-		if (record.actualColor) {
-			if (record.actualColor.r !== undefined) return true;
-			if (record.actualColor.L !== undefined) return true;
-			if (record.actualColor.h !== undefined) return true;
-		}
-	}
+    // Check if actualColor has any color space properties
+    if (record.actualColor) {
+      if (record.actualColor.r !== undefined) return true;
+      if (record.actualColor.L !== undefined) return true;
+      if (record.actualColor.h !== undefined) return true;
+    }
+  }
 
-	return false;
+  return false;
 }
 
 function isDifferenceRecord(record) {
-	return (
-		record &&
-		(record.type === "difference" ||
-			(record.actualDifference !== undefined &&
-				record.guessedDifference !== undefined))
-	);
+  return (
+    record &&
+    (record.type === "difference" ||
+      (record.actualDifference !== undefined &&
+        record.guessedDifference !== undefined))
+  );
 }
 
 // Format game type for display with fallback
 function formatGameType(type) {
-	if (!type) return "Standard";
-	return type.charAt(0).toUpperCase() + type.slice(1);
+  if (!type) return "Standard";
+  return type.charAt(0).toUpperCase() + type.slice(1);
 }
 
 // Helper function to determine color format
 function getColorFormat(record) {
-	if (!record?.actualColor) return "HSV";
+  if (!record?.actualColor) return "HSV";
 
-	// More precise format detection
-	if (
-		"L" in record.actualColor &&
-		"a" in record.actualColor &&
-		"b" in record.actualColor
-	) {
-		// OKLAB has specific L, a, b properties
-		return "OKLAB";
-	}
+  // More precise format detection
+  if (
+    "L" in record.actualColor &&
+    "a" in record.actualColor &&
+    "b" in record.actualColor
+  ) {
+    // OKLAB has specific L, a, b properties
+    return "OKLAB";
+  }
 
-	if (
-		"r" in record.actualColor &&
-		"g" in record.actualColor &&
-		"b" in record.actualColor
-	) {
-		// RGB has specific r, g, b properties
-		return "RGB";
-	}
+  if (
+    "r" in record.actualColor &&
+    "g" in record.actualColor &&
+    "b" in record.actualColor
+  ) {
+    // RGB has specific r, g, b properties
+    return "RGB";
+  }
 
-	if (
-		"h" in record.actualColor &&
-		"s" in record.actualColor &&
-		"v" in record.actualColor
-	) {
-		// HSV has specific h, s, v properties
-		return "HSV";
-	}
+  if (
+    "h" in record.actualColor &&
+    "s" in record.actualColor &&
+    "v" in record.actualColor
+  ) {
+    // HSV has specific h, s, v properties
+    return "HSV";
+  }
 
-	// If we can't determine format, look for colorSpace property
-	return record.colorSpace?.toUpperCase() || "HSV";
+  // If we can't determine format, look for colorSpace property
+  return record.colorSpace?.toUpperCase() || "HSV";
 }
 
 // Convert any color to HSV for comparison
 function convertToHsv(color) {
-	if (!color) return { h: 0, s: 0, v: 0 };
+  if (!color) return { h: 0, s: 0, v: 0 };
 
-	// Already HSV
-	if ("h" in color && "s" in color && "v" in color) {
-		return { h: color.h || 0, s: color.s || 0, v: color.v || 0 };
-	}
+  // Already HSV
+  if ("h" in color && "s" in color && "v" in color) {
+    return { h: color.h || 0, s: color.s || 0, v: color.v || 0 };
+  }
 
-	// RGB conversion
-	if ("r" in color && "g" in color && "b" in color) {
-		return rgbToHsv(color.r || 0, color.g || 0, color.b || 0);
-	}
+  // RGB conversion
+  if ("r" in color && "g" in color && "b" in color) {
+    return rgbToHsv(color.r || 0, color.g || 0, color.b || 0);
+  }
 
-	// OKLAB conversion
-	if ("L" in color && "a" in color && "b" in color) {
-		return oklabToHsv(color.L || 0, color.a || 0, color.b || 0);
-	}
+  // OKLAB conversion
+  if ("L" in color && "a" in color && "b" in color) {
+    return oklabToHsv(color.L || 0, color.a || 0, color.b || 0);
+  }
 
-	return { h: 0, s: 0, v: 0 }; // Default fallback
+  return { h: 0, s: 0, v: 0 }; // Default fallback
 }
 
 // Get valid color style even if color values are missing
 function getColorStyle(color) {
-	if (!color) return "background-color: gray;";
+  if (!color) return "background-color: gray;";
 
-	// Handle OKLAB color space
-	if ("L" in color && "a" in color && "b" in color) {
-		const L = color.L ?? 0;
-		const a = color.a ?? 0;
-		const b = color.b ?? 0;
+  // Handle OKLAB color space
+  if ("L" in color && "a" in color && "b" in color) {
+    const L = color.L ?? 0;
+    const a = color.a ?? 0;
+    const b = color.b ?? 0;
 
-		// Convert from our sliders' range (-100 to 100) to CSS oklab() range (-0.4 to 0.4)
-		// L is already properly scaled (0-100 to 0-1) by dividing by 100
-		// But a and b need to be scaled from -100/+100 to -0.4/+0.4
-		const cssL = L / 100;
-		const cssA = a / 250; // Scale from -100/+100 to -0.4/+0.4
-		const cssB = b / 250; // Scale from -100/+100 to -0.4/+0.4
+    // Convert from our sliders' range (-100 to 100) to CSS oklab() range (-0.4 to 0.4)
+    // L is already properly scaled (0-100 to 0-1) by dividing by 100
+    // But a and b need to be scaled from -100/+100 to -0.4/+0.4
+    const cssL = L / 100;
+    const cssA = a / 250; // Scale from -100/+100 to -0.4/+0.4
+    const cssB = b / 250; // Scale from -100/+100 to -0.4/+0.4
 
-		return `background-color: oklab(${cssL} ${cssA} ${cssB});`;
-	}
+    return `background-color: oklab(${cssL} ${cssA} ${cssB});`;
+  }
 
-	// Handle RGB color space
-	if ("r" in color && "g" in color && "b" in color) {
-		const r = color.r ?? 0;
-		const g = color.g ?? 0;
-		const b = color.b ?? 0;
-		return `background-color: rgb(${r}, ${g}, ${b});`;
-	}
+  // Handle RGB color space
+  if ("r" in color && "g" in color && "b" in color) {
+    const r = color.r ?? 0;
+    const g = color.g ?? 0;
+    const b = color.b ?? 0;
+    return `background-color: rgb(${r}, ${g}, ${b});`;
+  }
 
-	// Default to HSV color space
-	const h = color.h ?? 0;
-	const s = color.s ?? 0;
-	const v = color.v ?? 0;
-	return `background-color: hsl(${h}, ${s}%, ${v}%);`;
+  // Default to HSV color space
+  const h = color.h ?? 0;
+  const s = color.s ?? 0;
+  const v = color.v ?? 0;
+  return `background-color: hsl(${h}, ${s}%, ${v}%);`;
 }
 
 // Load more records
 function loadMoreRecords() {
-	currentPage.value++;
+  currentPage.value++;
 }
 
 const onClose = () => {
-	store.toggleRecordPopup();
-	// Reset pagination when closing the popup
-	currentPage.value = 1;
-	// Don't reset filter values here to make them sticky between sessions
+  store.toggleRecordPopup();
+  // Reset pagination when closing the popup
+  currentPage.value = 1;
+  // Don't reset filter values here to make them sticky between sessions
 };
 
 // Helper functions to calculate color differences
 function getHueDifference(record) {
-	if (!record?.actualColor || !record?.guessedColor) return 0;
+  if (!record?.actualColor || !record?.guessedColor) return 0;
 
-	// Convert both colors to HSV for comparison
-	const actualHsv = convertToHsv(record.actualColor);
-	const guessedHsv = convertToHsv(record.guessedColor);
+  // Convert both colors to HSV for comparison
+  const actualHsv = convertToHsv(record.actualColor);
+  const guessedHsv = convertToHsv(record.guessedColor);
 
-	// Handle hue's circular nature (0-360)
-	let diff = Math.abs(actualHsv.h - guessedHsv.h);
-	if (diff > 180) diff = 360 - diff;
+  // Handle hue's circular nature (0-360)
+  let diff = Math.abs(actualHsv.h - guessedHsv.h);
+  if (diff > 180) diff = 360 - diff;
 
-	return diff;
+  return diff;
 }
 
 function getSaturationDifference(record) {
-	if (!record?.actualColor || !record?.guessedColor) return 0;
+  if (!record?.actualColor || !record?.guessedColor) return 0;
 
-	// Convert both colors to HSV for comparison
-	const actualHsv = convertToHsv(record.actualColor);
-	const guessedHsv = convertToHsv(record.guessedColor);
+  // Convert both colors to HSV for comparison
+  const actualHsv = convertToHsv(record.actualColor);
+  const guessedHsv = convertToHsv(record.guessedColor);
 
-	return Math.abs(actualHsv.s - guessedHsv.s);
+  return Math.abs(actualHsv.s - guessedHsv.s);
 }
 
 function getValueDifference(record) {
-	if (!record?.actualColor || !record?.guessedColor) return 0;
+  if (!record?.actualColor || !record?.guessedColor) return 0;
 
-	// Convert both colors to HSV for comparison
-	const actualHsv = convertToHsv(record.actualColor);
-	const guessedHsv = convertToHsv(record.guessedColor);
+  // Convert both colors to HSV for comparison
+  const actualHsv = convertToHsv(record.actualColor);
+  const guessedHsv = convertToHsv(record.guessedColor);
 
-	return Math.abs(actualHsv.v - guessedHsv.v);
+  return Math.abs(actualHsv.v - guessedHsv.v);
 }
 
 // Helper functions to calculate RGB color differences
 function getRgbDifference(record, channel) {
-	if (!record?.actualColor?.[channel] || !record?.guessedColor?.[channel])
-		return 0;
+  if (!record?.actualColor?.[channel] || !record?.guessedColor?.[channel])
+    return 0;
 
-	// Calculate percentage difference (0-100%) from the 0-255 range
-	const diff = Math.abs(
-		record.actualColor[channel] - record.guessedColor[channel],
-	);
-	return diff / 2.55; // Convert to percentage (255/100 = 2.55)
+  // Calculate percentage difference (0-100%) from the 0-255 range
+  const diff = Math.abs(
+    record.actualColor[channel] - record.guessedColor[channel],
+  );
+  return diff / 2.55; // Convert to percentage (255/100 = 2.55)
 }
 
 // Helper functions to calculate OKLAB color differences
 function getOklabDifference(record, channel) {
-	if (!record?.actualColor?.[channel] || !record?.guessedColor?.[channel])
-		return 0;
+  if (!record?.actualColor?.[channel] || !record?.guessedColor?.[channel])
+    return 0;
 
-	// Calculate percentage difference
-	// For L: 0-100 is already percentage
-	// For a & b: -100 to +100 range needs to be converted to percentage
-	if (channel === "L") {
-		return Math.abs(record.actualColor[channel] - record.guessedColor[channel]);
-	}
+  // Calculate percentage difference
+  // For L: 0-100 is already percentage
+  // For a & b: -100 to +100 range needs to be converted to percentage
+  if (channel === "L") {
+    return Math.abs(record.actualColor[channel] - record.guessedColor[channel]);
+  }
 
-	// a and b range from -100 to +100, so divide by 2 to get percentage
-	return (
-		Math.abs(record.actualColor[channel] - record.guessedColor[channel]) / 2
-	);
+  // a and b range from -100 to +100, so divide by 2 to get percentage
+  return (
+    Math.abs(record.actualColor[channel] - record.guessedColor[channel]) / 2
+  );
 }
 
 // Format difference to show + or - prefix
 function formatDifference(value) {
-	return value.toFixed(1);
+  return value.toFixed(1);
 }
 
 // Get CSS class based on whether the difference is within precision
 function getColorDifferenceClass(diff) {
-	const precision = 10; // Default precision
-	return diff <= precision ? "bg-green-500" : "bg-red-500";
+  const precision = 10; // Default precision
+  return diff <= precision ? "bg-green-500" : "bg-red-500";
 }
 </script>

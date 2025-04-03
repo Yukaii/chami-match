@@ -73,12 +73,12 @@
 
 <script setup>
 import {
-	PhArrowsClockwise,
-	PhChartLine,
-	PhClockCounterClockwise,
-	PhGearSix,
-	PhHandFist,
-	PhQuestion,
+  PhArrowsClockwise,
+  PhChartLine,
+  PhClockCounterClockwise,
+  PhGearSix,
+  PhHandFist,
+  PhQuestion,
 } from "@phosphor-icons/vue";
 import { computed, ref, watch } from "vue";
 import { useGameStore } from "../stores/game";
@@ -90,8 +90,8 @@ import BaseTooltip from "./base/BaseTooltip.vue";
 const store = useGameStore();
 
 function openSettings() {
-	store.settingsMode = "game";
-	store.toggleSettingsPopup();
+  store.settingsMode = "game";
+  store.toggleSettingsPopup();
 }
 
 const isShaking = ref(false);
@@ -99,32 +99,32 @@ const isFlipping = ref(false);
 
 // Fix: Watch the store getters directly with proper function
 watch(
-	() => [store.winningStreak, store.currentRound],
-	([count, round], [prevCount, prevRound]) => {
-		if (round === 1) {
-			// round reset
-			return;
-		}
+  () => [store.winningStreak, store.currentRound],
+  ([count, round], [prevCount, prevRound]) => {
+    if (round === 1) {
+      // round reset
+      return;
+    }
 
-		if (count === prevCount + 1) {
-			// win!
-			isFlipping.value = true;
-			setTimeout(() => {
-				isFlipping.value = false;
-			}, 600);
-		} else {
-			isShaking.value = true;
-			setTimeout(() => {
-				isShaking.value = false;
-			}, 300);
-		}
-	},
+    if (count === prevCount + 1) {
+      // win!
+      isFlipping.value = true;
+      setTimeout(() => {
+        isFlipping.value = false;
+      }, 600);
+    } else {
+      isShaking.value = true;
+      setTimeout(() => {
+        isShaking.value = false;
+      }, 300);
+    }
+  },
 );
 
 const className = computed(() => {
-	return cn(
-		isFlipping.value && "animate-flip",
-		isShaking.value && "animate-shake",
-	);
+  return cn(
+    isFlipping.value && "animate-flip",
+    isShaking.value && "animate-shake",
+  );
 });
 </script>

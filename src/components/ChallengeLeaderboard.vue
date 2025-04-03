@@ -4,10 +4,10 @@ import { useChallengeApi } from "../composables/useChallengeApi";
 import BaseButton from "./base/BaseButton.vue"; // Assuming BaseButton is needed
 
 const props = defineProps({
-	challengeId: {
-		type: String,
-		required: true,
-	},
+  challengeId: {
+    type: String,
+    required: true,
+  },
 });
 
 const { getLeaderboard, isLoading, error } = useChallengeApi();
@@ -15,13 +15,13 @@ const leaderboardData = ref(null); // Will hold { challengeName, expiresAt, lead
 const refreshInterval = ref(null);
 
 const fetchLeaderboard = async () => {
-	if (!props.challengeId) return;
-	try {
-		leaderboardData.value = await getLeaderboard(props.challengeId);
-	} catch (err) {
-		// Error is already logged in the composable and stored in 'error' ref
-		leaderboardData.value = null; // Clear data on error
-	}
+  if (!props.challengeId) return;
+  try {
+    leaderboardData.value = await getLeaderboard(props.challengeId);
+  } catch (err) {
+    // Error is already logged in the composable and stored in 'error' ref
+    leaderboardData.value = null; // Clear data on error
+  }
 };
 
 // Fetch on mount and when challengeId changes
@@ -30,22 +30,22 @@ watch(() => props.challengeId, fetchLeaderboard);
 
 // Optional: Auto-refresh every 30 seconds
 onMounted(() => {
-	refreshInterval.value = setInterval(fetchLeaderboard, 30000); // Refresh every 30s
+  refreshInterval.value = setInterval(fetchLeaderboard, 30000); // Refresh every 30s
 });
 onUnmounted(() => {
-	if (refreshInterval.value) {
-		clearInterval(refreshInterval.value);
-	}
+  if (refreshInterval.value) {
+    clearInterval(refreshInterval.value);
+  }
 });
 
 const sortedLeaderboard = computed(() => {
-	// The server already sorts, but we can ensure it here too
-	return leaderboardData.value?.leaderboard || [];
+  // The server already sorts, but we can ensure it here too
+  return leaderboardData.value?.leaderboard || [];
 });
 
 const formatTimestamp = (timestamp) => {
-	if (!timestamp) return "N/A";
-	return new Date(timestamp).toLocaleString();
+  if (!timestamp) return "N/A";
+  return new Date(timestamp).toLocaleString();
 };
 </script>
 

@@ -97,31 +97,31 @@ import BaseButton from "./base/BaseButton.vue";
 const store = useGameStore();
 
 const onClose = () => {
-	store.toggleAboutPopup();
+  store.toggleAboutPopup();
 };
 
 const shareWebsite = async () => {
-	const url = window.location.origin;
+  const url = window.location.origin;
 
-	if (navigator.share) {
-		try {
-			await navigator.share({
-				title: "Chami Match",
-				url: url,
-			});
-		} catch (error) {
-			console.error("Error sharing:", error);
-		}
-	} else {
-		// Fallback to clipboard
-		try {
-			await navigator.clipboard.writeText(url);
-			alert("URL copied to clipboard!");
-		} catch (error) {
-			console.error("Failed to copy:", error);
-			// Ultimate fallback - show URL to manually copy
-			prompt("Copy this URL:", url);
-		}
-	}
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: "Chami Match",
+        url: url,
+      });
+    } catch (error) {
+      console.error("Error sharing:", error);
+    }
+  } else {
+    // Fallback to clipboard
+    try {
+      await navigator.clipboard.writeText(url);
+      alert("URL copied to clipboard!");
+    } catch (error) {
+      console.error("Failed to copy:", error);
+      // Ultimate fallback - show URL to manually copy
+      prompt("Copy this URL:", url);
+    }
+  }
 };
 </script>

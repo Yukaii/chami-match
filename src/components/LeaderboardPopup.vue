@@ -14,37 +14,37 @@ const challenge = ref(null);
 const refreshInterval = ref(null);
 
 const refreshLeaderboard = async () => {
-	if (!store.currentChallengeId) return;
+  if (!store.currentChallengeId) return;
 
-	try {
-		// Call the correct function: getLeaderboard
-		const result = await getLeaderboard(store.currentChallengeId);
-		// The leaderboard endpoint returns { challengeName, expiresAt, leaderboard }
-		// We need to adjust how we store/display this
-		challenge.value = result; // Store the whole response for now
-	} catch (err) {
-		console.error("Failed to refresh leaderboard:", err);
-	}
+  try {
+    // Call the correct function: getLeaderboard
+    const result = await getLeaderboard(store.currentChallengeId);
+    // The leaderboard endpoint returns { challengeName, expiresAt, leaderboard }
+    // We need to adjust how we store/display this
+    challenge.value = result; // Store the whole response for now
+  } catch (err) {
+    console.error("Failed to refresh leaderboard:", err);
+  }
 };
 
 // Auto-refresh every 30 seconds
 onMounted(async () => {
-	await refreshLeaderboard();
-	refreshInterval.value = setInterval(refreshLeaderboard, 30000);
+  await refreshLeaderboard();
+  refreshInterval.value = setInterval(refreshLeaderboard, 30000);
 });
 
 onBeforeUnmount(() => {
-	if (refreshInterval.value) {
-		clearInterval(refreshInterval.value);
-	}
+  if (refreshInterval.value) {
+    clearInterval(refreshInterval.value);
+  }
 });
 
 const formatDate = (dateStr) => {
-	return new Date(dateStr).toLocaleString();
+  return new Date(dateStr).toLocaleString();
 };
 
 const closePopup = () => {
-	emit("close");
+  emit("close");
 };
 </script>
 

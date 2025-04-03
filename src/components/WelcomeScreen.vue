@@ -23,39 +23,39 @@ const challengeCodeFromUrl = ref(null); // State for code from URL (still needed
 
 // Get the current game mode based on slide index
 const currentGameMode = computed(() => {
-	if (currentSlide.value >= 0 && currentSlide.value < store.gameModes.length) {
-		// Use store.gameModes
-		return store.gameModes[currentSlide.value]; // Use store.gameModes
-	}
-	// Fall back to the first game mode if the index is invalid
-	return store.gameModes[0]; // Use store.gameModes
+  if (currentSlide.value >= 0 && currentSlide.value < store.gameModes.length) {
+    // Use store.gameModes
+    return store.gameModes[currentSlide.value]; // Use store.gameModes
+  }
+  // Fall back to the first game mode if the index is invalid
+  return store.gameModes[0]; // Use store.gameModes
 });
 
 function startGame() {
-	const mode = currentGameMode.value;
-	store.updateGameType(mode.type);
-	store.updateLastPlayedGameType(mode.type); // Save the selected mode
-	store.startOver(); // Initialize a new game
-	router.push(mode.route);
+  const mode = currentGameMode.value;
+  store.updateGameType(mode.type);
+  store.updateLastPlayedGameType(mode.type); // Save the selected mode
+  store.startOver(); // Initialize a new game
+  router.push(mode.route);
 }
 
 function quickStartLastGame() {
-	const lastGameType = store.lastPlayedGameType;
-	const lastGame =
-		store.gameModes.find((mode) => mode.type === lastGameType) ||
-		store.gameModes[0]; // Use store.gameModes
-	store.updateGameType(lastGame.type);
-	store.startOver();
-	router.push(lastGame.route);
+  const lastGameType = store.lastPlayedGameType;
+  const lastGame =
+    store.gameModes.find((mode) => mode.type === lastGameType) ||
+    store.gameModes[0]; // Use store.gameModes
+  store.updateGameType(lastGame.type);
+  store.startOver();
+  router.push(lastGame.route);
 }
 
 function openSettings() {
-	store.settingsMode = "global";
-	store.toggleSettingsPopup();
+  store.settingsMode = "global";
+  store.toggleSettingsPopup();
 }
 
 function openChallengePopup() {
-	store.toggleChallengePopup(); // Use the new action
+  store.toggleChallengePopup(); // Use the new action
 }
 
 // Removed handleJoinChallenge and rejoinChallenge functions
@@ -63,31 +63,31 @@ function openChallengePopup() {
 
 // Initialize the carousel to show the last played game (if available)
 onMounted(() => {
-	const lastType = store.lastPlayedGameType;
-	if (lastType) {
-		const lastIndex = store.gameModes.findIndex(
-			(mode) => mode.type === lastType,
-		); // Use store.gameModes
-		if (lastIndex !== -1) {
-			currentSlide.value = lastIndex;
-		}
-	}
+  const lastType = store.lastPlayedGameType;
+  if (lastType) {
+    const lastIndex = store.gameModes.findIndex(
+      (mode) => mode.type === lastType,
+    ); // Use store.gameModes
+    if (lastIndex !== -1) {
+      currentSlide.value = lastIndex;
+    }
+  }
 
-	// Check for challenge code in URL query params
-	const codeFromQuery = route.query.challengeCode;
-	if (
-		codeFromQuery &&
-		typeof codeFromQuery === "string" &&
-		codeFromQuery.length === 6
-	) {
-		challengeCodeFromUrl.value = codeFromQuery.toUpperCase();
-		// Instead of showing local popup, open the ChallengePopup
-		// showJoinConfirmPopup.value = true; // Remove this line
-		store.toggleChallengePopup(); // Open the new popup
-		// The ChallengePopup's onMounted hook should handle the code check now.
-		// Clear the query param from URL without reloading page (optional, for cleaner URL)
-		// router.replace({ query: { ...route.query, challengeCode: undefined } });
-	}
+  // Check for challenge code in URL query params
+  const codeFromQuery = route.query.challengeCode;
+  if (
+    codeFromQuery &&
+    typeof codeFromQuery === "string" &&
+    codeFromQuery.length === 6
+  ) {
+    challengeCodeFromUrl.value = codeFromQuery.toUpperCase();
+    // Instead of showing local popup, open the ChallengePopup
+    // showJoinConfirmPopup.value = true; // Remove this line
+    store.toggleChallengePopup(); // Open the new popup
+    // The ChallengePopup's onMounted hook should handle the code check now.
+    // Clear the query param from URL without reloading page (optional, for cleaner URL)
+    // router.replace({ query: { ...route.query, challengeCode: undefined } });
+  }
 });
 </script>
 

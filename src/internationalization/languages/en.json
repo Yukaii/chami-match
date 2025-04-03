@@ -1,203 +1,203 @@
 {
-	"title": "Chami Match - Recognize the Color!",
-	"mainTitle": "Chami Match",
-	"subtitle": "Recognize the Color!",
-	"description": "A simple and fun color recognition training game!",
-	"challenge": {
-		"createTitle": "Create Challenge",
-		"createdTitle": "Challenge Created!",
-		"name": "Challenge Name",
-		"nameRequired": "Challenge name is required.",
-		"expiresIn": "Expires In",
-		"shareCode": "Share the access code with your friends:",
-		"copyCode": "Copy Code",
-		"copyLink": "Copy Link",
-		"copied": "Copied!",
-		"done": "Done",
-		"setupInfo": "Set up a challenge for your friends based on the current game settings.",
-		"expiresAt": "Expires At"
-	},
-	"joinChallenge": "Join a Challenge",
-	"joinChallengeConfirmTitle": "Join Challenge?",
-	"joinChallengeConfirmMessage": "Do you want to join the challenge with code {code}?",
-	"confirmJoin": "Confirm & Join",
-	"accessCode": "Access Code",
-	"join": "Join",
-	"joinedChallengesTitle": "Joined Challenges",
-	"expiredChallengesTitle": "Expired Challenges",
-	"play": "Play",
-	"remove": "Remove",
-	"you": "You",
-	"challengeMode": "Challenge Mode",
-	"startStandardGame": "Standard Mode",
-	"startContextualGame": "Contextual Mode",
-	"startRelativeGame": "Value Difference Mode",
-	"startColorGame": "Image Color Mode",
-	"startRecallGame": "Recall Mode",
-	"startGame": "Start Game",
-	"start": "Start",
-	"quickStart": "Quick Start Last Game",
-	"startOver": "Start Over",
-	"home": "Home",
-	"submit": "Submit",
-	"challengeFriends": "Challenge Friends",
-	"leaderboard": {
-		"name": "Name",
-		"streak": "Streak"
-	},
-	"viewLeaderboard": "View Leaderboard",
-	"refresh": "Refresh",
-	"close": "Close",
-	"cancel": "Cancel",
-	"create": "Create",
-	"loading": "Creating...",
-	"gameRecord": {
-		"title": "Game Record",
-		"emptyContent": "Your game records will be displayed here, but it's currently empty."
-	},
-	"totalRounds": "Total Rounds",
-	"allGameTypes": "All Game Types",
-	"loadMore": "Load More",
-	"unknownRecordType": "Unknown record type",
-	"actualColor": "Actual Color",
-	"guessedColor": "Your Guess",
-	"actualDifference": "Actual Difference",
-	"guessedDifference": "Your Guess",
-	"comboCount": "Combo Count",
-	"winningRate": "Winning Rate",
-	"roundCount": "Round Count",
-	"sessionDate": "Session Date",
-	"allSessions": "All Sessions",
-	"currentSession": "Current Session",
-	"settings": {
-		"title": "Settings",
-		"serverSettings": "Server Settings",
-		"serverUrl": "Server URL",
-		"serverStatus": {
-			"available": "Server is available",
-			"unavailable": "Server is not available",
-			"checking": "Checking server status..."
-		},
-		"UIOptions": "UI Options",
-		"displayName": "Display Name",
-		"gameOptions": "Game Options",
-		"language": "Language",
-		"theme": {
-			"title": "Theme",
-			"system": "System",
-			"dark": "Dark Mode",
-			"light": "Light Mode"
-		},
-		"confetti": {
-			"label": "Celebration Effect",
-			"on": "On",
-			"off": "Off"
-		},
-		"precision": {
-			"label": "Precision"
-		},
-		"colorMode": {
-			"label": "Color Mode"
-		},
-		"colorSpace": {
-			"label": "Color Space"
-		},
-		"maxTries": {
-			"label": "Max Tries"
-		},
-		"realtimePreview": {
-			"label": "Realtime Preview"
-		},
-		"recallTimeout": {
-			"label": "Recall Time"
-		},
-		"notice": "Applying game options will start a new round.",
-		"cta": "Apply",
-		"danger": "Danger Zone",
-		"confirmReset": "Reset will remove all your game data and settings. You can't undo this action.",
-		"resetGameData": "Reset Game Data",
-		"resetConfirmation": "Reset Game Data",
-		"resetWarning": "Are you sure you want to reset the game data? All your current progress will be lost."
-	},
-	"about": {
-		"title": "About",
-		"text1": "This game is inspired by the original idea from {colorTest}. Special thanks to {fragment} for his amazing idea!",
-		"text2": "For more information, contributions, or to report issues, please visit the {githubRepo}.",
-		"repository": "GitHub repository",
-		"developerCredits": "Developer Credits",
-		"developerText": "A big thanks to all the developers who contributed to this project. Your hard work and dedication make this game better for everyone.",
-		"share": "Share",
-		"close": "Close"
-	},
-	"reset": {
-		"title": "Reset Game Data",
-		"message": "Are you sure you want to reset the game data? All your current progress will be lost.",
-		"confirm": "Yes, Reset",
-		"cancel": "No, Cancel"
-	},
-	"gameModes": {
-		"standard": {
-			"name": "Standard Mode",
-			"description": "Match the color you see on the left"
-		},
-		"contextual": {
-			"name": "Contextual Mode",
-			"description": "Match the central color surrounded by similar colors - a harder challenge!",
-			"instructions": "Choose the color that matches the center square",
-			"selectPrompt": "Select the matching color:",
-			"lastSelection": "Your last selection:"
-		},
-		"relative": {
-			"name": "Value Difference Mode",
-			"description": "Determine the brightness difference between two colors",
-			"instructions": "Use the slider to indicate how different the brightness of these colors is (1-100)",
-			"valueDifference": "Value Difference",
-			"yourGuess": "Your guess:"
-		},
-		"color": {
-			"name": "Image Color Mode",
-			"description": "Match colors from real images - test your color perception in context!",
-			"instructions": "Choose the color that matches the circle in the image",
-			"selectPrompt": "Select the matching color:",
-			"lastSelection": "Your last selection:",
-			"toggleMagnifier": {
-				"show": "Show Magnifier",
-				"hide": "Hide Magnifier"
-			},
-			"toggleTargetCircle": {
-				"show": "Show Target Circle",
-				"hide": "Hide Target Circle"
-			}
-		},
-		"recall": {
-			"name": "Recall Mode",
-			"description": "Test your color memory - see a color briefly and then recall it",
-			"instructions": "Memorize the color before it disappears, then select the matching color",
-			"selectPrompt": "Select the matching color:",
-			"lastSelection": "Your last selection:",
-			"memorizePrompt": "Memorize this color!"
-		}
-	},
-	"colorDifferences": "Color Differences",
-	"precisionTarget": "Target",
-	"errorBoundary": {
-		"title": "Oops, something went wrong!",
-		"message": "The application encountered an unexpected error.",
-		"retry": "Retry",
-		"refresh": "Refresh Page",
-		"copyError": "Copy Error"
-	},
-	"challenge.title": "Challenges",
-	"serverUnavailable": "Challenge server unavailable. Please check server settings.",
-	"serverUnavailableShort": "Challenge server unavailable",
-	"error": {
-		"invalidAccessCode": "Please enter a valid 6-character access code.",
-		"joinVerificationFailed": "Error: Could not verify participation after joining.",
-		"joinFailed": "Error joining challenge",
-		"rejoinParticipantNotFound": "Error: You don't seem to be a participant in this challenge anymore.",
-		"rejoinFailed": "Error rejoining challenge"
-	},
-	"confirmRemoveChallengeNotFoundMessage": "You were not found in \"{name}\". Remove it from your list?",
-	"confirm": "Confirm",
-	"gameModeLabel": "Mode"
+  "title": "Chami Match - Recognize the Color!",
+  "mainTitle": "Chami Match",
+  "subtitle": "Recognize the Color!",
+  "description": "A simple and fun color recognition training game!",
+  "challenge": {
+    "createTitle": "Create Challenge",
+    "createdTitle": "Challenge Created!",
+    "name": "Challenge Name",
+    "nameRequired": "Challenge name is required.",
+    "expiresIn": "Expires In",
+    "shareCode": "Share the access code with your friends:",
+    "copyCode": "Copy Code",
+    "copyLink": "Copy Link",
+    "copied": "Copied!",
+    "done": "Done",
+    "setupInfo": "Set up a challenge for your friends based on the current game settings.",
+    "expiresAt": "Expires At"
+  },
+  "joinChallenge": "Join a Challenge",
+  "joinChallengeConfirmTitle": "Join Challenge?",
+  "joinChallengeConfirmMessage": "Do you want to join the challenge with code {code}?",
+  "confirmJoin": "Confirm & Join",
+  "accessCode": "Access Code",
+  "join": "Join",
+  "joinedChallengesTitle": "Joined Challenges",
+  "expiredChallengesTitle": "Expired Challenges",
+  "play": "Play",
+  "remove": "Remove",
+  "you": "You",
+  "challengeMode": "Challenge Mode",
+  "startStandardGame": "Standard Mode",
+  "startContextualGame": "Contextual Mode",
+  "startRelativeGame": "Value Difference Mode",
+  "startColorGame": "Image Color Mode",
+  "startRecallGame": "Recall Mode",
+  "startGame": "Start Game",
+  "start": "Start",
+  "quickStart": "Quick Start Last Game",
+  "startOver": "Start Over",
+  "home": "Home",
+  "submit": "Submit",
+  "challengeFriends": "Challenge Friends",
+  "leaderboard": {
+    "name": "Name",
+    "streak": "Streak"
+  },
+  "viewLeaderboard": "View Leaderboard",
+  "refresh": "Refresh",
+  "close": "Close",
+  "cancel": "Cancel",
+  "create": "Create",
+  "loading": "Creating...",
+  "gameRecord": {
+    "title": "Game Record",
+    "emptyContent": "Your game records will be displayed here, but it's currently empty."
+  },
+  "totalRounds": "Total Rounds",
+  "allGameTypes": "All Game Types",
+  "loadMore": "Load More",
+  "unknownRecordType": "Unknown record type",
+  "actualColor": "Actual Color",
+  "guessedColor": "Your Guess",
+  "actualDifference": "Actual Difference",
+  "guessedDifference": "Your Guess",
+  "comboCount": "Combo Count",
+  "winningRate": "Winning Rate",
+  "roundCount": "Round Count",
+  "sessionDate": "Session Date",
+  "allSessions": "All Sessions",
+  "currentSession": "Current Session",
+  "settings": {
+    "title": "Settings",
+    "serverSettings": "Server Settings",
+    "serverUrl": "Server URL",
+    "serverStatus": {
+      "available": "Server is available",
+      "unavailable": "Server is not available",
+      "checking": "Checking server status..."
+    },
+    "UIOptions": "UI Options",
+    "displayName": "Display Name",
+    "gameOptions": "Game Options",
+    "language": "Language",
+    "theme": {
+      "title": "Theme",
+      "system": "System",
+      "dark": "Dark Mode",
+      "light": "Light Mode"
+    },
+    "confetti": {
+      "label": "Celebration Effect",
+      "on": "On",
+      "off": "Off"
+    },
+    "precision": {
+      "label": "Precision"
+    },
+    "colorMode": {
+      "label": "Color Mode"
+    },
+    "colorSpace": {
+      "label": "Color Space"
+    },
+    "maxTries": {
+      "label": "Max Tries"
+    },
+    "realtimePreview": {
+      "label": "Realtime Preview"
+    },
+    "recallTimeout": {
+      "label": "Recall Time"
+    },
+    "notice": "Applying game options will start a new round.",
+    "cta": "Apply",
+    "danger": "Danger Zone",
+    "confirmReset": "Reset will remove all your game data and settings. You can't undo this action.",
+    "resetGameData": "Reset Game Data",
+    "resetConfirmation": "Reset Game Data",
+    "resetWarning": "Are you sure you want to reset the game data? All your current progress will be lost."
+  },
+  "about": {
+    "title": "About",
+    "text1": "This game is inspired by the original idea from {colorTest}. Special thanks to {fragment} for his amazing idea!",
+    "text2": "For more information, contributions, or to report issues, please visit the {githubRepo}.",
+    "repository": "GitHub repository",
+    "developerCredits": "Developer Credits",
+    "developerText": "A big thanks to all the developers who contributed to this project. Your hard work and dedication make this game better for everyone.",
+    "share": "Share",
+    "close": "Close"
+  },
+  "reset": {
+    "title": "Reset Game Data",
+    "message": "Are you sure you want to reset the game data? All your current progress will be lost.",
+    "confirm": "Yes, Reset",
+    "cancel": "No, Cancel"
+  },
+  "gameModes": {
+    "standard": {
+      "name": "Standard Mode",
+      "description": "Match the color you see on the left"
+    },
+    "contextual": {
+      "name": "Contextual Mode",
+      "description": "Match the central color surrounded by similar colors - a harder challenge!",
+      "instructions": "Choose the color that matches the center square",
+      "selectPrompt": "Select the matching color:",
+      "lastSelection": "Your last selection:"
+    },
+    "relative": {
+      "name": "Value Difference Mode",
+      "description": "Determine the brightness difference between two colors",
+      "instructions": "Use the slider to indicate how different the brightness of these colors is (1-100)",
+      "valueDifference": "Value Difference",
+      "yourGuess": "Your guess:"
+    },
+    "color": {
+      "name": "Image Color Mode",
+      "description": "Match colors from real images - test your color perception in context!",
+      "instructions": "Choose the color that matches the circle in the image",
+      "selectPrompt": "Select the matching color:",
+      "lastSelection": "Your last selection:",
+      "toggleMagnifier": {
+        "show": "Show Magnifier",
+        "hide": "Hide Magnifier"
+      },
+      "toggleTargetCircle": {
+        "show": "Show Target Circle",
+        "hide": "Hide Target Circle"
+      }
+    },
+    "recall": {
+      "name": "Recall Mode",
+      "description": "Test your color memory - see a color briefly and then recall it",
+      "instructions": "Memorize the color before it disappears, then select the matching color",
+      "selectPrompt": "Select the matching color:",
+      "lastSelection": "Your last selection:",
+      "memorizePrompt": "Memorize this color!"
+    }
+  },
+  "colorDifferences": "Color Differences",
+  "precisionTarget": "Target",
+  "errorBoundary": {
+    "title": "Oops, something went wrong!",
+    "message": "The application encountered an unexpected error.",
+    "retry": "Retry",
+    "refresh": "Refresh Page",
+    "copyError": "Copy Error"
+  },
+  "challenge.title": "Challenges",
+  "serverUnavailable": "Challenge server unavailable. Please check server settings.",
+  "serverUnavailableShort": "Challenge server unavailable",
+  "error": {
+    "invalidAccessCode": "Please enter a valid 6-character access code.",
+    "joinVerificationFailed": "Error: Could not verify participation after joining.",
+    "joinFailed": "Error joining challenge",
+    "rejoinParticipantNotFound": "Error: You don't seem to be a participant in this challenge anymore.",
+    "rejoinFailed": "Error rejoining challenge"
+  },
+  "confirmRemoveChallengeNotFoundMessage": "You were not found in \"{name}\". Remove it from your list?",
+  "confirm": "Confirm",
+  "gameModeLabel": "Mode"
 }

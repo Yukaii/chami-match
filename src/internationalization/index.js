@@ -7,18 +7,18 @@ import zhTW from "./languages/zh-TW.json";
 const availableCodes = ["en", "zh-TW", "ja"];
 
 const languageCode =
-	localStorage.getItem("lang") || navigator.language || "zh-TW";
+  localStorage.getItem("lang") || navigator.language || "zh-TW";
 
 const i18n = createI18n({
-	locale: availableCodes.includes(languageCode) ? languageCode : "zh-TW",
-	fallbackLocale: "zh-TW",
-	legacy: false,
-	globalInjection: true,
-	messages: {
-		"zh-TW": zhTW,
-		en,
-		ja,
-	},
+  locale: availableCodes.includes(languageCode) ? languageCode : "zh-TW",
+  fallbackLocale: "zh-TW",
+  legacy: false,
+  globalInjection: true,
+  messages: {
+    "zh-TW": zhTW,
+    en,
+    ja,
+  },
 });
 
 export default i18n;

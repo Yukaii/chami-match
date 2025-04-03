@@ -248,134 +248,134 @@ import BaseButton from "./base/BaseButton.vue";
 const { locale, t: $t } = useI18n();
 const store = useGameStore();
 const languages = [
-	{ code: "zh-TW", label: "繁體中文" },
-	{ code: "en", label: "English" },
-	{ code: "ja", label: "日本語" },
+  { code: "zh-TW", label: "繁體中文" },
+  { code: "en", label: "English" },
+  { code: "ja", label: "日本語" },
 ];
 
 // Computed properties for game type conditions
 const isBasicGameType = computed(
-	() =>
-		store.gameType !== "image" &&
-		store.gameType !== "contextual" &&
-		store.gameType !== "recall",
+  () =>
+    store.gameType !== "image" &&
+    store.gameType !== "contextual" &&
+    store.gameType !== "recall",
 );
 
 const isNotImageMode = computed(() => store.gameType !== "image");
 
 const settings = reactive({
-	language: localStorage.getItem("lang") || navigator.language || "zh-TW",
-	precision: store.precision,
-	mode: store.mode,
-	colorSpace: store.colorSpace,
-	maxTries: store.maxLife,
-	realtimePreview: store.realtimePreview,
-	enableConfetti: store.preferences.enableConfetti || true,
-	recallTimeout: store.recallTimeout,
-	displayName: store.preferences.displayName || "Player",
-	serverUrl: store.challengeServerUrl, // Add server URL
+  language: localStorage.getItem("lang") || navigator.language || "zh-TW",
+  precision: store.precision,
+  mode: store.mode,
+  colorSpace: store.colorSpace,
+  maxTries: store.maxLife,
+  realtimePreview: store.realtimePreview,
+  enableConfetti: store.preferences.enableConfetti || true,
+  recallTimeout: store.recallTimeout,
+  displayName: store.preferences.displayName || "Player",
+  serverUrl: store.challengeServerUrl, // Add server URL
 });
 
 // Theme handling
 const currentTheme = ref(localStorage.getItem("theme") || "system");
 
 const applyTheme = (theme) => {
-	if (theme === "system") {
-		// Remove any theme class to respect system preference
-		document.documentElement.classList.remove("dark", "light");
-		localStorage.setItem("theme", "system");
+  if (theme === "system") {
+    // Remove any theme class to respect system preference
+    document.documentElement.classList.remove("dark", "light");
+    localStorage.setItem("theme", "system");
 
-		// Check system preference to set UI appropriately
-		if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-			document.documentElement.classList.add("dark");
-		}
-	} else if (theme === "dark") {
-		document.documentElement.classList.add("dark");
-		document.documentElement.classList.remove("light");
-		localStorage.setItem("theme", "dark");
-	} else {
-		document.documentElement.classList.remove("dark");
-		document.documentElement.classList.add("light");
-		localStorage.setItem("theme", "light");
-	}
+    // Check system preference to set UI appropriately
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      document.documentElement.classList.add("dark");
+    }
+  } else if (theme === "dark") {
+    document.documentElement.classList.add("dark");
+    document.documentElement.classList.remove("light");
+    localStorage.setItem("theme", "dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+    document.documentElement.classList.add("light");
+    localStorage.setItem("theme", "light");
+  }
 };
 
 function setTheme(theme) {
-	currentTheme.value = theme;
+  currentTheme.value = theme;
 
-	applyTheme(theme);
+  applyTheme(theme);
 }
 
 const onClose = () => {
-	// Save display name when closing, regardless of mode
-	store.updateDisplayName(settings.displayName);
-	store.toggleSettingsPopup();
+  // Save display name when closing, regardless of mode
+  store.updateDisplayName(settings.displayName);
+  store.toggleSettingsPopup();
 };
 
 // Fix: Watch the store property directly
 watch(
-	() => store.settingsPopupOpen,
-	(isOpen) => {
-		if (isOpen) {
-			settings.precision = store.precision;
-			settings.mode = store.mode;
-			settings.colorSpace = store.colorSpace;
-			settings.maxTries = store.maxLife;
-			settings.realtimePreview = store.realtimePreview;
-			settings.enableConfetti = store.preferences.enableConfetti ?? true;
-			settings.recallTimeout = store.recallTimeout;
-			settings.displayName = store.preferences.displayName || "Player"; // Sync display name
-		}
-	},
+  () => store.settingsPopupOpen,
+  (isOpen) => {
+    if (isOpen) {
+      settings.precision = store.precision;
+      settings.mode = store.mode;
+      settings.colorSpace = store.colorSpace;
+      settings.maxTries = store.maxLife;
+      settings.realtimePreview = store.realtimePreview;
+      settings.enableConfetti = store.preferences.enableConfetti ?? true;
+      settings.recallTimeout = store.recallTimeout;
+      settings.displayName = store.preferences.displayName || "Player"; // Sync display name
+    }
+  },
 );
 
 const onApply = async () => {
-	// Update server URL and check availability first
-	await store.updateChallengeServerUrl(settings.serverUrl);
+  // Update server URL and check availability first
+  await store.updateChallengeServerUrl(settings.serverUrl);
 
-	// Update other settings
-	store.updatePrecision(settings.precision);
-	store.updateMode(settings.mode);
-	store.updateColorSpace(settings.colorSpace);
-	store.updateMaxLife(settings.maxTries);
-	store.updateRealtimePreview(settings.realtimePreview);
-	store.updateConfetti(settings.enableConfetti);
-	store.updateRecallTimeout(settings.recallTimeout);
-	store.updateDisplayName(settings.displayName);
-	store.startOver();
-	onClose();
+  // Update other settings
+  store.updatePrecision(settings.precision);
+  store.updateMode(settings.mode);
+  store.updateColorSpace(settings.colorSpace);
+  store.updateMaxLife(settings.maxTries);
+  store.updateRealtimePreview(settings.realtimePreview);
+  store.updateConfetti(settings.enableConfetti);
+  store.updateRecallTimeout(settings.recallTimeout);
+  store.updateDisplayName(settings.displayName);
+  store.startOver();
+  onClose();
 };
 
 const handleChangeLanguage = (lang) => {
-	settings.language = lang;
-	locale.value = lang;
-	localStorage.setItem("lang", lang);
+  settings.language = lang;
+  locale.value = lang;
+  localStorage.setItem("lang", lang);
 
-	// Also save confetti and display name setting when changing language
-	store.updateConfetti(settings.enableConfetti);
-	store.updateDisplayName(settings.displayName);
+  // Also save confetti and display name setting when changing language
+  store.updateConfetti(settings.enableConfetti);
+  store.updateDisplayName(settings.displayName);
 };
 
 onMounted(() => {
-	// Ensure currentTheme.value has a valid value
-	if (!["system", "dark", "light"].includes(currentTheme.value)) {
-		currentTheme.value = "system";
-	}
+  // Ensure currentTheme.value has a valid value
+  if (!["system", "dark", "light"].includes(currentTheme.value)) {
+    currentTheme.value = "system";
+  }
 
-	// Apply the theme
-	applyTheme(currentTheme.value);
+  // Apply the theme
+  applyTheme(currentTheme.value);
 
-	// Listen for system preference changes when in system mode
-	window
-		.matchMedia("(prefers-color-scheme: dark)")
-		.addEventListener("change", (e) => {
-			if (currentTheme.value === "system") {
-				if (e.matches) {
-					document.documentElement.classList.add("dark");
-				} else {
-					document.documentElement.classList.remove("dark");
-				}
-			}
-		});
+  // Listen for system preference changes when in system mode
+  window
+    .matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", (e) => {
+      if (currentTheme.value === "system") {
+        if (e.matches) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      }
+    });
 });
 </script>

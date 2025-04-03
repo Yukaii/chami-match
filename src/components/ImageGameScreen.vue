@@ -1,11 +1,11 @@
 <script setup>
 import {
-	computed,
-	nextTick,
-	onBeforeUnmount,
-	onMounted,
-	ref,
-	watch,
+  computed,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watch,
 } from "vue";
 import { useGameStore } from "../stores/game";
 import { ImageMode } from "../stores/modes/ImageMode";
@@ -42,287 +42,287 @@ const imageWrapperRef = ref(null); // Add ref for image wrapper
 
 // Calculate scale factors for the image
 const imageScaleFactor = computed(() => {
-	if (
-		!imageElement.value ||
-		!displayedImageWidth.value ||
-		!imageElement.value.naturalWidth
-	) {
-		return { x: 1, y: 1 };
-	}
+  if (
+    !imageElement.value ||
+    !displayedImageWidth.value ||
+    !imageElement.value.naturalWidth
+  ) {
+    return { x: 1, y: 1 };
+  }
 
-	return {
-		x: displayedImageWidth.value / imageElement.value.naturalWidth,
-		y: displayedImageHeight.value / imageElement.value.naturalHeight,
-	};
+  return {
+    x: displayedImageWidth.value / imageElement.value.naturalWidth,
+    y: displayedImageHeight.value / imageElement.value.naturalHeight,
+  };
 });
 
 // Check if target color is light to determine border color
 const isTargetColorLight = computed(() => {
-	if (!colorMode.value?.state?.randomColor) return false;
+  if (!colorMode.value?.state?.randomColor) return false;
 
-	// Get brightness value (v in HSV)
-	const brightness = colorMode.value.state.randomColor.v;
+  // Get brightness value (v in HSV)
+  const brightness = colorMode.value.state.randomColor.v;
 
-	// Consider colors with value > 70 as light
-	return brightness > 70;
+  // Consider colors with value > 70 as light
+  return brightness > 70;
 });
 
 // Get target region with defensive checks
 const getTargetRegion = computed(() => {
-	if (!store.currentModeState?.targetRegion) {
-		return { x: 0, y: 0, radius: 20, ready: false };
-	}
+  if (!store.currentModeState?.targetRegion) {
+    return { x: 0, y: 0, radius: 20, ready: false };
+  }
 
-	const region = store.currentModeState.targetRegion;
-	const ready = store.currentModeState.targetRegionReady;
+  const region = store.currentModeState.targetRegion;
+  const ready = store.currentModeState.targetRegionReady;
 
-	return {
-		x: Number(region.x) || 0,
-		y: Number(region.y) || 0,
-		radius: Number(region.radius) || 20,
-		ready: Boolean(ready),
-	};
+  return {
+    x: Number(region.x) || 0,
+    y: Number(region.y) || 0,
+    radius: Number(region.radius) || 20,
+    ready: Boolean(ready),
+  };
 });
 
 // Check if color options are available
 const hasColorOptions = computed(() => {
-	const options =
-		colorMode.value?.state?.colorOptions ||
-		store.currentModeState?.colorOptions;
-	return Array.isArray(options) && options.length > 0;
+  const options =
+    colorMode.value?.state?.colorOptions ||
+    store.currentModeState?.colorOptions;
+  return Array.isArray(options) && options.length > 0;
 });
 
 // Get current color options from either source
 const currentColorOptions = computed(() => {
-	return (
-		colorMode.value?.state?.colorOptions ||
-		store.currentModeState?.colorOptions ||
-		[]
-	);
+  return (
+    colorMode.value?.state?.colorOptions ||
+    store.currentModeState?.colorOptions ||
+    []
+  );
 });
 
 // Calculate adjusted position for target circle and magnifier
 function getAdjustedPosition(x, y) {
-	if (
-		!imageElement.value ||
-		!imageWrapperRef.value ||
-		typeof x !== "number" ||
-		typeof y !== "number"
-	) {
-		return { x: 0, y: 0 };
-	}
+  if (
+    !imageElement.value ||
+    !imageWrapperRef.value ||
+    typeof x !== "number" ||
+    typeof y !== "number"
+  ) {
+    return { x: 0, y: 0 };
+  }
 
-	try {
-		// Get the actual dimensions of the image as displayed
-		const imageRect = imageElement.value.getBoundingClientRect();
+  try {
+    // Get the actual dimensions of the image as displayed
+    const imageRect = imageElement.value.getBoundingClientRect();
 
-		// Calculate scaling of the image based on natural vs displayed size
-		const scaleX = imageRect.width / imageElement.value.naturalWidth;
-		const scaleY = imageRect.height / imageElement.value.naturalHeight;
+    // Calculate scaling of the image based on natural vs displayed size
+    const scaleX = imageRect.width / imageElement.value.naturalWidth;
+    const scaleY = imageRect.height / imageElement.value.naturalHeight;
 
-		// Calculate the position within the image itself
-		const scaledX = x * scaleX;
-		const scaledY = y * scaleY;
+    // Calculate the position within the image itself
+    const scaledX = x * scaleX;
+    const scaledY = y * scaleY;
 
-		return {
-			x: scaledX,
-			y: scaledY,
-		};
-	} catch (error) {
-		console.error("Error calculating position:", error);
-		return { x: 0, y: 0 };
-	}
+    return {
+      x: scaledX,
+      y: scaledY,
+    };
+  } catch (error) {
+    console.error("Error calculating position:", error);
+    return { x: 0, y: 0 };
+  }
 }
 
 // Add debounce function
 function debounce(fn, delay) {
-	let timeoutId;
-	return function (...args) {
-		clearTimeout(timeoutId);
-		timeoutId = setTimeout(() => fn.apply(this, args), delay);
-	};
+  let timeoutId;
+  return function (...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn.apply(this, args), delay);
+  };
 }
 
 // Debounced version of updateImageDimensions
 const debouncedUpdateDimensions = debounce(() => {
-	updateImageDimensions();
+  updateImageDimensions();
 }, 100);
 
 // Update the image dimensions
 function updateImageDimensions() {
-	if (imageElement.value) {
-		const imageRect = imageElement.value.getBoundingClientRect();
-		displayedImageWidth.value = imageRect.width;
-		displayedImageHeight.value = imageRect.height;
-		// Force position update when dimensions change
-		positionUpdateTrigger.value++;
-	}
+  if (imageElement.value) {
+    const imageRect = imageElement.value.getBoundingClientRect();
+    displayedImageWidth.value = imageRect.width;
+    displayedImageHeight.value = imageRect.height;
+    // Force position update when dimensions change
+    positionUpdateTrigger.value++;
+  }
 }
 
 // Initialize the ColorMode
 async function initializeImageMode() {
-	console.log("Initializing image mode, current state:", {
-		gameType: store.gameType,
-		hasGameMode: !!store.currentGameMode,
-	});
+  console.log("Initializing image mode, current state:", {
+    gameType: store.gameType,
+    hasGameMode: !!store.currentGameMode,
+  });
 
-	// Force the game type to color
-	store.updateGameType("image");
+  // Force the game type to color
+  store.updateGameType("image");
 
-	// Create a fresh start
-	await new Promise((resolve) => setTimeout(resolve, 50));
-	store.startOver();
-	await new Promise((resolve) => setTimeout(resolve, 100));
+  // Create a fresh start
+  await new Promise((resolve) => setTimeout(resolve, 50));
+  store.startOver();
+  await new Promise((resolve) => setTimeout(resolve, 100));
 
-	// Create new ColorMode instance if needed
-	if (!store.currentGameMode || store.currentGameMode.type !== "image") {
-		console.log("Creating ImageMode instance");
-		colorMode.value = new ImageMode({
-			colorMode: store.mode,
-			precision: store.precision,
-			realtimePreview: store.realtimePreview,
-		});
+  // Create new ColorMode instance if needed
+  if (!store.currentGameMode || store.currentGameMode.type !== "image") {
+    console.log("Creating ImageMode instance");
+    colorMode.value = new ImageMode({
+      colorMode: store.mode,
+      precision: store.precision,
+      realtimePreview: store.realtimePreview,
+    });
 
-		// Initialize its state
-		const initState = colorMode.value.initState();
-		colorMode.value.state = initState;
+    // Initialize its state
+    const initState = colorMode.value.initState();
+    colorMode.value.state = initState;
 
-		// Fetch a new image right away
-		await colorMode.value.fetchRandomImage();
-		console.log("Created ColorMode:", colorMode.value);
-	} else {
-		// Use the existing one
-		colorMode.value = store.currentGameMode;
-		console.log("Using existing ColorMode:", colorMode.value);
-	}
+    // Fetch a new image right away
+    await colorMode.value.fetchRandomImage();
+    console.log("Created ColorMode:", colorMode.value);
+  } else {
+    // Use the existing one
+    colorMode.value = store.currentGameMode;
+    console.log("Using existing ColorMode:", colorMode.value);
+  }
 
-	// Set image ready flag once we have an image URL
-	if (colorMode.value?.state?.imageUrl) {
-		imageReady.value = true;
-	}
+  // Set image ready flag once we have an image URL
+  if (colorMode.value?.state?.imageUrl) {
+    imageReady.value = true;
+  }
 }
 
 // Initialize when component mounts
 onMounted(async () => {
-	console.log("ImageGameScreen mounted, initializing");
-	await initializeImageMode();
+  console.log("ImageGameScreen mounted, initializing");
+  await initializeImageMode();
 
-	// Add resize listener with the debounced function
-	window.addEventListener("resize", debouncedUpdateDimensions);
+  // Add resize listener with the debounced function
+  window.addEventListener("resize", debouncedUpdateDimensions);
 
-	// Initial dimension update
-	nextTick(() => {
-		updateImageDimensions();
-	});
+  // Initial dimension update
+  nextTick(() => {
+    updateImageDimensions();
+  });
 
-	// Setup ResizeObserver for more reliable size change detection
-	if (window.ResizeObserver) {
-		resizeObserver = new ResizeObserver(debouncedUpdateDimensions);
+  // Setup ResizeObserver for more reliable size change detection
+  if (window.ResizeObserver) {
+    resizeObserver = new ResizeObserver(debouncedUpdateDimensions);
 
-		// Observe both the wrapper and the image
-		if (imageWrapperRef.value) {
-			resizeObserver.observe(imageWrapperRef.value);
-		}
-		if (imageElement.value) {
-			resizeObserver.observe(imageElement.value);
-		}
-	}
+    // Observe both the wrapper and the image
+    if (imageWrapperRef.value) {
+      resizeObserver.observe(imageWrapperRef.value);
+    }
+    if (imageElement.value) {
+      resizeObserver.observe(imageElement.value);
+    }
+  }
 });
 
 // Clean up event listeners and observers
 onBeforeUnmount(() => {
-	window.removeEventListener("resize", debouncedUpdateDimensions);
-	if (resizeObserver) {
-		resizeObserver.disconnect();
-	}
+  window.removeEventListener("resize", debouncedUpdateDimensions);
+  if (resizeObserver) {
+    resizeObserver.disconnect();
+  }
 });
 
 // Handle image load
 async function handleImageLoad() {
-	if (!imageElement.value || imageProcessing.value) return;
+  if (!imageElement.value || imageProcessing.value) return;
 
-	console.log("Image loaded, processing...");
-	imageProcessing.value = true;
+  console.log("Image loaded, processing...");
+  imageProcessing.value = true;
 
-	try {
-		// Ensure colorMode is initialized
-		if (!colorMode.value?.state) {
-			console.log("Reinitializing color mode state");
-			await initializeImageMode();
-		}
+  try {
+    // Ensure colorMode is initialized
+    if (!colorMode.value?.state) {
+      console.log("Reinitializing color mode state");
+      await initializeImageMode();
+    }
 
-		const extractedColor = await colorMode.value.selectRandomColorFromImage(
-			imageElement.value,
-		);
-		console.log("Extracted color:", extractedColor);
+    const extractedColor = await colorMode.value.selectRandomColorFromImage(
+      imageElement.value,
+    );
+    console.log("Extracted color:", extractedColor);
 
-		imageLoaded.value = true;
-		await nextTick();
-		updateImageDimensions();
+    imageLoaded.value = true;
+    await nextTick();
+    updateImageDimensions();
 
-		// Update color mode with extracted color
-		colorMode.value.setTargetColorAndGenerateOptions(extractedColor);
+    // Update color mode with extracted color
+    colorMode.value.setTargetColorAndGenerateOptions(extractedColor);
 
-		// Set the current game mode
-		store.currentGameMode = colorMode.value;
+    // Set the current game mode
+    store.currentGameMode = colorMode.value;
 
-		// Update the game mode state
-		if (colorMode.value?.state) {
-			const newState = {
-				targetRegion: colorMode.value.state.targetRegion,
-				targetRegionReady: true,
-				colorOptions: [...(colorMode.value.state.colorOptions || [])],
-				imageUrl: colorMode.value.state.imageUrl,
-				randomColor: { ...colorMode.value.state.randomColor },
-			};
+    // Update the game mode state
+    if (colorMode.value?.state) {
+      const newState = {
+        targetRegion: colorMode.value.state.targetRegion,
+        targetRegionReady: true,
+        colorOptions: [...(colorMode.value.state.colorOptions || [])],
+        imageUrl: colorMode.value.state.imageUrl,
+        randomColor: { ...colorMode.value.state.randomColor },
+      };
 
-			// Ensure atomic state update
-			Object.assign(colorMode.value.state, newState);
-			Object.assign(store.currentModeState, newState);
-		}
-	} catch (error) {
-		console.error("Error processing image:", error);
-		imageLoaded.value = false;
-	} finally {
-		imageProcessing.value = false;
-		// Ensure dimensions are updated after processing completes
-		nextTick(() => updateImageDimensions());
-	}
+      // Ensure atomic state update
+      Object.assign(colorMode.value.state, newState);
+      Object.assign(store.currentModeState, newState);
+    }
+  } catch (error) {
+    console.error("Error processing image:", error);
+    imageLoaded.value = false;
+  } finally {
+    imageProcessing.value = false;
+    // Ensure dimensions are updated after processing completes
+    nextTick(() => updateImageDimensions());
+  }
 }
 
 // Handle color selection
 function selectColor(color, index) {
-	if (!color) return;
+  if (!color) return;
 
-	selectedColorIndex.value = index;
-	if (colorMode.value) {
-		colorMode.value.state.userColor.h = color.h;
-		colorMode.value.state.userColor.s = color.s;
-		colorMode.value.state.userColor.v = color.v;
-	}
-	store.updateUserColor(color.h, color.s, color.v);
-	store.checkGuess();
+  selectedColorIndex.value = index;
+  if (colorMode.value) {
+    colorMode.value.state.userColor.h = color.h;
+    colorMode.value.state.userColor.s = color.s;
+    colorMode.value.state.userColor.v = color.v;
+  }
+  store.updateUserColor(color.h, color.s, color.v);
+  store.checkGuess();
 }
 
 // Reset selection and start a new round
 function resetSelection() {
-	selectedColorIndex.value = -1; // Reset selected index
-	if (colorMode.value && typeof colorMode.value.startRound === "function") {
-		imageLoaded.value = false;
-		imageProcessing.value = false;
-		colorMode.value.startRound().then(() => {
-			if (colorMode.value?.state) {
-				const newState = {
-					targetRegion: colorMode.value.state.targetRegion,
-					targetRegionReady: true,
-					colorOptions: [...(colorMode.value.state.colorOptions || [])],
-					imageUrl: colorMode.value.state.imageUrl,
-				};
-				Object.assign(colorMode.value.state, newState);
-				Object.assign(store.currentModeState, newState);
-			}
-		});
-	}
+  selectedColorIndex.value = -1; // Reset selected index
+  if (colorMode.value && typeof colorMode.value.startRound === "function") {
+    imageLoaded.value = false;
+    imageProcessing.value = false;
+    colorMode.value.startRound().then(() => {
+      if (colorMode.value?.state) {
+        const newState = {
+          targetRegion: colorMode.value.state.targetRegion,
+          targetRegionReady: true,
+          colorOptions: [...(colorMode.value.state.colorOptions || [])],
+          imageUrl: colorMode.value.state.imageUrl,
+        };
+        Object.assign(colorMode.value.state, newState);
+        Object.assign(store.currentModeState, newState);
+      }
+    });
+  }
 }
 
 // Development mode flag
@@ -334,22 +334,22 @@ const innerColorDotSize = 10;
 
 // Add a watcher to update dimensions when key properties change
 watch(
-	[
-		() => imageElement.value?.naturalWidth,
-		() => imageElement.value?.naturalHeight,
-		() => imageWrapperRef.value?.clientWidth,
-		() => imageWrapperRef.value?.clientHeight,
-		imageLoaded,
-	],
-	() => {
-		if (imageLoaded.value && !imageProcessing.value) {
-			nextTick(() => {
-				updateImageDimensions();
-				// Force position update
-				positionUpdateTrigger.value++;
-			});
-		}
-	},
+  [
+    () => imageElement.value?.naturalWidth,
+    () => imageElement.value?.naturalHeight,
+    () => imageWrapperRef.value?.clientWidth,
+    () => imageWrapperRef.value?.clientHeight,
+    imageLoaded,
+  ],
+  () => {
+    if (imageLoaded.value && !imageProcessing.value) {
+      nextTick(() => {
+        updateImageDimensions();
+        // Force position update
+        positionUpdateTrigger.value++;
+      });
+    }
+  },
 );
 
 // Add a reactive counter to force position updates
@@ -357,12 +357,12 @@ const positionUpdateTrigger = ref(0);
 
 // Create a reactive computed property for the adjusted position
 const adjustedTargetPosition = computed(() => {
-	// Including positionUpdateTrigger in the computation makes this reactive
-	positionUpdateTrigger.value;
-	if (!getTargetRegion.value || getTargetRegion.value.x === undefined) {
-		return { x: 0, y: 0 };
-	}
-	return getAdjustedPosition(getTargetRegion.value.x, getTargetRegion.value.y);
+  // Including positionUpdateTrigger in the computation makes this reactive
+  positionUpdateTrigger.value;
+  if (!getTargetRegion.value || getTargetRegion.value.x === undefined) {
+    return { x: 0, y: 0 };
+  }
+  return getAdjustedPosition(getTargetRegion.value.x, getTargetRegion.value.y);
 });
 
 // Track resize observer
@@ -370,16 +370,16 @@ let resizeObserver = null;
 
 // Update observer targets when refs change
 watch([imageWrapperRef, imageElement], ([newWrapper, newImage]) => {
-	if (resizeObserver) {
-		resizeObserver.disconnect();
+  if (resizeObserver) {
+    resizeObserver.disconnect();
 
-		if (newWrapper) {
-			resizeObserver.observe(newWrapper);
-		}
-		if (newImage) {
-			resizeObserver.observe(newImage);
-		}
-	}
+    if (newWrapper) {
+      resizeObserver.observe(newWrapper);
+    }
+    if (newImage) {
+      resizeObserver.observe(newImage);
+    }
+  }
 });
 </script>
 

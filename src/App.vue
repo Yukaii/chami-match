@@ -15,36 +15,36 @@ const store = useGameStore(); // Use the store
 
 // Theme handling moved to the ThemeToggle component and app initialization
 onMounted(() => {
-	// Apply saved theme on initial load
-	const savedTheme = localStorage.getItem("theme") || "dark"; // Default to dark
-	if (savedTheme === "dark") {
-		document.documentElement.classList.add("dark");
-	}
+  // Apply saved theme on initial load
+  const savedTheme = localStorage.getItem("theme") || "dark"; // Default to dark
+  if (savedTheme === "dark") {
+    document.documentElement.classList.add("dark");
+  }
 });
 
 watch(
-	locale,
-	() => {
-		useHead({
-			title: t("title"),
-			meta: [
-				{
-					name: "description",
-					content: t("description"),
-				},
-			],
-		});
+  locale,
+  () => {
+    useHead({
+      title: t("title"),
+      meta: [
+        {
+          name: "description",
+          content: t("description"),
+        },
+      ],
+    });
 
-		useSeoMeta({
-			title: t("title"),
-			description: t("description"),
-			ogDescription: t("description"),
-			ogTitle: t("title"),
-			ogImage: `${import.meta.env.VITE_BASE_URL}/og.png`,
-			twitterCard: "summary_large_image",
-		});
-	},
-	{ immediate: true },
+    useSeoMeta({
+      title: t("title"),
+      description: t("description"),
+      ogDescription: t("description"),
+      ogTitle: t("title"),
+      ogImage: `${import.meta.env.VITE_BASE_URL}/og.png`,
+      twitterCard: "summary_large_image",
+    });
+  },
+  { immediate: true },
 );
 </script>
 

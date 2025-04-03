@@ -8,26 +8,26 @@ const store = useGameStore();
 const emit = defineEmits(["startOver"]);
 
 function goToHome() {
-	router.push("/");
+  router.push("/");
 }
 
 function startOver() {
-	// Use the Pinia store to reset
-	store.startOver();
+  // Use the Pinia store to reset
+  store.startOver();
 
-	// Still emit event for backward compatibility
-	emit("startOver");
+  // Still emit event for backward compatibility
+  emit("startOver");
 }
 
 function viewLeaderboard() {
-	if (store.currentChallengeId) {
-		// router.push({ name: 'ChallengeLeaderboard', params: { id: store.currentChallengeId } }); // No longer navigate
-		store.toggleLeaderboardPopup(); // Toggle the popup instead
-	}
+  if (store.currentChallengeId) {
+    // router.push({ name: 'ChallengeLeaderboard', params: { id: store.currentChallengeId } }); // No longer navigate
+    store.toggleLeaderboardPopup(); // Toggle the popup instead
+  }
 }
 
 function startChallenge() {
-	store.toggleCreateChallengePopup();
+  store.toggleCreateChallengePopup();
 }
 </script>
 

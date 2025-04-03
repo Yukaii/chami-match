@@ -33,11 +33,11 @@ import BaseButton from "./base/BaseButton.vue";
 const store = useGameStore();
 
 const onClose = () => {
-	store.toggleResetPopup();
+  store.toggleResetPopup();
 };
 
 const confirmReset = () => {
-	store.resetGameData();
-	onClose();
+  store.resetGameData();
+  onClose();
 };
 </script>

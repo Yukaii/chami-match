@@ -9,24 +9,24 @@ const store = useGameStore();
 
 // Ensure the relative mode is initialized when component loads
 onMounted(() => {
-	if (store.gameType !== "relative") {
-		store.updateGameType("relative");
-		store.startOver(); // This will initialize the game mode and start a round
-	}
-	// If we're already in relative mode but don't have colors, just start a new round
-	else if (!store.relativeColors || !store.relativeColors.color1) {
-		store.startNewRound();
-	}
+  if (store.gameType !== "relative") {
+    store.updateGameType("relative");
+    store.startOver(); // This will initialize the game mode and start a round
+  }
+  // If we're already in relative mode but don't have colors, just start a new round
+  else if (!store.relativeColors || !store.relativeColors.color1) {
+    store.startNewRound();
+  }
 });
 
 // Create a computed property for the slider - using proper Pinia reactivity
 const valueDifference = computed({
-	get: () => store.userValueDifference,
-	set: (value) => store.updateUserValueDifference(Number.parseInt(value, 10)),
+  get: () => store.userValueDifference,
+  set: (value) => store.updateUserValueDifference(Number.parseInt(value, 10)),
 });
 
 function submit() {
-	store.checkGuess(); // Using the Pinia store method
+  store.checkGuess(); // Using the Pinia store method
 }
 </script>
 

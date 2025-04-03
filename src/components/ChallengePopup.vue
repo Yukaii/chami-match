@@ -110,69 +110,69 @@ const now = computed(() => new Date());
 
 // Computed property for active challenges
 const activeChallenges = computed(() => {
-	return store.joinedChallenges.filter((challenge) => {
-		if (!challenge.expiresAt) return true; // Assume active if no expiry date
-		try {
-			// Attempt to parse expiresAt, assuming it might be ISO string or timestamp number
-			const expiryTimestamp =
-				typeof challenge.expiresAt === "string"
-					? Date.parse(challenge.expiresAt)
-					: Number(challenge.expiresAt) * 1000; // Assume seconds timestamp if number
+  return store.joinedChallenges.filter((challenge) => {
+    if (!challenge.expiresAt) return true; // Assume active if no expiry date
+    try {
+      // Attempt to parse expiresAt, assuming it might be ISO string or timestamp number
+      const expiryTimestamp =
+        typeof challenge.expiresAt === "string"
+          ? Date.parse(challenge.expiresAt)
+          : Number(challenge.expiresAt) * 1000; // Assume seconds timestamp if number
 
-			if (Number.isNaN(expiryTimestamp)) {
-				console.error(
-					"Invalid date format for expiresAt:",
-					challenge.expiresAt,
-				);
-				return true; // Treat as active if parsing fails
-			}
-			return expiryTimestamp > now.value.getTime();
-		} catch (e) {
-			console.error(
-				"Error processing challenge expiry date:",
-				challenge.expiresAt,
-				e,
-			);
-			return true; // Treat as active on error
-		}
-	});
+      if (Number.isNaN(expiryTimestamp)) {
+        console.error(
+          "Invalid date format for expiresAt:",
+          challenge.expiresAt,
+        );
+        return true; // Treat as active if parsing fails
+      }
+      return expiryTimestamp > now.value.getTime();
+    } catch (e) {
+      console.error(
+        "Error processing challenge expiry date:",
+        challenge.expiresAt,
+        e,
+      );
+      return true; // Treat as active on error
+    }
+  });
 });
 
 // Computed property for expired or unavailable challenges
 const expiredChallenges = computed(() => {
-	return store.joinedChallenges.filter((challenge) => {
-		if (!challenge.expiresAt) return false; // Not expired if no expiry date
-		try {
-			// Attempt to parse expiresAt, assuming it might be ISO string or timestamp number
-			const expiryTimestamp =
-				typeof challenge.expiresAt === "string"
-					? Date.parse(challenge.expiresAt)
-					: Number(challenge.expiresAt) * 1000; // Assume seconds timestamp if number
+  return store.joinedChallenges.filter((challenge) => {
+    if (!challenge.expiresAt) return false; // Not expired if no expiry date
+    try {
+      // Attempt to parse expiresAt, assuming it might be ISO string or timestamp number
+      const expiryTimestamp =
+        typeof challenge.expiresAt === "string"
+          ? Date.parse(challenge.expiresAt)
+          : Number(challenge.expiresAt) * 1000; // Assume seconds timestamp if number
 
-			if (Number.isNaN(expiryTimestamp)) {
-				console.error(
-					"Invalid date format for expiresAt:",
-					challenge.expiresAt,
-				);
-				return false; // Treat as not expired if parsing fails
-			}
-			return expiryTimestamp <= now.value.getTime();
-		} catch (e) {
-			console.error(
-				"Error processing challenge expiry date:",
-				challenge.expiresAt,
-				e,
-			);
-			return false; // Treat as not expired on error
-		}
-	});
+      if (Number.isNaN(expiryTimestamp)) {
+        console.error(
+          "Invalid date format for expiresAt:",
+          challenge.expiresAt,
+        );
+        return false; // Treat as not expired if parsing fails
+      }
+      return expiryTimestamp <= now.value.getTime();
+    } catch (e) {
+      console.error(
+        "Error processing challenge expiry date:",
+        challenge.expiresAt,
+        e,
+      );
+      return false; // Treat as not expired on error
+    }
+  });
 });
 
 const {
-	joinChallenge,
-	getChallengeById,
-	isLoading: isApiLoading,
-	error: apiError,
+  joinChallenge,
+  getChallengeById,
+  isLoading: isApiLoading,
+  error: apiError,
 } = useChallengeApi();
 
 const accessCode = ref("");
@@ -180,223 +180,223 @@ const challengeToRemoveId = ref(null); // State for confirmation
 
 // Computed property to get the name of the challenge to remove
 const challengeToRemoveName = computed(() => {
-	if (!challengeToRemoveId.value) return "";
-	const challenge = store.joinedChallenges.find(
-		(c) => c.id === challengeToRemoveId.value,
-	);
-	return challenge ? challenge.name : "this challenge";
+  if (!challengeToRemoveId.value) return "";
+  const challenge = store.joinedChallenges.find(
+    (c) => c.id === challengeToRemoveId.value,
+  );
+  return challenge ? challenge.name : "this challenge";
 });
 
 // Function to remove challenge from store
 const removeChallenge = (challengeId) => {
-	store.joinedChallenges = store.joinedChallenges.filter(
-		(c) => c.id !== challengeId,
-	);
+  store.joinedChallenges = store.joinedChallenges.filter(
+    (c) => c.id !== challengeId,
+  );
 };
 
 // Function to handle confirmation of removal
 const confirmRemoveChallenge = () => {
-	if (challengeToRemoveId.value) {
-		removeChallenge(challengeToRemoveId.value);
-		apiError.value = null; // Clear error after removal
-		challengeToRemoveId.value = null; // Reset confirmation state
-	}
+  if (challengeToRemoveId.value) {
+    removeChallenge(challengeToRemoveId.value);
+    apiError.value = null; // Clear error after removal
+    challengeToRemoveId.value = null; // Reset confirmation state
+  }
 };
 
 // Function to cancel removal
 const cancelRemoveChallenge = () => {
-	challengeToRemoveId.value = null; // Reset confirmation state
-	apiError.value = null; // Also clear the error message on cancel
+  challengeToRemoveId.value = null; // Reset confirmation state
+  apiError.value = null; // Also clear the error message on cancel
 };
 
 // --- Logic moved from WelcomeScreen ---
 
 const handleJoinChallenge = async () => {
-	apiError.value = null; // Clear previous errors
-	if (!accessCode.value || accessCode.value.length !== 6) {
-		apiError.value =
-			$t("error.invalidAccessCode") ||
-			"Please enter a valid 6-character access code.";
-		return;
-	}
+  apiError.value = null; // Clear previous errors
+  if (!accessCode.value || accessCode.value.length !== 6) {
+    apiError.value =
+      $t("error.invalidAccessCode") ||
+      "Please enter a valid 6-character access code.";
+    return;
+  }
 
-	const payload = {
-		accessCode: accessCode.value.toUpperCase(), // Ensure uppercase
-		deviceId: store.deviceId,
-		displayName: store.preferences.displayName || "Player", // Use stored name
-		// userId: store.userId, // Add if user auth exists
-	};
+  const payload = {
+    accessCode: accessCode.value.toUpperCase(), // Ensure uppercase
+    deviceId: store.deviceId,
+    displayName: store.preferences.displayName || "Player", // Use stored name
+    // userId: store.userId, // Add if user auth exists
+  };
 
-	try {
-		console.log("Joining challenge with payload:", payload);
-		const challenge = await joinChallenge(payload);
-		console.log("Joined challenge:", challenge);
+  try {
+    console.log("Joining challenge with payload:", payload);
+    const challenge = await joinChallenge(payload);
+    console.log("Joined challenge:", challenge);
 
-		// Find the participant record for the current device
-		const myParticipant = challenge.participants.find(
-			(p) => p.deviceId === store.deviceId,
-		);
+    // Find the participant record for the current device
+    const myParticipant = challenge.participants.find(
+      (p) => p.deviceId === store.deviceId,
+    );
 
-		if (!myParticipant) {
-			console.error(
-				"Could not find own participant record after joining challenge.",
-			);
-			apiError.value =
-				$t("error.joinVerificationFailed") ||
-				"Error: Could not verify participation after joining.";
-			return;
-		}
+    if (!myParticipant) {
+      console.error(
+        "Could not find own participant record after joining challenge.",
+      );
+      apiError.value =
+        $t("error.joinVerificationFailed") ||
+        "Error: Could not verify participation after joining.";
+      return;
+    }
 
-		// Store challenge context in Pinia
-		store.currentChallengeId = challenge.id;
-		store.currentParticipantId = myParticipant.id;
+    // Store challenge context in Pinia
+    store.currentChallengeId = challenge.id;
+    store.currentParticipantId = myParticipant.id;
 
-		// Add to list of joined challenges (avoid duplicates), including expiration and gameMode
-		if (!store.joinedChallenges.some((c) => c.id === challenge.id)) {
-			store.joinedChallenges.push({
-				id: challenge.id,
-				name: challenge.name,
-				accessCode: challenge.accessCode,
-				expiresAt: challenge.expiresAt, // Store the expiration time
-				gameMode: challenge.gameMode, // Store the game mode
-			});
-		} else {
-			// If challenge already exists, ensure gameMode is updated (in case it was missing before)
-			const existingChallengeIndex = store.joinedChallenges.findIndex(
-				(c) => c.id === challenge.id,
-			);
-			if (
-				existingChallengeIndex !== -1 &&
-				!store.joinedChallenges[existingChallengeIndex].gameMode
-			) {
-				store.joinedChallenges[existingChallengeIndex].gameMode =
-					challenge.gameMode;
-			}
-		}
+    // Add to list of joined challenges (avoid duplicates), including expiration and gameMode
+    if (!store.joinedChallenges.some((c) => c.id === challenge.id)) {
+      store.joinedChallenges.push({
+        id: challenge.id,
+        name: challenge.name,
+        accessCode: challenge.accessCode,
+        expiresAt: challenge.expiresAt, // Store the expiration time
+        gameMode: challenge.gameMode, // Store the game mode
+      });
+    } else {
+      // If challenge already exists, ensure gameMode is updated (in case it was missing before)
+      const existingChallengeIndex = store.joinedChallenges.findIndex(
+        (c) => c.id === challenge.id,
+      );
+      if (
+        existingChallengeIndex !== -1 &&
+        !store.joinedChallenges[existingChallengeIndex].gameMode
+      ) {
+        store.joinedChallenges[existingChallengeIndex].gameMode =
+          challenge.gameMode;
+      }
+    }
 
-		// Set the game type based on the challenge settings
-		store.updateGameType(challenge.settings.gameType);
+    // Set the game type based on the challenge settings
+    store.updateGameType(challenge.settings.gameType);
 
-		// Find the route for the challenge's game type using store.gameModes
-		const gameModeRoute =
-			store.gameModes.find((mode) => mode.type === challenge.settings.gameType)
-				?.route || "/game"; // Default to standard game
+    // Find the route for the challenge's game type using store.gameModes
+    const gameModeRoute =
+      store.gameModes.find((mode) => mode.type === challenge.settings.gameType)
+        ?.route || "/game"; // Default to standard game
 
-		// Start a new game session for the challenge
-		store.startOver(); // This resets score/round and sets challenge IDs to null, need to re-set them
+    // Start a new game session for the challenge
+    store.startOver(); // This resets score/round and sets challenge IDs to null, need to re-set them
 
-		// Re-set challenge context after startOver clears it
-		store.currentChallengeId = challenge.id;
-		store.currentParticipantId = myParticipant.id;
+    // Re-set challenge context after startOver clears it
+    store.currentChallengeId = challenge.id;
+    store.currentParticipantId = myParticipant.id;
 
-		// Close the popup and navigate
-		onClose();
-		router.push(gameModeRoute);
-	} catch (err) {
-		// apiError should be set by the composable, but log the error just in case
-		console.error("Failed to join challenge:", err, apiError.value);
-		// Ensure apiError has a fallback message if the composable didn't set one
-		if (!apiError.value) {
-			apiError.value = $t("error.joinFailed") || "Error joining challenge";
-		}
-	}
+    // Close the popup and navigate
+    onClose();
+    router.push(gameModeRoute);
+  } catch (err) {
+    // apiError should be set by the composable, but log the error just in case
+    console.error("Failed to join challenge:", err, apiError.value);
+    // Ensure apiError has a fallback message if the composable didn't set one
+    if (!apiError.value) {
+      apiError.value = $t("error.joinFailed") || "Error joining challenge";
+    }
+  }
 };
 
 const rejoinChallenge = async (challengeId) => {
-	apiError.value = null; // Clear previous errors
-	try {
-		console.log("Rejoining challenge:", challengeId);
-		const challenge = await getChallengeById(challengeId); // Fetch challenge details
-		console.log("Fetched challenge details:", challenge);
+  apiError.value = null; // Clear previous errors
+  try {
+    console.log("Rejoining challenge:", challengeId);
+    const challenge = await getChallengeById(challengeId); // Fetch challenge details
+    console.log("Fetched challenge details:", challenge);
 
-		// Find the participant record for the current device
-		const myParticipant = challenge.participants.find(
-			(p) => p.deviceId === store.deviceId,
-		);
+    // Find the participant record for the current device
+    const myParticipant = challenge.participants.find(
+      (p) => p.deviceId === store.deviceId,
+    );
 
-		if (!myParticipant) {
-			console.error(
-				"Could not find own participant record in challenge:",
-				challengeId,
-			);
-			// Set the specific error message
-			apiError.value =
-				$t("error.rejoinParticipantNotFound") ||
-				"Error: You don't seem to be a participant in this challenge anymore.";
+    if (!myParticipant) {
+      console.error(
+        "Could not find own participant record in challenge:",
+        challengeId,
+      );
+      // Set the specific error message
+      apiError.value =
+        $t("error.rejoinParticipantNotFound") ||
+        "Error: You don't seem to be a participant in this challenge anymore.";
 
-			// Ask user for confirmation before removing
-			const challengeToRemove = store.joinedChallenges.find(
-				(c) => c.id === challengeId,
-			);
-			const challengeName = challengeToRemove
-				? challengeToRemove.name
-				: "this challenge";
-			const confirmMessage =
-				$t("confirmRemoveChallengeNotFound", { name: challengeName }) ||
-				`You were not found in "${challengeName}". Remove it from your list?`;
+      // Ask user for confirmation before removing
+      const challengeToRemove = store.joinedChallenges.find(
+        (c) => c.id === challengeId,
+      );
+      const challengeName = challengeToRemove
+        ? challengeToRemove.name
+        : "this challenge";
+      const confirmMessage =
+        $t("confirmRemoveChallengeNotFound", { name: challengeName }) ||
+        `You were not found in "${challengeName}". Remove it from your list?`;
 
-			if (window.confirm(confirmMessage)) {
-				store.joinedChallenges = store.joinedChallenges.filter(
-					(c) => c.id !== challengeId,
-				);
-			}
-			return; // Prevent further execution after handling the error
-		}
+      if (window.confirm(confirmMessage)) {
+        store.joinedChallenges = store.joinedChallenges.filter(
+          (c) => c.id !== challengeId,
+        );
+      }
+      return; // Prevent further execution after handling the error
+    }
 
-		// Store challenge context in Pinia
-		store.currentChallengeId = challenge.id;
-		store.currentParticipantId = myParticipant.id;
+    // Store challenge context in Pinia
+    store.currentChallengeId = challenge.id;
+    store.currentParticipantId = myParticipant.id;
 
-		// Set the game type based on the challenge settings
-		store.updateGameType(challenge.settings.gameType);
+    // Set the game type based on the challenge settings
+    store.updateGameType(challenge.settings.gameType);
 
-		// Find the route for the challenge's game type using store.gameModes
-		const gameModeRoute =
-			store.gameModes.find((mode) => mode.type === challenge.settings.gameType)
-				?.route || "/game"; // Default to standard game
+    // Find the route for the challenge's game type using store.gameModes
+    const gameModeRoute =
+      store.gameModes.find((mode) => mode.type === challenge.settings.gameType)
+        ?.route || "/game"; // Default to standard game
 
-		// Start a new game session for the challenge
-		store.startOver(); // This resets score/round and sets challenge IDs to null, need to re-set them
+    // Start a new game session for the challenge
+    store.startOver(); // This resets score/round and sets challenge IDs to null, need to re-set them
 
-		// Re-set challenge context after startOver clears it
-		store.currentChallengeId = challenge.id;
-		store.currentParticipantId = myParticipant.id;
+    // Re-set challenge context after startOver clears it
+    store.currentChallengeId = challenge.id;
+    store.currentParticipantId = myParticipant.id;
 
-		// Close the popup and navigate
-		onClose();
-		router.push(gameModeRoute);
-	} catch (err) {
-		// Log the raw error first
-		// Log the raw error first
-		console.error("Failed to rejoin challenge:", err);
+    // Close the popup and navigate
+    onClose();
+    router.push(gameModeRoute);
+  } catch (err) {
+    // Log the raw error first
+    // Log the raw error first
+    console.error("Failed to rejoin challenge:", err);
 
-		// Check the caught error's message directly for 'Not Found' (case-insensitive) using optional chaining
-		const isNotFoundError =
-			err?.message &&
-			typeof err.message === "string" &&
-			err.message.toLowerCase().includes("not found");
+    // Check the caught error's message directly for 'Not Found' (case-insensitive) using optional chaining
+    const isNotFoundError =
+      err?.message &&
+      typeof err.message === "string" &&
+      err.message.toLowerCase().includes("not found");
 
-		if (isNotFoundError) {
-			// Set the user-facing error message
-			apiError.value =
-				$t("error.rejoinParticipantNotFound") ||
-				"Error: You don't seem to be a participant in this challenge anymore.";
-			// Set the ID of the challenge needing removal confirmation
-			challengeToRemoveId.value = challengeId;
-		} else {
-			// Handle other potential errors from the API call
-			// Use the error message from the caught error (with optional chaining), or a generic fallback
-			apiError.value =
-				err?.message || $t("error.rejoinFailed") || "Error rejoining challenge";
-			console.error("Rejoin API Error (Other):", apiError.value);
-		}
-	}
+    if (isNotFoundError) {
+      // Set the user-facing error message
+      apiError.value =
+        $t("error.rejoinParticipantNotFound") ||
+        "Error: You don't seem to be a participant in this challenge anymore.";
+      // Set the ID of the challenge needing removal confirmation
+      challengeToRemoveId.value = challengeId;
+    } else {
+      // Handle other potential errors from the API call
+      // Use the error message from the caught error (with optional chaining), or a generic fallback
+      apiError.value =
+        err?.message || $t("error.rejoinFailed") || "Error rejoining challenge";
+      console.error("Rejoin API Error (Other):", apiError.value);
+    }
+  }
 };
 
 // --- End of moved logic ---
 
 const onClose = () => {
-	store.toggleChallengePopup(); // Use the new toggle function
+  store.toggleChallengePopup(); // Use the new toggle function
 };
 
 // If the URL param logic needs to stay with the popup opening mechanism,
@@ -404,22 +404,22 @@ const onClose = () => {
 // For now, keeping the onMounted check here, but it might be redundant
 // if the popup isn't open when the WelcomeScreen mounts.
 onMounted(() => {
-	// Check for challenge code in URL query params when the component mounts
-	// This might be better handled in WelcomeScreen before opening the popup
-	const codeFromQuery = route.query.challengeCode;
-	if (
-		codeFromQuery &&
-		typeof codeFromQuery === "string" &&
-		codeFromQuery.length === 6
-	) {
-		// Potentially pre-fill the access code if the popup is opened due to the param
-		// accessCode.value = codeFromQuery.toUpperCase();
-		// Or trigger the join confirmation logic if that's moved here too.
-		// For now, just logging it.
-		console.log(
-			"Challenge code from URL detected in ChallengePopup:",
-			codeFromQuery,
-		);
-	}
+  // Check for challenge code in URL query params when the component mounts
+  // This might be better handled in WelcomeScreen before opening the popup
+  const codeFromQuery = route.query.challengeCode;
+  if (
+    codeFromQuery &&
+    typeof codeFromQuery === "string" &&
+    codeFromQuery.length === 6
+  ) {
+    // Potentially pre-fill the access code if the popup is opened due to the param
+    // accessCode.value = codeFromQuery.toUpperCase();
+    // Or trigger the join confirmation logic if that's moved here too.
+    // For now, just logging it.
+    console.log(
+      "Challenge code from URL detected in ChallengePopup:",
+      codeFromQuery,
+    );
+  }
 });
 </script>

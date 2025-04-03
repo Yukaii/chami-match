@@ -16,95 +16,95 @@ const createdChallengeInfo = ref(null); // To store { id, accessCode, name, expi
 const showCopiedMessage = ref(false);
 
 const expirationOptions = [
-	{ value: "1h", label: "1 Hour" },
-	{ value: "24h", label: "24 Hours" },
-	{ value: "3d", label: "3 Days" },
-	{ value: "7d", label: "7 Days" },
-	{ value: null, label: "Never" }, // Represent 'Never' as null or undefined
+  { value: "1h", label: "1 Hour" },
+  { value: "24h", label: "24 Hours" },
+  { value: "3d", label: "3 Days" },
+  { value: "7d", label: "7 Days" },
+  { value: null, label: "Never" }, // Represent 'Never' as null or undefined
 ];
 
 const resetForm = () => {
-	challengeName.value = "";
-	expiration.value = "1h";
-	error.value = null;
-	createdChallengeInfo.value = null;
+  challengeName.value = "";
+  expiration.value = "1h";
+  error.value = null;
+  createdChallengeInfo.value = null;
 };
 
 const closePopup = () => {
-	resetForm();
-	emit("close");
+  resetForm();
+  emit("close");
 };
 
 const submitCreateChallenge = async () => {
-	if (!challengeName.value) {
-		error.value = $t("challenge.nameRequired");
-		return;
-	}
+  if (!challengeName.value) {
+    error.value = $t("challenge.nameRequired");
+    return;
+  }
 
-	const payload = {
-		name: challengeName.value,
-		expiresIn: expiration.value || undefined, // Send undefined if 'Never' selected
-		gameMode: store.gameType, // Use the correct game type here
-		settings: {
-			precision: store.precision,
-			maxLife: store.maxLife,
-			gameType: store.gameType,
-		},
-		deviceId: store.deviceId,
-		displayName: store.preferences.displayName || "Player", // Use stored name
-	};
+  const payload = {
+    name: challengeName.value,
+    expiresIn: expiration.value || undefined, // Send undefined if 'Never' selected
+    gameMode: store.gameType, // Use the correct game type here
+    settings: {
+      precision: store.precision,
+      maxLife: store.maxLife,
+      gameType: store.gameType,
+    },
+    deviceId: store.deviceId,
+    displayName: store.preferences.displayName || "Player", // Use stored name
+  };
 
-	try {
-		const result = await createChallenge(payload);
-		createdChallengeInfo.value = result; // Store result to show sharing info
+  try {
+    const result = await createChallenge(payload);
+    createdChallengeInfo.value = result; // Store result to show sharing info
 
-		// Also store the challenge context in Pinia for the creator
-		store.currentChallengeId = result.id;
-		store.currentParticipantId = result.participantId; // Get participant ID from response
+    // Also store the challenge context in Pinia for the creator
+    store.currentChallengeId = result.id;
+    store.currentParticipantId = result.participantId; // Get participant ID from response
 
-		// Add the newly created challenge to the joined challenges list
-		if (!store.joinedChallenges.some((c) => c.id === result.id)) {
-			store.joinedChallenges.push({
-				id: result.id,
-				name: result.name,
-				accessCode: result.accessCode,
-				expiresAt: result.expiresAt, // Store the expiration time
-				gameMode: store.gameType, // Use the game type selected for creation
-			});
-		}
-	} catch (err) {
-		// error should be set by the composable, but log just in case
-		console.error("Failed to create challenge:", err, error.value);
-		// Ensure error has a fallback if not set by composable
-		if (!error.value) {
-			error.value = $t("error.createFailed") || "Error creating challenge";
-		}
-	}
+    // Add the newly created challenge to the joined challenges list
+    if (!store.joinedChallenges.some((c) => c.id === result.id)) {
+      store.joinedChallenges.push({
+        id: result.id,
+        name: result.name,
+        accessCode: result.accessCode,
+        expiresAt: result.expiresAt, // Store the expiration time
+        gameMode: store.gameType, // Use the game type selected for creation
+      });
+    }
+  } catch (err) {
+    // error should be set by the composable, but log just in case
+    console.error("Failed to create challenge:", err, error.value);
+    // Ensure error has a fallback if not set by composable
+    if (!error.value) {
+      error.value = $t("error.createFailed") || "Error creating challenge";
+    }
+  }
 };
 
 // Function to copy text to clipboard
 const copyToClipboard = async () => {
-	const url = getChallengeUrl();
-	if (!url) return;
-	try {
-		await navigator.clipboard.writeText(url);
-		showCopiedMessage.value = true;
-		setTimeout(() => {
-			showCopiedMessage.value = false;
-		}, 2000);
-	} catch (err) {
-		console.error("Failed to copy text: ", err);
-		showCopiedMessage.value = false;
-	}
+  const url = getChallengeUrl();
+  if (!url) return;
+  try {
+    await navigator.clipboard.writeText(url);
+    showCopiedMessage.value = true;
+    setTimeout(() => {
+      showCopiedMessage.value = false;
+    }, 2000);
+  } catch (err) {
+    console.error("Failed to copy text: ", err);
+    showCopiedMessage.value = false;
+  }
 };
 
 const getChallengeUrl = () => {
-	if (!createdChallengeInfo.value?.accessCode) return "";
-	// Construct the URL with the current origin and root path, adding the challenge code as a query parameter
-	const baseUrl = `${window.location.origin}/`; // Use root path with template literal
-	const url = new URL(baseUrl);
-	url.searchParams.set("challengeCode", createdChallengeInfo.value.accessCode);
-	return url.toString();
+  if (!createdChallengeInfo.value?.accessCode) return "";
+  // Construct the URL with the current origin and root path, adding the challenge code as a query parameter
+  const baseUrl = `${window.location.origin}/`; // Use root path with template literal
+  const url = new URL(baseUrl);
+  url.searchParams.set("challengeCode", createdChallengeInfo.value.accessCode);
+  return url.toString();
 };
 </script>
 
