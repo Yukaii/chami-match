@@ -180,5 +180,15 @@
 		"retry": "Retry",
 		"refresh": "Refresh Page",
 		"copyError": "Copy Error"
+	},
+	"challenge.title": "Challenges",
+	"serverUnavailable": "Challenge server unavailable. Please check server settings.",
+	"serverUnavailableShort": "Challenge server unavailable",
+	"error": {
+		"invalidAccessCode": "Please enter a valid 6-character access code.",
+		"joinVerificationFailed": "Error: Could not verify participation after joining.",
+		"joinFailed": "Error joining challenge",
+		"rejoinParticipantNotFound": "Error: You don't seem to be a participant in this challenge anymore.",
+		"rejoinFailed": "Error rejoining challenge"
 	}
 }

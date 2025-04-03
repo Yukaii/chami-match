@@ -182,5 +182,14 @@
 		"retry": "再試行",
 		"refresh": "ページを更新",
 		"copyError": "エラーをコピー"
+	},
+	"challenge.title": "チャレンジ",
+	"serverUnavailableShort": "チャレンジサーバー利用不可",
+	"error": {
+		"invalidAccessCode": "有効な6文字のアクセスコードを入力してください。",
+		"joinVerificationFailed": "エラー：参加確認に失敗しました。",
+		"joinFailed": "チャレンジ参加エラー",
+		"rejoinParticipantNotFound": "エラー：このチャレンジの参加者ではないようです。",
+		"rejoinFailed": "チャレンジ再参加エラー"
 	}
 }

@@ -182,5 +182,14 @@
 		"retry": "重試",
 		"refresh": "重新整理頁面",
 		"copyError": "複製錯誤"
+	},
+	"challenge.title": "挑戰",
+	"serverUnavailableShort": "挑戰伺服器無法使用",
+	"error": {
+		"invalidAccessCode": "請輸入有效的6位數邀請碼。",
+		"joinVerificationFailed": "錯誤：加入後無法驗證您的參與狀態。",
+		"joinFailed": "加入挑戰時發生錯誤",
+		"rejoinParticipantNotFound": "錯誤：您似乎已不再是此挑戰的參與者。",
+		"rejoinFailed": "重新加入挑戰時發生錯誤"
 	}
 }

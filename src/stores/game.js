@@ -60,15 +60,63 @@ export const useGameStore = defineStore("game", {
 		aboutPopupOpen: false,
 		resetPopupOpen: false,
 		createChallengePopupOpen: false,
+		challengePopupOpen: false, // State for the new challenge popup
 		leaderboardPopupOpen: false, // State for leaderboard popup
 		settingsMode: "global",
 
 		// Other state
 		lives: 5,
 		attemptCount: 0,
+
+		// Moved gameModes here for global access
+		gameModes: [
+			{
+				type: "standard",
+				name: "startStandardGame", // Corresponds to i18n key
+				color:
+					"bg-green-500 dark:bg-green-600 hover:bg-green-600 dark:hover:bg-green-700 border-b-4 border-green-700 dark:border-green-800",
+				icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" /></svg>`,
+				route: "/game",
+			},
+			{
+				type: "contextual",
+				name: "startContextualGame",
+				color:
+					"bg-purple-500 dark:bg-purple-600 hover:bg-purple-600 dark:hover:bg-purple-700 border-b-4 border-purple-700 dark:border-purple-800",
+				icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>`,
+				route: "/context-game",
+			},
+			{
+				type: "relative",
+				name: "startRelativeGame",
+				color:
+					"bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700 border-b-4 border-blue-700 dark:border-blue-800",
+				icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" /></svg>`,
+				route: "/relative-game",
+			},
+			{
+				type: "image",
+				name: "startColorGame", // Note: i18n key might need update if specific to image game
+				color:
+					"bg-amber-500 dark:bg-amber-600 hover:bg-amber-600 dark:hover:bg-amber-700 border-b-4 border-amber-700 dark:border-amber-800",
+				icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>`,
+				route: "/image-game",
+			},
+			{
+				type: "recall",
+				name: "startRecallGame",
+				color:
+					"bg-pink-500 dark:bg-pink-600 hover:bg-pink-600 dark:hover:bg-pink-700 border-b-4 border-pink-700 dark:border-pink-800",
+				icon: `<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`,
+				route: "/recall-game",
+			},
+		],
 	}),
 
 	getters: {
+		// Expose gameModes through getters if preferred, or access directly via store.gameModes
+		// gameModesList(state) { return state.gameModes; },
+
 		maxLife(state) {
 			// Override maxLife for contextual and image mode to always be 2
 			if (
@@ -529,6 +577,11 @@ export const useGameStore = defineStore("game", {
 
 		toggleCreateChallengePopup() {
 			this.createChallengePopupOpen = !this.createChallengePopupOpen;
+		},
+
+		toggleChallengePopup() {
+			// Action to toggle the new challenge popup
+			this.challengePopupOpen = !this.challengePopupOpen;
 		},
 
 		toggleLeaderboardPopup() {
