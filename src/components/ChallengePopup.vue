@@ -33,8 +33,13 @@
         <h3 class="text-lg font-semibold mb-2 text-center text-gray-700 dark:text-gray-300">{{ $t('joinedChallengesTitle') || 'Joined Challenges' }}</h3>
         <ul class="space-y-2 max-h-40 overflow-y-auto">
           <li v-for="challenge in activeChallenges" :key="challenge.id" class="flex justify-between items-center p-2 bg-gray-100 dark:bg-gray-700 rounded">
-            <span class="truncate mr-2">{{ challenge.name }} ({{ challenge.accessCode }})</span>
-            <BaseButton variant="outline" size="xs" @click="rejoinChallenge(challenge.id)">
+            <div class="flex-1 min-w-0 mr-2"> <!-- Wrapper for text content -->
+              <p class="truncate font-medium">{{ challenge.name }} ({{ challenge.accessCode }})</p>
+              <p v-if="challenge.gameMode" class="text-xs text-gray-500 dark:text-gray-400 truncate">
+                {{ $t(`gameModes.${challenge.gameMode}.name`, challenge.gameMode) }} <!-- Display game mode -->
+              </p>
+            </div>
+            <BaseButton variant="outline" size="xs" @click="rejoinChallenge(challenge.id)" class="flex-shrink-0"> <!-- Prevent button shrinking -->
               {{ $t('play') || 'Play' }}
             </BaseButton>
           </li>
@@ -246,14 +251,27 @@ const handleJoinChallenge = async () => {
 		store.currentChallengeId = challenge.id;
 		store.currentParticipantId = myParticipant.id;
 
-		// Add to list of joined challenges (avoid duplicates), including expiration
+		// Add to list of joined challenges (avoid duplicates), including expiration and gameMode
 		if (!store.joinedChallenges.some((c) => c.id === challenge.id)) {
 			store.joinedChallenges.push({
 				id: challenge.id,
 				name: challenge.name,
 				accessCode: challenge.accessCode,
 				expiresAt: challenge.expiresAt, // Store the expiration time
+				gameMode: challenge.gameMode, // Store the game mode
 			});
+		} else {
+			// If challenge already exists, ensure gameMode is updated (in case it was missing before)
+			const existingChallengeIndex = store.joinedChallenges.findIndex(
+				(c) => c.id === challenge.id,
+			);
+			if (
+				existingChallengeIndex !== -1 &&
+				!store.joinedChallenges[existingChallengeIndex].gameMode
+			) {
+				store.joinedChallenges[existingChallengeIndex].gameMode =
+					challenge.gameMode;
+			}
 		}
 
 		// Set the game type based on the challenge settings

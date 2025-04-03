@@ -390,9 +390,10 @@ app.get("/api/challenges/:id/leaderboard", (c) => {
 	});
 
 	// Return the sorted leaderboard
-	// Also include challenge info like name and expiration?
+	// Include challenge info like name, gameMode, and expiration
 	return c.json({
 		challengeName: challenge.name,
+		gameMode: challenge.gameMode, // Add gameMode here
 		expiresAt: challenge.expiresAt,
 		leaderboard: leaderboard,
 	});

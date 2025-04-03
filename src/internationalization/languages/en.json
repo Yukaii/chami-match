@@ -41,6 +41,10 @@
 	"home": "Home",
 	"submit": "Submit",
 	"challengeFriends": "Challenge Friends",
+	"leaderboard": {
+		"name": "Name",
+		"streak": "Streak"
+	},
 	"viewLeaderboard": "View Leaderboard",
 	"refresh": "Refresh",
 	"close": "Close",
@@ -194,5 +198,6 @@
 		"rejoinFailed": "Error rejoining challenge"
 	},
 	"confirmRemoveChallengeNotFoundMessage": "You were not found in \"{name}\". Remove it from your list?",
-	"confirm": "Confirm"
+	"confirm": "Confirm",
+	"gameModeLabel": "Mode"
 }

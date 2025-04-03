@@ -103,6 +103,7 @@ export interface LeaderboardEntry {
 
 export interface LeaderboardResponse {
 	challengeName: string;
+	gameMode: string; // Add gameMode
 	expiresAt?: number;
 	leaderboard: LeaderboardEntry[];
 }

@@ -15,6 +15,10 @@
 	},
 	"challengeMode": "チャレンジモード",
 	"challengeFriends": "フレンドをチャレンジ",
+	"leaderboard": {
+		"name": "名前",
+		"streak": "連勝"
+	},
 	"viewLeaderboard": "リーダーボード",
 	"refresh": "更新",
 	"loading": "作成中...",
@@ -195,5 +199,6 @@
 		"rejoinFailed": "チャレンジ再参加エラー"
 	},
 	"confirmRemoveChallengeNotFoundMessage": "チャレンジ「{name}」に参加者として見つかりませんでした。リストから削除しますか？",
-	"confirm": "確認"
+	"confirm": "確認",
+	"gameModeLabel": "モード"
 }

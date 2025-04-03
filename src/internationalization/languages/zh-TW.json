@@ -15,6 +15,10 @@
 	},
 	"challengeMode": "挑戰模式",
 	"challengeFriends": "挑戰好友",
+	"leaderboard": {
+		"name": "名稱",
+		"streak": "連勝"
+	},
 	"viewLeaderboard": "排行榜",
 	"refresh": "重新整理",
 	"loading": "建立中...",
@@ -195,5 +199,6 @@
 		"rejoinFailed": "重新加入挑戰時發生錯誤"
 	},
 	"confirmRemoveChallengeNotFoundMessage": "在挑戰「{name}」中找不到您的參與紀錄。要將其從列表中移除嗎？",
-	"confirm": "確認"
+	"confirm": "確認",
+	"gameModeLabel": "模式"
 }

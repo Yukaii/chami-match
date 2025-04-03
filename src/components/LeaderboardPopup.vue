@@ -65,16 +65,32 @@ const closePopup = () => {
     </div>
 
     <div v-else-if="challenge" class="mt-2">
-      <div v-if="challenge.expiresAt" class="mb-4"> <!-- Conditionally show expiration -->
-        <p class="text-sm text-gray-500 dark:text-gray-400">
-          {{ $t('challenge.expiresAt') }}: {{ formatDate(challenge.expiresAt) }}
-        </p>
+      <!-- Display Game Mode and Expiration -->
+      <div class="mb-4 text-sm text-gray-500 dark:text-gray-400 space-y-1">
+         <p v-if="challenge.gameMode">
+           <span class="font-semibold">{{ $t('gameModeLabel') || 'Mode' }}:</span>
+           {{ $t(`gameModes.${challenge.gameMode}.name`, challenge.gameMode) }} <!-- Translate game mode name -->
+         </p>
+         <p v-if="challenge.expiresAt">
+           <span class="font-semibold">{{ $t('challenge.expiresAt') || 'Expires' }}:</span>
+           {{ formatDate(challenge.expiresAt) }}
+         </p>
       </div>
+
 
       <!-- Leaderboard -->
       <div class="space-y-2">
+        <!-- Header Row -->
+        <div class="p-3 flex items-center justify-between border-b border-gray-200 dark:border-gray-700 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">
+          <div class="flex items-center gap-2 w-3/5"> <!-- Adjust width as needed -->
+            <span>#</span>
+            <span>{{ $t('leaderboard.name') || 'Name' }}</span>
+          </div>
+          <div class="w-1/5 text-right">{{ $t('leaderboard.streak') || 'Streak' }}</div> <!-- Adjust width and alignment -->
+        </div>
+
         <!-- Iterate over challenge.leaderboard instead of challenge.participants -->
-        <div v-for="(entry, index) in challenge.leaderboard" 
+        <div v-for="(entry, index) in challenge.leaderboard"
              :key="entry.participantId"
              :class="{
                'bg-purple-100 dark:bg-purple-900': entry.participantId === store.currentParticipantId,
@@ -82,15 +98,16 @@ const closePopup = () => {
              }"
              class="p-3 rounded-lg flex items-center justify-between"
         >
-          <div class="flex items-center gap-2">
-            <span class="font-bold">{{ index + 1 }}.</span>
-            <span>{{ entry.displayName }}</span> <!-- Use entry.displayName -->
-            <span v-if="entry.participantId === store.currentParticipantId" 
-                  class="text-xs text-purple-600 dark:text-purple-400">
+          <div class="flex items-center gap-2 w-3/5"> <!-- Match width with header -->
+            <span class="font-bold w-6 text-right">{{ index + 1 }}.</span> <!-- Fixed width for rank -->
+            <span class="truncate">{{ entry.displayName }}</span> <!-- Use entry.displayName, truncate if long -->
+            <span v-if="entry.participantId === store.currentParticipantId"
+                  class="text-xs text-purple-600 dark:text-purple-400 ml-1 flex-shrink-0"> <!-- Prevent shrinking -->
               ({{ $t('you') || 'You' }}) <!-- Add fallback for 'you' -->
             </span>
           </div>
-          <div class="font-bold">{{ entry.score }}</div> <!-- Use entry.score -->
+          <!-- Display winningStreak instead of score -->
+          <div class="font-bold w-1/5 text-right">{{ entry.winningStreak }}</div> <!-- Match width and alignment with header -->
         </div>
       </div>
 

@@ -44,7 +44,7 @@ const submitCreateChallenge = async () => {
 	const payload = {
 		name: challengeName.value,
 		expiresIn: expiration.value || undefined, // Send undefined if 'Never' selected
-		gameMode: store.mode,
+		gameMode: store.gameType, // Use the correct game type here
 		settings: {
 			precision: store.precision,
 			maxLife: store.maxLife,
