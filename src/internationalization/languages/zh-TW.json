@@ -7,6 +7,7 @@
 		"expiresIn": "有效期限",
 		"shareCode": "分享邀請碼給你的朋友：",
 		"copyCode": "複製邀請碼",
+		"copied": "已複製！",
 		"done": "完成",
 		"setupInfo": "以目前的遊戲設定建立挑戰"
 	},

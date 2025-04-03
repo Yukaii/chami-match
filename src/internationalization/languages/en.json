@@ -11,6 +11,7 @@
 		"expiresIn": "Expires In",
 		"shareCode": "Share the access code with your friends:",
 		"copyCode": "Copy Code",
+		"copied": "Copied!",
 		"done": "Done",
 		"setupInfo": "Set up a challenge for your friends based on the current game settings."
 	},

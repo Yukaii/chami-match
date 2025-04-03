@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { PhCheck } from "@phosphor-icons/vue";
 import { useChallengeApi } from "../composables/useChallengeApi";
 import { useGameStore } from "../stores/game";
 import Modal from "./Modal.vue";
@@ -12,6 +13,7 @@ const emit = defineEmits(["close", "challengeCreated"]);
 const challengeName = ref("");
 const expiration = ref("1h"); // Default expiration
 const createdChallengeInfo = ref(null); // To store { id, accessCode, name, expiresAt }
+const showCopiedMessage = ref(false);
 
 const expirationOptions = [
 	{ value: "1h", label: "1 Hour" },
@@ -68,10 +70,13 @@ const submitCreateChallenge = async () => {
 const copyToClipboard = async (text) => {
 	try {
 		await navigator.clipboard.writeText(text);
-		alert("Copied to clipboard!");
+		showCopiedMessage.value = true;
+		setTimeout(() => {
+			showCopiedMessage.value = false;
+		}, 2000);
 	} catch (err) {
 		console.error("Failed to copy text: ", err);
-		alert("Failed to copy to clipboard.");
+		showCopiedMessage.value = false;
 	}
 };
 
@@ -140,7 +145,13 @@ const getChallengeUrl = () => {
             Expires: {{ new Date(createdChallengeInfo.expiresAt).toLocaleString() }}
          </p>
          <div class="flex justify-center space-x-2">
-             <BaseButton variant="secondary" @click="copyToClipboard(createdChallengeInfo.accessCode)">{{ $t('challenge.copyCode') }}</BaseButton>
+             <BaseButton variant="secondary" @click="copyToClipboard(createdChallengeInfo.accessCode)" class="relative">
+                {{ $t('challenge.copyCode') }}
+                <span v-if="showCopiedMessage" class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-2 py-1 rounded text-sm flex items-center gap-1">
+                  <PhCheck class="h-4 w-4" weight="bold" />
+                  {{ $t('challenge.copied') }}
+                </span>
+             </BaseButton>
              <BaseButton variant="primary" @click="closePopup">{{ $t('challenge.done') }}</BaseButton>
          </div>
       </template>
