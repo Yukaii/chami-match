@@ -47,6 +47,7 @@ export const useGameStore = defineStore("game", {
 		currentChallengeId: null, // ID of the active challenge, if any
 		currentParticipantId: null, // ID of the current user within the active challenge
 		joinedChallenges: useStorage("joinedChallenges", []), // Store { id, name, accessCode }
+		isServerAvailable: false, // Track server availability
 
 		// Game state
 		currentRound: 0,
@@ -491,6 +492,24 @@ export const useGameStore = defineStore("game", {
 			}
 		},
 
+		// Server management
+		async updateChallengeServerUrl(newUrl) {
+			this.challengeServerUrl = newUrl;
+			await this.checkServerAvailability();
+		},
+
+		async checkServerAvailability() {
+			try {
+				const response = await fetch(`${this.challengeServerUrl}/health`);
+				this.isServerAvailable = response.ok;
+				return response.ok;
+			} catch (error) {
+				console.error("Server availability check failed:", error);
+				this.isServerAvailable = false;
+				return false;
+			}
+		},
+
 		// Toggle UI states
 		toggleRecordPopup() {
 			this.recordPopupOpen = !this.recordPopupOpen;
@@ -550,7 +569,8 @@ export const useGameStore = defineStore("game", {
 		},
 
 		// Initialize the store
-		initStore() {
+		async initStore() {
+			await this.checkServerAvailability();
 			if (!this.currentSession) {
 				const session = createSession({
 					maxLife: this.maxLife,

@@ -38,21 +38,26 @@ function startChallenge() {
     </BaseButton>
 
     <!-- Challenge buttons and indicators -->
-    <div class="flex items-center gap-2">
+      <div class="flex items-center gap-2">
       <!-- Challenge Mode Indicator -->
-      <div v-if="store.currentChallengeId" class="text-xs font-semibold text-purple-600 dark:text-purple-400 border border-purple-400 dark:border-purple-500 rounded px-2 py-0.5">
+      <div v-if="store.currentChallengeId && store.isServerAvailable" class="text-xs font-semibold text-purple-600 dark:text-purple-400 border border-purple-400 dark:border-purple-500 rounded px-2 py-0.5">
         {{ $t('challengeMode') }}
       </div>
 
-      <!-- View Leaderboard Button (only in challenge mode) -->
-      <BaseButton v-if="store.currentChallengeId" variant="info" size="sm" @click="viewLeaderboard">
+      <!-- View Leaderboard Button (only in challenge mode and when server is available) -->
+      <BaseButton v-if="store.currentChallengeId && store.isServerAvailable" variant="info" size="sm" @click="viewLeaderboard">
         {{ $t('viewLeaderboard') }}
       </BaseButton>
 
-      <!-- Create Challenge Button (not in challenge mode) -->
-      <BaseButton v-else variant="secondary" size="sm" @click="startChallenge">
+      <!-- Create Challenge Button (not in challenge mode and when server is available) -->
+      <BaseButton v-if="!store.currentChallengeId && store.isServerAvailable" variant="secondary" size="sm" @click="startChallenge">
         {{ $t('challengeFriends') }}
       </BaseButton>
+
+      <!-- Server Unavailable Warning -->
+      <div v-if="!store.isServerAvailable" class="text-xs text-red-500 dark:text-red-400">
+        Server unavailable
+      </div>
     </div>
 
     <BaseButton variant="secondary" size="sm" @click="startOver">

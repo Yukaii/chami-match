@@ -328,9 +328,10 @@ onMounted(() => {
       </div>
 
       <!-- Join Challenge Section -->
-      <div class="mt-6 border-t pt-4 dark:border-gray-700">
-         <h3 class="text-lg font-semibold mb-2 text-center text-gray-700 dark:text-gray-300">{{ $t('joinChallenge') }}</h3>
-         <div class="flex gap-2">
+      <template v-if="store.isServerAvailable">
+        <div class="mt-6 border-t pt-4 dark:border-gray-700">
+          <h3 class="text-lg font-semibold mb-2 text-center text-gray-700 dark:text-gray-300">{{ $t('joinChallenge') }}</h3>
+          <div class="flex gap-2">
             <input
                 v-model="accessCode"
                 type="text"
@@ -347,22 +348,30 @@ onMounted(() => {
             >
                 {{ isApiLoading ? $t('loading') : $t('join') }}
             </BaseButton>
-         </div>
-         <p v-if="apiError" class="text-red-500 text-sm mt-1 text-center">{{ apiError }}</p>
-      </div>
+          </div>
+          <p v-if="apiError" class="text-red-500 text-sm mt-1 text-center">{{ apiError }}</p>
+        </div>
 
-      <!-- Joined Challenges List -->
-      <div v-if="store.joinedChallenges.length > 0" class="mt-6 border-t pt-4 dark:border-gray-700">
-        <h3 class="text-lg font-semibold mb-2 text-center text-gray-700 dark:text-gray-300">{{ $t('joinedChallengesTitle') || 'Joined Challenges' }}</h3>
-        <ul class="space-y-2 max-h-40 overflow-y-auto"> {/* Added max-height and scroll */}
-          <li v-for="challenge in store.joinedChallenges" :key="challenge.id" class="flex justify-between items-center p-2 bg-gray-100 dark:bg-gray-700 rounded">
-            <span class="truncate mr-2">{{ challenge.name }} ({{ challenge.accessCode }})</span>
-            <BaseButton variant="outline" size="xs" @click="rejoinChallenge(challenge.id)">
-              {{ $t('viewPlay') || 'View/Play' }}
-            </BaseButton>
-          </li>
-        </ul>
-      </div>
+        <!-- Joined Challenges List -->
+        <div v-if="store.joinedChallenges.length > 0" class="mt-6 border-t pt-4 dark:border-gray-700">
+          <h3 class="text-lg font-semibold mb-2 text-center text-gray-700 dark:text-gray-300">{{ $t('joinedChallengesTitle') || 'Joined Challenges' }}</h3>
+          <ul class="space-y-2 max-h-40 overflow-y-auto">
+            <li v-for="challenge in store.joinedChallenges" :key="challenge.id" class="flex justify-between items-center p-2 bg-gray-100 dark:bg-gray-700 rounded">
+              <span class="truncate mr-2">{{ challenge.name }} ({{ challenge.accessCode }})</span>
+              <BaseButton variant="outline" size="xs" @click="rejoinChallenge(challenge.id)">
+                {{ $t('viewPlay') || 'View/Play' }}
+              </BaseButton>
+            </li>
+          </ul>
+        </div>
+      </template>
+      <template v-else>
+        <div class="mt-6 border-t pt-4 dark:border-gray-700">
+          <div class="text-center text-red-500 dark:text-red-400">
+            Challenge server is not available. Please check your server settings.
+          </div>
+        </div>
+      </template>
 
     </div>
   </div>

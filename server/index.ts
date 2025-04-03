@@ -17,13 +17,14 @@ import { calculateExpiresAt, generateAccessCode } from "./utils";
 
 const app = new Hono();
 
-// Enable CORS for the client origin
+// Enable CORS for all routes
 app.use(
-	"/api/*",
+	"*",
 	cors({
-		origin: "http://localhost:5173", // Allow requests from the Vite client
+		origin: "*", // Allow requests from any origin since server URL is configurable
 		allowMethods: ["GET", "POST", "OPTIONS"],
 		allowHeaders: ["Content-Type"], // Allow necessary headers
+		exposeHeaders: ["Content-Length", "Content-Type"], // Expose necessary headers
 	}),
 );
 
@@ -31,6 +32,11 @@ app.use(
 app.use("*", async (c, next) => {
 	console.log(`[${c.req.method}] ${c.req.url}`);
 	await next();
+});
+
+// Health check endpoint
+app.get("/health", (c) => {
+	return c.json({ status: "ok" });
 });
 
 app.get("/", (c) => {

@@ -2,10 +2,36 @@
   <Modal size="medium" :is-open="store.settingsPopupOpen" @on-close="onClose">
     <div class="mb-4 text-center text-lg font-bold text-gray-900 dark:text-white">{{ $t('settings.title') }}</div>
 
-    <!-- UI Options -->
-    <div class="mb-4">
-      <div class="mb-2 text-xl font-bold text-pink-600 dark:text-pink-400">{{ $t('settings.UIOptions') }}</div>
-      <hr class="mb-4 border-gray-400" />
+<!-- Server Settings -->
+<div class="mb-4">
+<div class="mb-2 text-xl font-bold text-pink-600 dark:text-pink-400">Server Settings</div>
+<hr class="mb-4 border-gray-400" />
+
+<!-- Challenge Server URL -->
+<div class="mb-4">
+<label for="serverUrl" class="mb-2 block font-bold text-gray-900 dark:text-white">Challenge Server URL</label>
+<div class="flex gap-2">
+  <input
+    type="text"
+    id="serverUrl"
+    v-model="settings.serverUrl"
+    class="flex-grow mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-orange-500 dark:focus:border-orange-500"
+    placeholder="http://localhost:8787"
+  />
+</div>
+<div v-if="store.isServerAvailable" class="mt-1 text-sm text-green-600 dark:text-green-400">
+  Server is available
+</div>
+<div v-else class="mt-1 text-sm text-red-600 dark:text-red-400">
+  Server is not available
+</div>
+</div>
+</div>
+
+<!-- UI Options -->
+<div class="mb-4">
+<div class="mb-2 text-xl font-bold text-pink-600 dark:text-pink-400">{{ $t('settings.UIOptions') }}</div>
+<hr class="mb-4 border-gray-400" />
 
       <!-- Dark Mode - NEW -->
       <div class="mb-4">
@@ -246,7 +272,8 @@ const settings = reactive({
 	realtimePreview: store.realtimePreview,
 	enableConfetti: store.preferences.enableConfetti || true,
 	recallTimeout: store.recallTimeout,
-	displayName: store.preferences.displayName || "Player", // Add displayName
+	displayName: store.preferences.displayName || "Player",
+	serverUrl: store.challengeServerUrl, // Add server URL
 });
 
 // Theme handling
@@ -302,7 +329,11 @@ watch(
 	},
 );
 
-const onApply = () => {
+const onApply = async () => {
+	// Update server URL and check availability first
+	await store.updateChallengeServerUrl(settings.serverUrl);
+
+	// Update other settings
 	store.updatePrecision(settings.precision);
 	store.updateMode(settings.mode);
 	store.updateColorSpace(settings.colorSpace);
@@ -310,7 +341,7 @@ const onApply = () => {
 	store.updateRealtimePreview(settings.realtimePreview);
 	store.updateConfetti(settings.enableConfetti);
 	store.updateRecallTimeout(settings.recallTimeout);
-	store.updateDisplayName(settings.displayName); // Save display name
+	store.updateDisplayName(settings.displayName);
 	store.startOver();
 	onClose();
 };
