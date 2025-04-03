@@ -58,6 +58,13 @@
 	"currentSession": "Current Session",
 	"settings": {
 		"title": "Settings",
+		"serverSettings": "Server Settings",
+		"serverUrl": "Server URL",
+		"serverStatus": {
+			"available": "Server is available",
+			"unavailable": "Server is not available",
+			"checking": "Checking server status..."
+		},
 		"UIOptions": "UI Options",
 		"displayName": "Display Name",
 		"gameOptions": "Game Options",

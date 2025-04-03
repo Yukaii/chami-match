@@ -368,7 +368,7 @@ onMounted(() => {
       <template v-else>
         <div class="mt-6 border-t pt-4 dark:border-gray-700">
           <div class="text-center text-red-500 dark:text-red-400">
-            Challenge server is not available. Please check your server settings.
+            {{ $t('serverUnavailable') }}
           </div>
         </div>
       </template>

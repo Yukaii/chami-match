@@ -4,12 +4,12 @@
 
 <!-- Server Settings -->
 <div class="mb-4">
-<div class="mb-2 text-xl font-bold text-pink-600 dark:text-pink-400">Server Settings</div>
+<div class="mb-2 text-xl font-bold text-pink-600 dark:text-pink-400">{{ $t('settings.serverSettings') }}</div>
 <hr class="mb-4 border-gray-400" />
 
 <!-- Challenge Server URL -->
 <div class="mb-4">
-<label for="serverUrl" class="mb-2 block font-bold text-gray-900 dark:text-white">Challenge Server URL</label>
+<label for="serverUrl" class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.serverUrl') }}</label>
 <div class="flex gap-2">
   <input
     type="text"
@@ -20,10 +20,10 @@
   />
 </div>
 <div v-if="store.isServerAvailable" class="mt-1 text-sm text-green-600 dark:text-green-400">
-  Server is available
+  {{ $t('settings.serverStatus.available') }}
 </div>
 <div v-else class="mt-1 text-sm text-red-600 dark:text-red-400">
-  Server is not available
+  {{ $t('settings.serverStatus.unavailable') }}
 </div>
 </div>
 </div>

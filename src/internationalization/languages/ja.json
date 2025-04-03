@@ -59,6 +59,13 @@
 	"currentSession": "現在のセッション",
 	"settings": {
 		"title": "設定",
+		"serverSettings": "サーバー設定",
+		"serverUrl": "サーバーURL",
+		"serverStatus": {
+			"available": "サーバーが利用可能です",
+			"unavailable": "サーバーが利用できません",
+			"checking": "サーバー状態を確認中..."
+		},
 		"UIOptions": "UI設定",
 		"displayName": "表示名",
 		"gameOptions": "ゲーム設定",
@@ -161,6 +168,7 @@
 	},
 	"colorDifferences": "色の差異",
 	"precisionTarget": "目標値",
+	"serverUnavailable": "チャレンジサーバーが利用できません。サーバー設定を確認してください。",
 	"errorBoundary": {
 		"title": "申し訳ありません、エラーが発生しました！",
 		"message": "アプリケーションで予期しないエラーが発生しました。",

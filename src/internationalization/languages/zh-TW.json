@@ -59,6 +59,13 @@
 	"currentSession": "目前遊戲",
 	"settings": {
 		"title": "設定",
+		"serverSettings": "伺服器設定",
+		"serverUrl": "伺服器網址",
+		"serverStatus": {
+			"available": "伺服器可以使用",
+			"unavailable": "伺服器無法使用",
+			"checking": "檢查伺服器狀態中..."
+		},
 		"UIOptions": "介面設定",
 		"displayName": "顯示名稱",
 		"gameOptions": "遊戲設定",
@@ -161,6 +168,7 @@
 	},
 	"colorDifferences": "顏色差異",
 	"precisionTarget": "目標值",
+	"serverUnavailable": "挑戰伺服器無法使用。請檢查伺服器設定。",
 	"errorBoundary": {
 		"title": "糟糕，發生錯誤了！",
 		"message": "應用程式發生了未預期的錯誤。",
