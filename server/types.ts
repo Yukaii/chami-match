@@ -93,8 +93,8 @@ export const CreateChallengePayloadSchema = z.object({
 
 // --- API Response Structures ---
 
+// Publicly visible leaderboard entry - does NOT include internal participantId
 export interface LeaderboardEntry {
-	participantId: string;
 	displayName: string;
 	winningStreak: number; // Changed from score
 	submittedAt: number; // Timestamp of the best streak submission

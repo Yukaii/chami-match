@@ -163,9 +163,11 @@ app.post(
 		let participant = challenge.participants.find(
 			(p) => p.deviceId === payload.deviceId,
 		);
+		let needsUpdate = false; // Declare needsUpdate variable
 
 		if (!participant) {
 			// Add new participant
+			needsUpdate = true; // Mark for update when adding new participant
 			const newParticipantId = uuidv4();
 			participant = {
 				id: newParticipantId,
@@ -199,26 +201,36 @@ app.post(
 			console.log(
 				`Participant ${participant.id} (${payload.deviceId}) rejoined challenge ${challenge.id}`,
 			);
-		}
-
-		// Save changes if a new participant was added OR an existing one was updated
-		if (
-			!challenge.participants.find((p) => p.id === participant.id) ||
-			participant.displayName === payload.displayName
-		) {
-			try {
-				store.updateChallenge(challenge); // Save the updated challenge
-			} catch (error) {
-				console.error("Error updating challenge store:", error);
-				throw new HTTPException(500, {
-					message: "Internal Server Error: Failed to save participant update",
-				});
+			// Check if display name needs update
+			if (participant.displayName !== payload.displayName) {
+				needsUpdate = true; // Mark for update
+				participant.displayName = payload.displayName;
 			}
 		}
 
-		// Return the full challenge details needed by the client
-		// Consider filtering sensitive data if necessary in the future
-		return c.json(challenge);
+		// Save changes if needed (new participant added or existing one updated)
+		if (needsUpdate) {
+			try {
+				store.updateChallenge(challenge); // Single update call
+			} catch (error) {
+				console.error("Error updating challenge store on join:", error);
+				// Decide if this error should prevent the response. For now, let's log and continue.
+				// throw new HTTPException(500, { message: "Internal Server Error: Failed to save participant update" });
+			}
+		}
+
+		// Prepare the response: return challenge details BUT sanitize participant IDs
+		// Also return the specific participantId for the user who just joined/rejoined
+		const sanitizedParticipants = challenge.participants.map(
+			({ id, ...rest }) => rest,
+		); // Remove 'id' from each participant
+		const responsePayload = {
+			...challenge, // Spread the original challenge data
+			participants: sanitizedParticipants, // Use the sanitized list
+			participantId: participant.id, // Add the current user's participant ID separately
+		};
+
+		return c.json(responsePayload);
 	},
 );
 
@@ -227,6 +239,18 @@ app.post(
 	"/api/challenges/:id/attempts",
 	zValidator("json", SubmitAttemptPayloadSchema, (result, c) => {
 		if (!result.success) {
+			// Log the validation errors and the received payload for debugging
+			console.error(
+				"Attempt Submission Validation failed:",
+				JSON.stringify(result.error.errors, null, 2),
+			);
+			// Log the raw body text to see exactly what was received
+			c.req
+				.text()
+				.then((text) => console.error("Received attempt payload:", text))
+				.catch((err) =>
+					console.error("Error reading request body for logging:", err),
+				);
 			return c.json(
 				{
 					message: "Validation Failed",
@@ -336,12 +360,12 @@ app.get("/api/challenges/:id/leaderboard", (c) => {
 		// }
 	}
 
-	// Create leaderboard entries
+	// Create leaderboard entries (without participantId)
 	const leaderboard: LeaderboardEntry[] = challenge.participants.map(
 		(participant) => {
 			const bestAttempt = bestAttempts.get(participant.id);
 			return {
-				participantId: participant.id,
+				// participantId: participant.id, // DO NOT EXPOSE internal ID
 				displayName: participant.displayName,
 				// Use best winning streak if available, otherwise 0.
 				winningStreak: bestAttempt ? bestAttempt.winningStreak : 0, // Changed from score
@@ -383,9 +407,15 @@ app.get("/api/challenges/:id", (c) => {
 		throw new HTTPException(404, { message: "Challenge not found" });
 	}
 
-	// Return the full challenge details
-	// Consider filtering sensitive data if necessary in the future
-	return c.json(challenge);
+	// Return the challenge details, but sanitize participant IDs
+	const sanitizedParticipants = challenge.participants.map(
+		({ id, ...rest }) => rest,
+	); // Remove 'id'
+	const responsePayload = {
+		...challenge,
+		participants: sanitizedParticipants,
+	};
+	return c.json(responsePayload);
 });
 
 // Export the app instance for testing

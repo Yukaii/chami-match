@@ -350,10 +350,21 @@ describe("Challenge API", () => {
 					"Test setup failed: Joiner participant not found after joining.",
 				);
 			}
-			joinerParticipant = foundJoiner; // Store joiner
+			// Fetch the updated state directly from the store to get the joiner's ID
+			const finalChallengeState = store.getChallengeById(createdChallenge.id);
+			expect(finalChallengeState).toBeDefined();
+			if (!finalChallengeState)
+				throw new Error(
+					"Setup failed: Challenge not found in store after join",
+				);
+			const foundJoinerInStore = finalChallengeState.participants.find(
+				(p) => p.deviceId === "joiner-device-id",
+			);
+			expect(foundJoinerInStore).toBeDefined();
+			if (!foundJoinerInStore)
+				throw new Error("Setup failed: Joiner not found in store after join");
+			joinerParticipant = foundJoinerInStore; // Store joiner with ID
 		});
-
-		// Helper to create a valid attempt payload is now defined globally
 
 		it("should allow creator to submit a valid attempt", async () => {
 			const attemptPayload = createValidAttemptPayload(creatorParticipant, 100);
@@ -618,12 +629,7 @@ describe("Challenge API", () => {
 			});
 			const joinRes1 = await app.request(joinReq1);
 			expect(joinRes1.status).toBe(200);
-			const state1 = (await joinRes1.json()) as Challenge;
-			const foundJoiner1 = state1.participants.find(
-				(p) => p.deviceId === "joiner1-dev",
-			);
-			if (!foundJoiner1) throw new Error("Setup failed: Joiner 1 not found");
-			joiner1 = foundJoiner1;
+			// Don't rely on the sanitized response for joiner1's details yet
 
 			// 3. Join participant 2
 			const joinPayload2: JoinChallengePayload = {
@@ -638,14 +644,31 @@ describe("Challenge API", () => {
 			});
 			const joinRes2 = await app.request(joinReq2);
 			expect(joinRes2.status).toBe(200);
-			const state2 = (await joinRes2.json()) as Challenge;
-			const foundJoiner2 = state2.participants.find(
-				(p) => p.deviceId === "joiner2-dev",
-			);
-			if (!foundJoiner2) throw new Error("Setup failed: Joiner 2 not found");
-			joiner2 = foundJoiner2;
+			// Don't rely on the sanitized response for joiner2's details yet
 
-			// 4. Submit some scores
+			// 4. Fetch the final state from the store AFTER both joins are complete
+			const finalState = store.getChallengeById(createdChallenge.id);
+			if (!finalState)
+				throw new Error("Setup failed: Challenge disappeared from store");
+			const finalCreator = finalState.participants.find(
+				(p) => p.deviceId === creator.deviceId,
+			);
+			const finalJoiner1 = finalState.participants.find(
+				(p) => p.deviceId === "joiner1-dev", // Use the known deviceId
+			);
+			const finalJoiner2 = finalState.participants.find(
+				(p) => p.deviceId === "joiner2-dev", // Use the known deviceId
+			);
+			if (!finalCreator || !finalJoiner1 || !finalJoiner2)
+				throw new Error(
+					"Setup failed: Could not find all participants in store",
+				);
+
+			creator = finalCreator; // Update with ID
+			joiner1 = finalJoiner1; // Update with ID
+			joiner2 = finalJoiner2; // Update with ID
+
+			// 4. Submit some scores (now using participants with IDs)
 			await submitAttempt(joiner1, 150); // Joiner 1 scores 150
 			await submitAttempt(creator, 100); // Creator scores 100
 			await submitAttempt(joiner1, 120); // Joiner 1 scores 120 (lower, should be ignored)
@@ -677,17 +700,17 @@ describe("Challenge API", () => {
 			expect(entry2).toBeDefined();
 
 			if (entry0) {
-				expect(entry0.participantId).toBe(joiner2.id);
+				// expect(entry0.participantId).toBe(joiner2.id); // Removed participantId check
 				expect(entry0.winningStreak).toBe(200); // Changed from score
 				expect(entry0.displayName).toBe("Joiner Two");
 			}
 			if (entry1) {
-				expect(entry1.participantId).toBe(creator.id);
+				// expect(entry1.participantId).toBe(creator.id); // Removed participantId check
 				expect(entry1.winningStreak).toBe(180); // Changed from score
 				expect(entry1.displayName).toBe("Tester"); // Creator's original name
 			}
 			if (entry2) {
-				expect(entry2.participantId).toBe(joiner1.id);
+				// expect(entry2.participantId).toBe(joiner1.id); // Removed participantId check
 				expect(entry2.winningStreak).toBe(150); // Changed from score
 				expect(entry2.displayName).toBe("Joiner One");
 			}
@@ -789,10 +812,10 @@ describe("Challenge API", () => {
 			const participant = body.participants[0];
 			expect(participant).toBeDefined();
 			if (participant) {
-				expect(participant.id).toBe(creator.id);
 				expect(participant.displayName).toBe("Tester");
+				expect(participant).not.toHaveProperty("id"); // Verify ID is removed
 			}
-			expect(body.attempts).toBeInstanceOf(Array);
+			expect(body.attempts).toBeInstanceOf(Array); // Attempts should still be there (though maybe empty)
 			expect(body.attempts.length).toBe(0);
 			expect(body.settings.gameType).toBe("Color");
 		});
