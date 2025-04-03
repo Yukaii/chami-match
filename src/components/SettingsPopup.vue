@@ -2,10 +2,36 @@
   <Modal size="medium" :is-open="store.settingsPopupOpen" @on-close="onClose">
     <div class="mb-4 text-center text-lg font-bold text-gray-900 dark:text-white">{{ $t('settings.title') }}</div>
 
-    <!-- UI Options -->
-    <div class="mb-4">
-      <div class="mb-2 text-xl font-bold text-pink-600 dark:text-pink-400">{{ $t('settings.UIOptions') }}</div>
-      <hr class="mb-4 border-gray-400" />
+<!-- Server Settings -->
+<div class="mb-4">
+<div class="mb-2 text-xl font-bold text-pink-600 dark:text-pink-400">{{ $t('settings.serverSettings') }}</div>
+<hr class="mb-4 border-gray-400" />
+
+<!-- Challenge Server URL -->
+<div class="mb-4">
+<label for="serverUrl" class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.serverUrl') }}</label>
+<div class="flex gap-2">
+  <input
+    type="text"
+    id="serverUrl"
+    v-model="settings.serverUrl"
+    class="flex-grow mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-orange-500 dark:focus:border-orange-500"
+    placeholder="http://localhost:8787"
+  />
+</div>
+<div v-if="store.isServerAvailable" class="mt-1 text-sm text-green-600 dark:text-green-400">
+  {{ $t('settings.serverStatus.available') }}
+</div>
+<div v-else class="mt-1 text-sm text-red-600 dark:text-red-400">
+  {{ $t('settings.serverStatus.unavailable') }}
+</div>
+</div>
+</div>
+
+<!-- UI Options -->
+<div class="mb-4">
+<div class="mb-2 text-xl font-bold text-pink-600 dark:text-pink-400">{{ $t('settings.UIOptions') }}</div>
+<hr class="mb-4 border-gray-400" />
 
       <!-- Dark Mode - NEW -->
       <div class="mb-4">
@@ -61,6 +87,19 @@
           </BaseButton>
         </div>
       </div>
+
+      <!-- Display Name -->
+      <div class="mb-4">
+        <label for="displayName" class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.displayName') }}</label>
+        <input
+          type="text"
+          id="displayName"
+          v-model="settings.displayName"
+          maxlength="50"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-orange-500 dark:focus:border-orange-500"
+        />
+      </div>
+
     </div>
 
     <!-- Game Options - Only shown in game mode -->
@@ -209,123 +248,134 @@ import BaseButton from "./base/BaseButton.vue";
 const { locale, t: $t } = useI18n();
 const store = useGameStore();
 const languages = [
-	{ code: "zh-TW", label: "繁體中文" },
-	{ code: "en", label: "English" },
-	{ code: "ja", label: "日本語" },
+  { code: "zh-TW", label: "繁體中文" },
+  { code: "en", label: "English" },
+  { code: "ja", label: "日本語" },
 ];
 
 // Computed properties for game type conditions
 const isBasicGameType = computed(
-	() =>
-		store.gameType !== "image" &&
-		store.gameType !== "contextual" &&
-		store.gameType !== "recall",
+  () =>
+    store.gameType !== "image" &&
+    store.gameType !== "contextual" &&
+    store.gameType !== "recall",
 );
 
 const isNotImageMode = computed(() => store.gameType !== "image");
 
 const settings = reactive({
-	language: localStorage.getItem("lang") || navigator.language || "zh-TW",
-	precision: store.precision,
-	mode: store.mode,
-	colorSpace: store.colorSpace,
-	maxTries: store.maxLife,
-	realtimePreview: store.realtimePreview,
-	enableConfetti: store.preferences.enableConfetti || true,
-	recallTimeout: store.recallTimeout,
+  language: localStorage.getItem("lang") || navigator.language || "zh-TW",
+  precision: store.precision,
+  mode: store.mode,
+  colorSpace: store.colorSpace,
+  maxTries: store.maxLife,
+  realtimePreview: store.realtimePreview,
+  enableConfetti: store.preferences.enableConfetti || true,
+  recallTimeout: store.recallTimeout,
+  displayName: store.preferences.displayName || "Player",
+  serverUrl: store.challengeServerUrl, // Add server URL
 });
 
 // Theme handling
 const currentTheme = ref(localStorage.getItem("theme") || "system");
 
 const applyTheme = (theme) => {
-	if (theme === "system") {
-		// Remove any theme class to respect system preference
-		document.documentElement.classList.remove("dark", "light");
-		localStorage.setItem("theme", "system");
+  if (theme === "system") {
+    // Remove any theme class to respect system preference
+    document.documentElement.classList.remove("dark", "light");
+    localStorage.setItem("theme", "system");
 
-		// Check system preference to set UI appropriately
-		if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-			document.documentElement.classList.add("dark");
-		}
-	} else if (theme === "dark") {
-		document.documentElement.classList.add("dark");
-		document.documentElement.classList.remove("light");
-		localStorage.setItem("theme", "dark");
-	} else {
-		document.documentElement.classList.remove("dark");
-		document.documentElement.classList.add("light");
-		localStorage.setItem("theme", "light");
-	}
+    // Check system preference to set UI appropriately
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      document.documentElement.classList.add("dark");
+    }
+  } else if (theme === "dark") {
+    document.documentElement.classList.add("dark");
+    document.documentElement.classList.remove("light");
+    localStorage.setItem("theme", "dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+    document.documentElement.classList.add("light");
+    localStorage.setItem("theme", "light");
+  }
 };
 
 function setTheme(theme) {
-	currentTheme.value = theme;
+  currentTheme.value = theme;
 
-	applyTheme(theme);
+  applyTheme(theme);
 }
 
 const onClose = () => {
-	store.toggleSettingsPopup();
+  // Save display name when closing, regardless of mode
+  store.updateDisplayName(settings.displayName);
+  store.toggleSettingsPopup();
 };
 
 // Fix: Watch the store property directly
 watch(
-	() => store.settingsPopupOpen,
-	(isOpen) => {
-		if (isOpen) {
-			settings.precision = store.precision;
-			settings.mode = store.mode;
-			settings.colorSpace = store.colorSpace;
-			settings.maxTries = store.maxLife;
-			settings.realtimePreview = store.realtimePreview;
-			settings.enableConfetti = store.preferences.enableConfetti ?? true;
-			settings.recallTimeout = store.recallTimeout;
-		}
-	},
+  () => store.settingsPopupOpen,
+  (isOpen) => {
+    if (isOpen) {
+      settings.precision = store.precision;
+      settings.mode = store.mode;
+      settings.colorSpace = store.colorSpace;
+      settings.maxTries = store.maxLife;
+      settings.realtimePreview = store.realtimePreview;
+      settings.enableConfetti = store.preferences.enableConfetti ?? true;
+      settings.recallTimeout = store.recallTimeout;
+      settings.displayName = store.preferences.displayName || "Player"; // Sync display name
+    }
+  },
 );
 
-const onApply = () => {
-	store.updatePrecision(settings.precision);
-	store.updateMode(settings.mode);
-	store.updateColorSpace(settings.colorSpace);
-	store.updateMaxLife(settings.maxTries);
-	store.updateRealtimePreview(settings.realtimePreview);
-	store.updateConfetti(settings.enableConfetti);
-	store.updateRecallTimeout(settings.recallTimeout);
-	store.startOver();
-	onClose();
+const onApply = async () => {
+  // Update server URL and check availability first
+  await store.updateChallengeServerUrl(settings.serverUrl);
+
+  // Update other settings
+  store.updatePrecision(settings.precision);
+  store.updateMode(settings.mode);
+  store.updateColorSpace(settings.colorSpace);
+  store.updateMaxLife(settings.maxTries);
+  store.updateRealtimePreview(settings.realtimePreview);
+  store.updateConfetti(settings.enableConfetti);
+  store.updateRecallTimeout(settings.recallTimeout);
+  store.updateDisplayName(settings.displayName);
+  store.startOver();
+  onClose();
 };
 
 const handleChangeLanguage = (lang) => {
-	settings.language = lang;
-	locale.value = lang;
-	localStorage.setItem("lang", lang);
+  settings.language = lang;
+  locale.value = lang;
+  localStorage.setItem("lang", lang);
 
-	// Also save confetti setting when changing language
-	store.updateConfetti(settings.enableConfetti);
+  // Also save confetti and display name setting when changing language
+  store.updateConfetti(settings.enableConfetti);
+  store.updateDisplayName(settings.displayName);
 };
 
 onMounted(() => {
-	// Ensure currentTheme.value has a valid value
-	if (!["system", "dark", "light"].includes(currentTheme.value)) {
-		currentTheme.value = "system";
-	}
+  // Ensure currentTheme.value has a valid value
+  if (!["system", "dark", "light"].includes(currentTheme.value)) {
+    currentTheme.value = "system";
+  }
 
-	// Apply the theme
-	applyTheme(currentTheme.value);
+  // Apply the theme
+  applyTheme(currentTheme.value);
 
-	// Listen for system preference changes when in system mode
-	window
-		.matchMedia("(prefers-color-scheme: dark)")
-		.addEventListener("change", (e) => {
-			if (currentTheme.value === "system") {
-				if (e.matches) {
-					document.documentElement.classList.add("dark");
-				} else {
-					document.documentElement.classList.remove("dark");
-				}
-			}
-		});
+  // Listen for system preference changes when in system mode
+  window
+    .matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", (e) => {
+      if (currentTheme.value === "system") {
+        if (e.matches) {
+          document.documentElement.classList.add("dark");
+        } else {
+          document.documentElement.classList.remove("dark");
+        }
+      }
+    });
 });
 </script>

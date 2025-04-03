@@ -1,20 +1,26 @@
 <script setup>
 import { computed, onMounted, ref, watch } from "vue";
+import { useChallengeApi } from "../composables/useChallengeApi"; // Import the composable
 import { useGameStore } from "../stores/game";
 import GameNavBar from "./GameNavBar.vue";
 import BaseButton from "./base/BaseButton.vue";
 import BaseSlider from "./base/BaseSlider.vue";
 
 const store = useGameStore();
+const {
+  createChallenge,
+  isLoading: isApiLoading,
+  error: apiError,
+} = useChallengeApi(); // Use the composable
 const mode = computed(() => store.mode);
 const colorSpace = computed(() => store.colorSpace);
 const realtimePreview = computed(() => store.realtimePreview);
 
 onMounted(() => {
-	// start a new round if current round is zero
-	if (store.currentRound === 0) {
-		store.startNewRound();
-	}
+  // start a new round if current round is zero
+  if (store.currentRound === 0) {
+    store.startNewRound();
+  }
 });
 
 // HSV values
@@ -34,52 +40,58 @@ const userB_lab = ref(store.userColor?.b || 0);
 
 // Computed values for the current color space
 const colorValues = computed(() => {
-	if (colorSpace.value === "rgb") {
-		return [
-			Number.parseInt(userR.value, 10),
-			Number.parseInt(userG.value, 10),
-			Number.parseInt(userB.value, 10),
-		];
-	}
+  if (colorSpace.value === "rgb") {
+    return [
+      Number.parseInt(userR.value, 10),
+      Number.parseInt(userG.value, 10),
+      Number.parseInt(userB.value, 10),
+    ];
+  }
 
-	if (colorSpace.value === "oklab") {
-		return [
-			Number.parseInt(userL.value, 10),
-			Number.parseInt(userA.value, 10),
-			Number.parseInt(userB_lab.value, 10),
-		];
-	}
+  if (colorSpace.value === "oklab") {
+    return [
+      Number.parseInt(userL.value, 10),
+      Number.parseInt(userA.value, 10),
+      Number.parseInt(userB_lab.value, 10),
+    ];
+  }
 
-	// Default: HSV
-	const hsv = [
-		Number.parseInt(userH.value, 10),
-		Number.parseInt(userS.value, 10),
-		Number.parseInt(userV.value, 10),
-	];
+  // Default: HSV
+  const hsv = [
+    Number.parseInt(userH.value, 10),
+    Number.parseInt(userS.value, 10),
+    Number.parseInt(userV.value, 10),
+  ];
 
-	if (mode.value === "B/W") {
-		hsv[0] = 0;
-		hsv[1] = 0;
-	}
+  if (mode.value === "B/W") {
+    hsv[0] = 0;
+    hsv[1] = 0;
+  }
 
-	return hsv;
+  return hsv;
 });
 
 // Change the color space
 const changeColorSpace = (space) => {
-	store.updateColorSpace(space);
+  store.updateColorSpace(space);
 };
 
 const submit = () => {
-	store.updateUserColor(...colorValues.value);
-	store.checkGuess();
+  store.updateUserColor(...colorValues.value);
+  store.checkGuess();
 };
 
 watch([colorValues, realtimePreview], () => {
-	if (realtimePreview.value) {
-		store.updateUserColor(...colorValues.value);
-	}
+  if (realtimePreview.value) {
+    store.updateUserColor(...colorValues.value);
+  }
 });
+
+// Function to open the create challenge popup
+const startChallenge = () => {
+  console.log("Challenge Friends button clicked - opening popup");
+  store.toggleCreateChallengePopup(); // Use the action from the store
+};
 </script>
 
 <template>

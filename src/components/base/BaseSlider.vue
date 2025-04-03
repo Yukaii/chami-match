@@ -50,51 +50,51 @@
 import { computed, ref } from "vue";
 
 const props = defineProps({
-	modelValue: {
-		type: [Number, String],
-		required: true,
-	},
-	min: {
-		type: [Number, String],
-		default: 0,
-	},
-	max: {
-		type: [Number, String],
-		default: 100,
-	},
-	step: {
-		type: [Number, String],
-		default: 1,
-	},
-	variant: {
-		type: String,
-		default: "default",
-		validator: (value) =>
-			[
-				"default",
-				"hue",
-				"saturation",
-				"value",
-				"red",
-				"green",
-				"blue",
-				"lightness",
-				"a-axis",
-				"b-axis",
-			].includes(value),
-	},
-	label: {
-		type: String,
-		default: "",
-	},
-	showValue: {
-		type: Boolean,
-		default: true,
-	},
-	className: {
-		type: String,
-		default: "",
-	},
+  modelValue: {
+    type: [Number, String],
+    required: true,
+  },
+  min: {
+    type: [Number, String],
+    default: 0,
+  },
+  max: {
+    type: [Number, String],
+    default: 100,
+  },
+  step: {
+    type: [Number, String],
+    default: 1,
+  },
+  variant: {
+    type: String,
+    default: "default",
+    validator: (value) =>
+      [
+        "default",
+        "hue",
+        "saturation",
+        "value",
+        "red",
+        "green",
+        "blue",
+        "lightness",
+        "a-axis",
+        "b-axis",
+      ].includes(value),
+  },
+  label: {
+    type: String,
+    default: "",
+  },
+  showValue: {
+    type: Boolean,
+    default: true,
+  },
+  className: {
+    type: String,
+    default: "",
+  },
 });
 
 const emit = defineEmits(["update:modelValue"]);
@@ -102,38 +102,38 @@ const emit = defineEmits(["update:modelValue"]);
 const isActive = ref(false);
 
 const percentage = computed(() => {
-	const numerator = Number(props.modelValue) - Number(props.min);
-	const denominator = Number(props.max) - Number(props.min);
-	return (numerator / denominator) * 100;
+  const numerator = Number(props.modelValue) - Number(props.min);
+  const denominator = Number(props.max) - Number(props.min);
+  return (numerator / denominator) * 100;
 });
 
 const variantBackgroundClass = computed(() => {
-	switch (props.variant) {
-		case "hue":
-			return "hue-slider";
-		case "saturation":
-			return "saturation-slider";
-		case "value":
-			return "value-slider";
-		case "red":
-			return "red-slider";
-		case "green":
-			return "green-slider";
-		case "blue":
-			return "blue-slider";
-		case "lightness":
-			return "lightness-slider";
-		case "a-axis":
-			return "a-axis-slider";
-		case "b-axis":
-			return "b-axis-slider";
-		default:
-			return "bg-linear-to-r from-pink-400 to-pink-600";
-	}
+  switch (props.variant) {
+    case "hue":
+      return "hue-slider";
+    case "saturation":
+      return "saturation-slider";
+    case "value":
+      return "value-slider";
+    case "red":
+      return "red-slider";
+    case "green":
+      return "green-slider";
+    case "blue":
+      return "blue-slider";
+    case "lightness":
+      return "lightness-slider";
+    case "a-axis":
+      return "a-axis-slider";
+    case "b-axis":
+      return "b-axis-slider";
+    default:
+      return "bg-linear-to-r from-pink-400 to-pink-600";
+  }
 });
 
 const handleInput = (event) => {
-	emit("update:modelValue", event.target.value);
+  emit("update:modelValue", event.target.value);
 };
 </script>
 

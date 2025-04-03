@@ -15,41 +15,41 @@ import { computed } from "vue";
 import { cn } from "../utils/index";
 
 const props = defineProps({
-	isOpen: Boolean,
-	modalClass: {
-		type: String,
-		default: "",
-	},
-	size: {
-		type: String,
-		default: "default",
-		validator: (value) =>
-			["small", "default", "medium", "large", "xl"].includes(value),
-	},
+  isOpen: Boolean,
+  modalClass: {
+    type: String,
+    default: "",
+  },
+  size: {
+    type: String,
+    default: "default",
+    validator: (value) =>
+      ["small", "default", "medium", "large", "xl"].includes(value),
+  },
 });
 
 const sizeClass = computed(() => {
-	const sizes = {
-		small: "max-w-xs",
-		default: "max-w-xs",
-		medium: "max-w-md",
-		large: "max-w-lg",
-		xl: "max-w-xl",
-	};
-	return sizes[props.size] || sizes.default;
+  const sizes = {
+    small: "max-w-xs",
+    default: "max-w-xs",
+    medium: "max-w-md",
+    large: "max-w-lg",
+    xl: "max-w-xl",
+  };
+  return sizes[props.size] || sizes.default;
 });
 
 const className = computed(() => {
-	return cn(
-		"fixed left-0 top-0 z-50 flex size-full items-center justify-center bg-black/50 backdrop-blur-xs",
-		props.modalClass,
-		!props.isOpen && "hidden",
-	);
+  return cn(
+    "fixed left-0 top-0 z-50 flex size-full items-center justify-center bg-black/50 backdrop-blur-xs",
+    props.modalClass,
+    !props.isOpen && "hidden",
+  );
 });
 
 const emit = defineEmits(["onClose"]);
 const onClose = () => {
-	emit("onClose");
+  emit("onClose");
 };
 </script>
 

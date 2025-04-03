@@ -85,111 +85,111 @@ const timer = ref(null);
 
 // Initialize the game
 onMounted(() => {
-	// Set the game type and start the game
-	store.updateGameType("recall");
-	store.startOver();
+  // Set the game type and start the game
+  store.updateGameType("recall");
+  store.startOver();
 
-	// Register callbacks for the game mode
-	registerCallbacks();
+  // Register callbacks for the game mode
+  registerCallbacks();
 });
 
 // Clean up when component is destroyed
 onBeforeUnmount(() => {
-	clearTimer();
+  clearTimer();
 });
 
 // Watch for changes to the game mode and re-register callbacks
 watch(
-	() => store.currentGameMode,
-	(newMode) => {
-		if (newMode) {
-			registerCallbacks();
-		}
-	},
-	{ immediate: true },
+  () => store.currentGameMode,
+  (newMode) => {
+    if (newMode) {
+      registerCallbacks();
+    }
+  },
+  { immediate: true },
 );
 
 // Watch for new rounds to restart the timer
 watch(
-	() => store.currentRound,
-	() => {
-		startTimer();
-	},
+  () => store.currentRound,
+  () => {
+    startTimer();
+  },
 );
 
 // Watch for changes in the timeRemaining value
 watch(
-	() => state.value.timeRemaining,
-	(newTime) => {
-		if (newTime <= 0 && state.value.timerActive) {
-			store.currentGameMode.hideColor();
-		}
-	},
+  () => state.value.timeRemaining,
+  (newTime) => {
+    if (newTime <= 0 && state.value.timerActive) {
+      store.currentGameMode.hideColor();
+    }
+  },
 );
 
 function registerCallbacks() {
-	if (store.currentGameMode) {
-		store.currentGameMode.registerViewCallback("onNewRound", handleNewRound);
+  if (store.currentGameMode) {
+    store.currentGameMode.registerViewCallback("onNewRound", handleNewRound);
 
-		// Ensure timer starts immediately if we're in a visible state
-		if (state.value?.colorVisible && state.value.timerActive) {
-			startTimer();
-		}
-	}
+    // Ensure timer starts immediately if we're in a visible state
+    if (state.value?.colorVisible && state.value.timerActive) {
+      startTimer();
+    }
+  }
 }
 
 function handleNewRound() {
-	// Reset state for a new round
-	userHasSelected.value = false;
-	lastSelectedColor.value = null;
-	startTimer();
+  // Reset state for a new round
+  userHasSelected.value = false;
+  lastSelectedColor.value = null;
+  startTimer();
 }
 
 function startTimer() {
-	// Clear existing timer
-	clearTimer();
+  // Clear existing timer
+  clearTimer();
 
-	// Only start if color should be visible
-	if (state.value.colorVisible && state.value.timerActive) {
-		timer.value = setInterval(() => {
-			if (state.value.timeRemaining > 0) {
-				state.value.timeRemaining -= 1;
-			} else {
-				clearTimer();
-				store.currentGameMode.hideColor();
-			}
-		}, 1000);
-	}
+  // Only start if color should be visible
+  if (state.value.colorVisible && state.value.timerActive) {
+    timer.value = setInterval(() => {
+      if (state.value.timeRemaining > 0) {
+        state.value.timeRemaining -= 1;
+      } else {
+        clearTimer();
+        store.currentGameMode.hideColor();
+      }
+    }, 1000);
+  }
 }
 
 function clearTimer() {
-	if (timer.value) {
-		clearInterval(timer.value);
-		timer.value = null;
-	}
+  if (timer.value) {
+    clearInterval(timer.value);
+    timer.value = null;
+  }
 }
 
 function selectColor(color) {
-	// Only allow selection when color is hidden
-	if (!state.value.colorVisible) {
-		store.updateUserColor(color.h, color.s, color.v);
-		lastSelectedColor.value = { ...color };
-		userHasSelected.value = true;
-	}
+  // Only allow selection when color is hidden
+  if (!state.value.colorVisible) {
+    store.updateUserColor(color.h, color.s, color.v);
+    lastSelectedColor.value = { ...color };
+    userHasSelected.value = true;
+  }
 }
 
 function isSelectedColor(color) {
-	if (!state.value.userColor) return false;
-	return (
-		state.value.userColor.h === color.h &&
-		state.value.userColor.s === color.s &&
-		state.value.userColor.v === color.v
-	);
+  if (!state.value.userColor) return false;
+  return (
+    state.value.userColor.h === color.h &&
+    state.value.userColor.s === color.s &&
+    state.value.userColor.v === color.v
+  );
 }
 
 function submitGuess() {
-	if (userHasSelected.value && !state.value.colorVisible) {
-		store.checkGuess();
-	}
+  if (userHasSelected.value && !state.value.colorVisible) {
+    store.checkGuess();
+  }
 }
 </script>

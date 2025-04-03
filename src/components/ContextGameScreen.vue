@@ -12,81 +12,81 @@ const selectedColorIndex = ref(-1);
 
 // Create a reactive local surroundingColor object
 const surroundingColor = reactive({
-	h: 0,
-	s: 0,
-	v: 0,
+  h: 0,
+  s: 0,
+  v: 0,
 });
 
 // Add initialization logic when component mounts
 onMounted(() => {
-	if (store.gameType !== "contextual") {
-		store.updateGameType("contextual");
-		store.startOver(); // This will initialize the game mode and start a round
-	}
-	// If we're already in contextual mode but don't have options, just start a new round
-	else if (!store.colorOptions || store.colorOptions.length === 0) {
-		store.startNewRound();
-	}
+  if (store.gameType !== "contextual") {
+    store.updateGameType("contextual");
+    store.startOver(); // This will initialize the game mode and start a round
+  }
+  // If we're already in contextual mode but don't have options, just start a new round
+  else if (!store.colorOptions || store.colorOptions.length === 0) {
+    store.startNewRound();
+  }
 });
 
 // Generate surrounding color with controlled contrast
 function generateSurroundingColor(targetColor, contrastLevel = 30) {
-	// Create a color that contrasts with the target by a specific amount
-	const hVariation = Math.random() > 0.5 ? contrastLevel : -contrastLevel;
-	const sVariation = Math.random() * 20 - 10;
-	const vVariation = Math.random() * 20 - 10;
+  // Create a color that contrasts with the target by a specific amount
+  const hVariation = Math.random() > 0.5 ? contrastLevel : -contrastLevel;
+  const sVariation = Math.random() * 20 - 10;
+  const vVariation = Math.random() * 20 - 10;
 
-	const h = Math.round((targetColor.h + hVariation + 360) % 360);
-	const s = Math.round(Math.max(0, Math.min(100, targetColor.s + sVariation)));
-	const v = Math.round(Math.max(0, Math.min(100, targetColor.v + vVariation)));
+  const h = Math.round((targetColor.h + hVariation + 360) % 360);
+  const s = Math.round(Math.max(0, Math.min(100, targetColor.s + sVariation)));
+  const v = Math.round(Math.max(0, Math.min(100, targetColor.v + vVariation)));
 
-	return { h, s, v };
+  return { h, s, v };
 }
 
 // Update surrounding color when random color changes with proper Pinia reactivity
 watch(
-	() => store.randomColor,
-	(newColor) => {
-		if (newColor) {
-			const newSurroundingColor = generateSurroundingColor(newColor);
-			surroundingColor.h = newSurroundingColor.h;
-			surroundingColor.s = newSurroundingColor.s;
-			surroundingColor.v = newSurroundingColor.v;
-		}
-	},
-	{ immediate: true, deep: true },
+  () => store.randomColor,
+  (newColor) => {
+    if (newColor) {
+      const newSurroundingColor = generateSurroundingColor(newColor);
+      surroundingColor.h = newSurroundingColor.h;
+      surroundingColor.s = newSurroundingColor.s;
+      surroundingColor.v = newSurroundingColor.v;
+    }
+  },
+  { immediate: true, deep: true },
 );
 
 // Use a watcher to detect new rounds and reset the selected color index
 watch(
-	[() => store.randomColor, currentRound],
-	() => {
-		// Reset selection when random color changes (new round starts)
-		selectedColorIndex.value = -1;
-	},
-	{ deep: true },
+  [() => store.randomColor, currentRound],
+  () => {
+    // Reset selection when random color changes (new round starts)
+    selectedColorIndex.value = -1;
+  },
+  { deep: true },
 );
 
 function selectColor(color, index) {
-	selectedColorIndex.value = index;
-	store.updateUserColor(color.h, color.s, color.v);
-	store.checkGuess();
+  selectedColorIndex.value = index;
+  store.updateUserColor(color.h, color.s, color.v);
+  store.checkGuess();
 }
 
 function resetSelection() {
-	selectedColorIndex.value = -1; // Reset selected index
+  selectedColorIndex.value = -1; // Reset selected index
 }
 
 // Define a layout for the grid - now just surrounding color with target in center
 const gridStructure = [
-	["bg", "bg", "bg"],
-	["bg", "target", "bg"],
-	["bg", "bg", "bg"],
+  ["bg", "bg", "bg"],
+  ["bg", "target", "bg"],
+  ["bg", "bg", "bg"],
 ];
 
 // Debug computed property to check if colorOptions is available
 const hasColorOptions = computed(() => {
-	return Array.isArray(store.colorOptions) && store.colorOptions.length > 0;
+  return Array.isArray(store.colorOptions) && store.colorOptions.length > 0;
 });
 </script>
 

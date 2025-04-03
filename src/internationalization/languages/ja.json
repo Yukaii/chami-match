@@ -1,147 +1,204 @@
 {
-	"title": "チャミマッチ - 色を再現してみよう！",
-	"mainTitle": "チャミマッチ",
-	"subtitle": "色を再現してみよう！",
-	"description": "色覚を楽しくトレーニング！シンプルな色合わせゲーム",
-	"startStandardGame": "標準モード",
-	"startContextualGame": "コンテキストモード",
-	"startRelativeGame": "明度差モード",
-	"startColorGame": "画像カラーモード",
-	"startRecallGame": "記憶モード",
-	"startGame": "ゲームを始める",
-	"start": "スタート",
-	"quickStart": "前回のゲームを開始",
-	"startOver": "最初からやり直す",
-	"home": "ホーム",
-	"submit": "提出",
-	"close": "閉じる",
-	"cancel": "キャンセル",
-	"gameRecord": {
-		"title": "ゲーム記録",
-		"emptyContent": "ゲームの記錄はこちらに表示されますが、現在は空です。"
-	},
-	"actualColor": "実際の色",
-	"guessedColor": "あなたの推測",
-	"actualDifference": "実際の差異",
-	"guessedDifference": "あなたの推測",
-	"comboCount": "コンボ数",
-	"winningRate": "勝率",
-	"roundCount": "ラウンド数",
-	"totalRounds": "総ラウンド数",
-	"allGameTypes": "すべてのゲームモード",
-	"loadMore": "もっと読み込む",
-	"unknownRecordType": "不明な記録タイプ",
-	"sessionDate": "ゲーム日時",
-	"allSessions": "すべてのセッション",
-	"currentSession": "現在のセッション",
-	"colorDifferences": "色の差異",
-	"precisionTarget": "目標精度",
-	"settings": {
-		"title": "設定",
-		"UIOptions": "ユーザーインターフェースオプション",
-		"gameOptions": "ゲームオプション",
-		"language": "言語",
-		"theme": {
-			"title": "テーマ",
-			"system": "システム設定",
-			"dark": "ダークモード",
-			"light": "ライトモード"
-		},
-		"confetti": {
-			"label": "お祝いエフェクト",
-			"on": "オン",
-			"off": "オフ"
-		},
-		"precision": {
-			"label": "精度"
-		},
-		"colorMode": {
-			"label": "カラーモード"
-		},
-		"colorSpace": {
-			"label": "色空間"
-		},
-		"maxTries": {
-			"label": "試行回数"
-		},
-		"realtimePreview": {
-			"label": "リアルタイムプレビュー"
-		},
-		"recallTimeout": {
-			"label": "記憶時間"
-		},
-		"notice": "ゲームオプションを適用すると、新しいラウンドが始まります。",
-		"cta": "適用",
-		"danger": "危険ゾーン",
-		"confirmReset": "リセットすると、すべてのゲームデータと設定が削除されます。この動作は元に戻すことはできません。",
-		"resetGameData": "ゲームデータをリセット",
-		"resetConfirmation": "ゲームデータをリセット",
-		"resetWarning": "本当にゲームデータをリセットしますか？ 現在の進行状況はすべて失われます。"
-	},
-	"about": {
-		"title": "このゲームについて",
-		"text1": "このゲームは、{colorTest}のオリジナルのアイデアに触発されています。素晴らしいアイデアを提供してくれた{fragment}に感謝の意を表します！",
-		"text2": "詳細情報、貢献、または問題の報告は、{githubRepo}をご覧ください。",
-		"repository": "GitHubリポジトリ",
-		"developerCredits": "開発者のクレジット",
-		"developerText": "このプロジェクトに貢献したすべての開発者に感謝します。皆さんの献身的な努力とコミットメントがこのゲームを皆のためにより良いものにしています。",
-		"share": "シェア",
-		"close": "閉じる"
-	},
-	"reset": {
-		"title": "ゲームデータをリセット",
-		"message": "本当にゲームデータをリセットしますか？ 現在の進行状況はすべて失われます。",
-		"confirm": "はい、リセット",
-		"cancel": "いいえ、キャンセル"
-	},
-	"errorBoundary": {
-		"title": "エラーが発生しました",
-		"message": "アプリケーションで予期しないエラーが発生しました。",
-		"retry": "再試行",
-		"refresh": "ページを更新",
-		"copyError": "エラーをコピー"
-	},
-	"gameModes": {
-		"standard": {
-			"name": "標準モード",
-			"description": "左側に表示されている色と一致させてください"
-		},
-		"contextual": {
-			"name": "コンテキストモード",
-			"description": "類似した色に囲まれた中央の色を一致させる - より難しい挑戦！",
-			"instructions": "中央の四角に一致する色を選んでください",
-			"selectPrompt": "一致する色を選択：",
-			"lastSelection": "前回の選択："
-		},
-		"relative": {
-			"name": "明度差モード",
-			"description": "2つの色の明るさの違いを判断する",
-			"instructions": "スライダーを使用して、これらの色の明るさの違いを示してください（1〜100）",
-			"valueDifference": "明度差",
-			"yourGuess": "あなたの推測："
-		},
-		"color": {
-			"name": "画像カラーモード",
-			"description": "実際の画像から色を一致させる - コンテキスト内での色知覚をテスト！",
-			"instructions": "画像内の円の中の色と一致する色を選んでください",
-			"selectPrompt": "一致する色を選択：",
-			"lastSelection": "前回の選択：",
-			"toggleMagnifier": {
-				"show": "拡大鏡を表示",
-				"hide": "拡大鏡を非表示"
-			},
-			"toggleTargetCircle": {
-				"show": "ターゲットサークルを表示",
-				"hide": "ターゲットサークルを非表示"
-			}
-		},
-		"recall": {
-			"name": "記憶モード",
-			"description": "色の記憶力をテスト - 一瞬見た色を覚えて選ぶ",
-			"instructions": "色が消える前に記憶し、一致する色を選んでください",
-			"selectPrompt": "一致する色を選択：",
-			"lastSelection": "前回の選択：",
-			"memorizePrompt": "この色を記憶してください！"
-		}
-	}
+  "challenge": {
+    "createTitle": "チャレンジを作成",
+    "createdTitle": "チャレンジを作成しました！",
+    "name": "チャレンジ名",
+    "nameRequired": "チャレンジ名を入力してください。",
+    "expiresIn": "有効期限",
+    "shareCode": "アクセスコードを友達とシェアしよう：",
+    "copyCode": "コードをコピー",
+    "copyLink": "リンクをコピー",
+    "copied": "コピーしました！",
+    "done": "完了",
+    "setupInfo": "現在の設定でチャレンジを作成します。",
+    "expiresAt": "有効期限"
+  },
+  "challengeMode": "チャレンジモード",
+  "challengeFriends": "フレンドをチャレンジ",
+  "leaderboard": {
+    "name": "名前",
+    "streak": "連勝"
+  },
+  "viewLeaderboard": "リーダーボード",
+  "refresh": "更新",
+  "loading": "作成中...",
+  "create": "作成",
+  "joinChallenge": "チャレンジに参加",
+  "joinChallengeConfirmTitle": "チャレンジに参加しますか？",
+  "joinChallengeConfirmMessage": "コード {code} のチャレンジに参加しますか？",
+  "confirmJoin": "確認して参加",
+  "accessCode": "アクセスコード",
+  "join": "参加",
+  "joinedChallengesTitle": "参加したチャレンジ",
+  "expiredChallengesTitle": "期限切れのチャレンジ",
+  "play": "プレイ",
+  "remove": "削除",
+  "you": "あなた",
+
+  "title": "チャミマッチ - 色を再現してみよう！",
+  "mainTitle": "チャミマッチ",
+  "subtitle": "色を再現してみよう！",
+  "description": "色覚を楽しくトレーニング！シンプルな色合わせゲーム",
+  "startStandardGame": "標準モード",
+  "startContextualGame": "コンテキストモード",
+  "startRelativeGame": "明度差モード",
+  "startColorGame": "画像カラーモード",
+  "startRecallGame": "記憶モード",
+  "startGame": "ゲームを始める",
+  "start": "スタート",
+  "quickStart": "最後のゲームから始める",
+  "startOver": "最初からやり直す",
+  "home": "ホーム",
+  "submit": "提出",
+  "close": "閉じる",
+  "cancel": "キャンセル",
+  "gameRecord": {
+    "title": "ゲーム記録",
+    "emptyContent": "ゲーム記録がありません。"
+  },
+  "totalRounds": "総ラウンド数",
+  "allGameTypes": "すべてのゲームタイプ",
+  "loadMore": "もっと見る",
+  "unknownRecordType": "不明なレコードタイプ",
+  "actualColor": "正解の色",
+  "guessedColor": "あなたの選択",
+  "actualDifference": "正解の差",
+  "guessedDifference": "あなたの選択",
+  "comboCount": "コンボ数",
+  "winningRate": "勝率",
+  "roundCount": "ラウンド数",
+  "sessionDate": "セッション日時",
+  "allSessions": "全セッション",
+  "currentSession": "現在のセッション",
+  "settings": {
+    "title": "設定",
+    "serverSettings": "サーバー設定",
+    "serverUrl": "サーバーURL",
+    "serverStatus": {
+      "available": "サーバーが利用可能です",
+      "unavailable": "サーバーが利用できません",
+      "checking": "サーバー状態を確認中..."
+    },
+    "UIOptions": "UI設定",
+    "displayName": "表示名",
+    "gameOptions": "ゲーム設定",
+    "language": "言語",
+    "theme": {
+      "title": "テーマ",
+      "system": "システム",
+      "dark": "ダークモード",
+      "light": "ライトモード"
+    },
+    "confetti": {
+      "label": "お祝いエフェクト",
+      "on": "オン",
+      "off": "オフ"
+    },
+    "precision": {
+      "label": "精度"
+    },
+    "colorMode": {
+      "label": "カラーモード"
+    },
+    "colorSpace": {
+      "label": "色空間"
+    },
+    "maxTries": {
+      "label": "最大試行回数"
+    },
+    "realtimePreview": {
+      "label": "リアルタイムプレビュー"
+    },
+    "recallTimeout": {
+      "label": "記憶時間"
+    },
+    "notice": "ゲーム設定を適用すると、新しいラウンドが開始されます。",
+    "cta": "適用",
+    "danger": "危険な操作",
+    "confirmReset": "ゲームデータとすべての設定がリセットされます。この操作は取り消せません。",
+    "resetGameData": "ゲームデータをリセット",
+    "resetConfirmation": "ゲームデータをリセット",
+    "resetWarning": "本当にゲームデータをリセットしますか？現在の進行状況はすべて失われます。"
+  },
+  "about": {
+    "title": "このゲームについて",
+    "text1": "このゲームは{colorTest}のアイデアから着想を得ています。素晴らしいアイデアを提供してくれた{fragment}に感謝します！",
+    "text2": "詳細情報、コントリビューション、または問題の報告については、{githubRepo}をご覧ください。",
+    "repository": "GitHubリポジトリ",
+    "developerCredits": "開発者クレジット",
+    "developerText": "このプロジェクトに貢献してくれたすべての開発者に感謝します。皆様の熱心な取り組みによって、このゲームはより良いものになっています。",
+    "share": "シェア",
+    "close": "閉じる"
+  },
+  "reset": {
+    "title": "ゲームデータをリセット",
+    "message": "本当にゲームデータをリセットしますか？現在の進行状況はすべて失われます。",
+    "confirm": "はい、リセットします",
+    "cancel": "いいえ、キャンセルします"
+  },
+  "gameModes": {
+    "standard": {
+      "name": "標準モード",
+      "description": "左側の色を再現してください"
+    },
+    "contextual": {
+      "name": "コンテキストモード",
+      "description": "類似した色に囲まれた中央の色を再現する - より難しいチャレンジ！",
+      "instructions": "中央の四角形の色と一致する色を選んでください",
+      "selectPrompt": "一致する色を選択：",
+      "lastSelection": "前回の選択："
+    },
+    "relative": {
+      "name": "明度差モード",
+      "description": "2つの色の明るさの差を判定する",
+      "instructions": "スライダーを使用して、これらの色の明るさの差を示してください（1-100）",
+      "valueDifference": "明度差",
+      "yourGuess": "あなたの予想："
+    },
+    "color": {
+      "name": "画像カラーモード",
+      "description": "実際の画像から色を合わせる - 文脈の中での色の知覚をテスト！",
+      "instructions": "画像内の円の色と一致する色を選んでください",
+      "selectPrompt": "一致する色を選択：",
+      "lastSelection": "前回の選択：",
+      "toggleMagnifier": {
+        "show": "拡大鏡を表示",
+        "hide": "拡大鏡を非表示"
+      },
+      "toggleTargetCircle": {
+        "show": "ターゲット円を表示",
+        "hide": "ターゲット円を非表示"
+      }
+    },
+    "recall": {
+      "name": "記憶モード",
+      "description": "色の記憶をテスト - 短時間色を見て、その後再現する",
+      "instructions": "色が消える前に記憶し、その後一致する色を選んでください",
+      "selectPrompt": "一致する色を選択：",
+      "lastSelection": "前回の選択：",
+      "memorizePrompt": "この色を記憶してください！"
+    }
+  },
+  "colorDifferences": "色の差異",
+  "precisionTarget": "目標値",
+  "serverUnavailable": "チャレンジサーバーが利用できません。サーバー設定を確認してください。",
+  "errorBoundary": {
+    "title": "申し訳ありません、エラーが発生しました！",
+    "message": "アプリケーションで予期しないエラーが発生しました。",
+    "retry": "再試行",
+    "refresh": "ページを更新",
+    "copyError": "エラーをコピー"
+  },
+  "challenge.title": "チャレンジ",
+  "serverUnavailableShort": "チャレンジサーバー利用不可",
+  "error": {
+    "invalidAccessCode": "有効な6文字のアクセスコードを入力してください。",
+    "joinVerificationFailed": "エラー：参加確認に失敗しました。",
+    "joinFailed": "チャレンジ参加エラー",
+    "rejoinParticipantNotFound": "エラー：このチャレンジの参加者ではないようです。",
+    "rejoinFailed": "チャレンジ再参加エラー"
+  },
+  "confirmRemoveChallengeNotFoundMessage": "チャレンジ「{name}」に参加者として見つかりませんでした。リストから削除しますか？",
+  "confirm": "確認",
+  "gameModeLabel": "モード"
 }

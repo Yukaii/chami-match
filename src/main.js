@@ -14,19 +14,19 @@ const head = createHead();
 const app = createApp(App);
 
 app
-	.use(i18n)
-	.use(head)
-	.use(router)
-	.use(createPinia())
-	.use(
-		VueGtag,
-		{
-			appName: "Chami Match",
-			pageTrackerScreenviewEnabled: true,
-			config: { id: import.meta.env.VITE_GA_MEASUREMENT_ID },
-		},
-		router,
-	);
+  .use(i18n)
+  .use(head)
+  .use(router)
+  .use(createPinia())
+  .use(
+    VueGtag,
+    {
+      appName: "Chami Match",
+      pageTrackerScreenviewEnabled: true,
+      config: { id: import.meta.env.VITE_GA_MEASUREMENT_ID },
+    },
+    router,
+  );
 
 // Initialize all stores that need initialization
 initializeStores();
