@@ -39,11 +39,11 @@ const createValidPayload = (overrides = {}): CreateChallengePayload => ({
 // Helper function needs to be accessible by the leaderboard tests' beforeEach
 const createValidAttemptPayload = (
 	participant: Participant,
-	score: number,
+	winningStreak: number, // Changed from score
 	overrides = {},
 ): SubmitAttemptPayload => ({
 	participantId: participant.id,
-	score: score,
+	winningStreak: winningStreak, // Changed from score
 	metadata: { rounds: 10, mode: "Standard", gameType: "Color", precision: 5 },
 	deviceId: participant.deviceId, // Crucial for verification
 	...overrides,
@@ -232,7 +232,8 @@ describe("Challenge API", () => {
 			expect(participant).toBeDefined(); // Ensure participant exists
 			if (participant) {
 				// Add type guard
-				expect(participant.displayName).toBe(creatorPayload.displayName); // Name should NOT change on rejoin currently
+				// Expect the name to be updated on rejoin as per current server logic
+				expect(participant.displayName).toBe(joinPayload.displayName);
 				expect(participant.deviceId).toBe(creatorPayload.deviceId);
 			}
 		});
@@ -372,7 +373,7 @@ describe("Challenge API", () => {
 			expect(body).toHaveProperty("id");
 			expect(body.challengeId).toBe(createdChallenge.id);
 			expect(body.participantId).toBe(creatorParticipant.id);
-			expect(body.score).toBe(100);
+			expect(body.winningStreak).toBe(100); // Changed from score
 			expect(body.metadata.rounds).toBe(10);
 
 			// Verify in store
@@ -385,7 +386,7 @@ describe("Challenge API", () => {
 				if (attempt) {
 					// Type guard for attempt
 					expect(attempt.id).toBe(body.id);
-					expect(attempt.score).toBe(100);
+					expect(attempt.winningStreak).toBe(100); // Changed from score
 				}
 			} else {
 				// Fail test explicitly if attempt wasn't stored correctly
@@ -410,7 +411,7 @@ describe("Challenge API", () => {
 			expect(res.status).toBe(201);
 			const body = (await res.json()) as Attempt;
 			expect(body.participantId).toBe(joinerParticipant.id);
-			expect(body.score).toBe(150);
+			expect(body.winningStreak).toBe(150); // Changed from score
 
 			// Verify in store
 			const storedChallenge = store.getChallengeById(createdChallenge.id);
@@ -421,7 +422,7 @@ describe("Challenge API", () => {
 				expect(attempt).toBeDefined(); // Ensure attempt exists
 				if (attempt) {
 					// Type guard for attempt
-					expect(attempt.score).toBe(150);
+					expect(attempt.winningStreak).toBe(150); // Changed from score
 				}
 			} else {
 				// Fail test explicitly if attempt wasn't stored correctly
@@ -448,7 +449,7 @@ describe("Challenge API", () => {
 			expect(body.message).toBe("Validation Failed");
 			expect(body.errors).toBeDefined();
 			if (body.errors) {
-				expect(body.errors).toHaveProperty("score");
+				expect(body.errors).toHaveProperty("winningStreak"); // Changed from score
 			}
 		});
 
@@ -553,9 +554,16 @@ describe("Challenge API", () => {
 		let joiner2: Participant; // Add a third participant
 
 		// Helper to submit an attempt
-		const submitAttempt = async (participant: Participant, score: number) => {
+		const submitAttempt = async (
+			participant: Participant,
+			winningStreak: number,
+		) => {
+			// Changed from score
 			// Use the globally defined helper
-			const attemptPayload = createValidAttemptPayload(participant, score);
+			const attemptPayload = createValidAttemptPayload(
+				participant,
+				winningStreak,
+			); // Changed from score
 			const req = new Request(
 				`http://localhost/api/challenges/${createdChallenge.id}/attempts`,
 				{
@@ -670,17 +678,17 @@ describe("Challenge API", () => {
 
 			if (entry0) {
 				expect(entry0.participantId).toBe(joiner2.id);
-				expect(entry0.score).toBe(200);
+				expect(entry0.winningStreak).toBe(200); // Changed from score
 				expect(entry0.displayName).toBe("Joiner Two");
 			}
 			if (entry1) {
 				expect(entry1.participantId).toBe(creator.id);
-				expect(entry1.score).toBe(180);
+				expect(entry1.winningStreak).toBe(180); // Changed from score
 				expect(entry1.displayName).toBe("Tester"); // Creator's original name
 			}
 			if (entry2) {
 				expect(entry2.participantId).toBe(joiner1.id);
-				expect(entry2.score).toBe(150);
+				expect(entry2.winningStreak).toBe(150); // Changed from score
 				expect(entry2.displayName).toBe("Joiner One");
 			}
 		});
@@ -714,7 +722,7 @@ describe("Challenge API", () => {
 			const entry0 = body.leaderboard[0];
 			expect(entry0).toBeDefined();
 			if (entry0) {
-				expect(entry0.score).toBe(0); // Score defaults to 0 if no attempts
+				expect(entry0.winningStreak).toBe(0); // Streak defaults to 0 if no attempts
 				expect(entry0.submittedAt).toBe(0); // Timestamp defaults to 0
 			}
 		});

@@ -291,7 +291,7 @@ app.post(
 			id: uuidv4(), // Unique ID for the attempt
 			challengeId: challengeId,
 			participantId: payload.participantId,
-			score: payload.score,
+			winningStreak: payload.winningStreak, // Changed from score
 			submittedAt: now,
 			sessionId: payload.sessionId,
 			metadata: payload.metadata,
@@ -326,11 +326,12 @@ app.get("/api/challenges/:id/leaderboard", (c) => {
 
 	for (const attempt of challenge.attempts) {
 		const currentBest = bestAttempts.get(attempt.participantId);
-		if (!currentBest || attempt.score > currentBest.score) {
+		// Compare winning streaks instead of scores
+		if (!currentBest || attempt.winningStreak > currentBest.winningStreak) {
 			bestAttempts.set(attempt.participantId, attempt);
 		}
-		// Optional: Handle score ties (e.g., prefer earlier submission)
-		// else if (attempt.score === currentBest.score && attempt.submittedAt < currentBest.submittedAt) {
+		// Optional: Handle streak ties (e.g., prefer earlier submission)
+		// else if (attempt.winningStreak === currentBest.winningStreak && attempt.submittedAt < currentBest.submittedAt) {
 		//   bestAttempts.set(attempt.participantId, attempt);
 		// }
 	}
@@ -342,21 +343,21 @@ app.get("/api/challenges/:id/leaderboard", (c) => {
 			return {
 				participantId: participant.id,
 				displayName: participant.displayName,
-				// Use best score if available, otherwise maybe 0 or null? Let's use 0.
-				score: bestAttempt ? bestAttempt.score : 0,
-				// Use timestamp of best score, or participant join time if no score? Let's use 0 if no score.
+				// Use best winning streak if available, otherwise 0.
+				winningStreak: bestAttempt ? bestAttempt.winningStreak : 0, // Changed from score
+				// Use timestamp of best streak submission, or 0 if no submission.
 				submittedAt: bestAttempt ? bestAttempt.submittedAt : 0,
 				// Add userId if needed: userId: participant.userId
 			};
 		},
 	);
 
-	// Sort leaderboard by score (descending), then by submission time (ascending for ties)
+	// Sort leaderboard by winning streak (descending), then by submission time (ascending for ties)
 	leaderboard.sort((a, b) => {
-		if (b.score !== a.score) {
-			return b.score - a.score; // Higher score first
+		if (b.winningStreak !== a.winningStreak) {
+			return b.winningStreak - a.winningStreak; // Higher streak first
 		}
-		// If scores are equal, earlier submission ranks higher (lower timestamp)
+		// If streaks are equal, earlier submission ranks higher (lower timestamp)
 		// Handle participants with no submissions (submittedAt = 0) - they rank last among ties
 		if (a.submittedAt === 0 && b.submittedAt === 0) return 0; // Both no submissions, order doesn't matter
 		if (a.submittedAt === 0) return 1; // a has no submission, ranks lower

@@ -436,7 +436,7 @@ export const useGameStore = defineStore("game", {
 			const { submitAttempt } = useChallengeApi(); // Get API function
 			const payload = {
 				participantId: this.currentParticipantId,
-				score: this.score, // Submit the current total score
+				winningStreak: this.winningStreak, // Submit the current winning streak
 				sessionId: record.sessionId, // Include session ID
 				deviceId: this.deviceId, // Include device ID for verification
 				metadata: {

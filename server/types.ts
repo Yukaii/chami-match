@@ -38,7 +38,7 @@ export interface Attempt {
 	id: string; // Unique identifier
 	challengeId: string; // Reference to challenge
 	participantId: string; // Reference to participant (using deviceId or internal participant ID)
-	score: number; // Player's score
+	winningStreak: number; // Player's winning streak
 	submittedAt: number; // Unix timestamp (ms)
 	sessionId?: string; // Optional reference to local game session
 	metadata: AttemptMetadata; // Additional game data
@@ -66,7 +66,7 @@ export interface JoinChallengePayload {
 
 export interface SubmitAttemptPayload {
 	participantId: string; // Or maybe deviceId? Let's use participantId for now.
-	score: number;
+	winningStreak: number; // Changed from score
 	sessionId?: string;
 	metadata: AttemptMetadata;
 	deviceId: string; // To verify participant
@@ -96,8 +96,8 @@ export const CreateChallengePayloadSchema = z.object({
 export interface LeaderboardEntry {
 	participantId: string;
 	displayName: string;
-	score: number;
-	submittedAt: number; // Timestamp of the best score submission
+	winningStreak: number; // Changed from score
+	submittedAt: number; // Timestamp of the best streak submission
 	// Add other relevant participant info if needed (e.g., userId)
 }
 
@@ -117,7 +117,7 @@ const AttemptMetadataSchema = z.object({
 
 export const SubmitAttemptPayloadSchema = z.object({
 	participantId: z.string().uuid(), // Expecting UUID for participant ID
-	score: z.number().int().min(0), // Assuming score cannot be negative
+	winningStreak: z.number().int().min(0), // Changed from score, assuming streak cannot be negative
 	sessionId: z.string().optional(),
 	metadata: AttemptMetadataSchema,
 	deviceId: z.string().min(1), // Used for verification
