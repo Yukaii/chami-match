@@ -21,13 +21,31 @@ import { calculateExpiresAt, generateAccessCode } from "./utils";
 const app = new Hono();
 
 // Enable CORS for all routes
-const CORS_ORIGIN = process.env.CORS_ORIGIN || "*";
-console.log(`CORS Origin: ${CORS_ORIGIN}`);
-
+// Access CORS_ORIGIN from the environment provided by the adapter (e.g., c.env in CF Workers)
 app.use(
   "*",
   cors({
-    origin: CORS_ORIGIN,
+    origin: (origin, c) => {
+      // Allow specific origin from env var or default to '*'
+      // Note: c.env is specific to environments like Cloudflare Workers
+      const allowedOrigin = c.env?.CORS_ORIGIN || "*";
+      if (allowedOrigin === "*") {
+        return "*"; // Allow any origin if configured as '*'
+      }
+      // If a specific origin is set, validate against it
+      // Be careful with multiple origins or more complex logic if needed
+      if (origin && allowedOrigin === origin) {
+        return origin;
+      }
+      // You might want to return a fixed default or handle errors differently
+      // Returning the configured origin might be safer if the request origin is not present
+      return allowedOrigin;
+      // Alternatively, for stricter control:
+      // if (origin && allowedOrigin.split(',').includes(origin)) {
+      //   return origin;
+      // }
+      // return undefined; // Or throw an error, or return a default allowed origin
+    },
     allowMethods: ["GET", "POST", "OPTIONS"],
     allowHeaders: ["Content-Type"],
     exposeHeaders: ["Content-Length", "Content-Type"],
@@ -437,14 +455,13 @@ app.get("/api/challenges/:id", async (c) => {
 // Export the app instance for testing
 export const appInstance = app;
 
-const PORT = process.env.PORT ? Number.parseInt(process.env.PORT, 10) : 8787;
-
 // Export for Cloudflare Workers environment
+// The 'port' property is typically not used directly in the CF Worker fetch handler signature.
+// The port for local development is usually configured via wrangler.toml or wrangler dev arguments.
 export default {
-  port: PORT, // Port is mainly for local dev using `wrangler dev` or similar
   async fetch(
     request: Request,
-    env: Environment,
+    env: Environment, // Use the Environment type which includes bindings
     ctx: ExecutionContext,
   ): Promise<Response> {
     // Use Environment and ExecutionContext types
