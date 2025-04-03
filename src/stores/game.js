@@ -38,7 +38,7 @@ export const useGameStore = defineStore("game", {
 
     challengeServerUrl: useStorage(
       "challengeServerUrl",
-      "http://localhost:8787",
+      import.meta.env.VITE_API_BASE_URL || "http://localhost:8787", // Use correct env var or fallback
     ), // Default URL, make it persistent
     deviceId: useStorage("deviceId", uuidv4()), // Generate and store device ID persistently
 

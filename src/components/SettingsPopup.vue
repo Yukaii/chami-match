@@ -16,7 +16,7 @@
     id="serverUrl"
     v-model="settings.serverUrl"
     class="flex-grow mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-orange-500 dark:focus:border-orange-500"
-    placeholder="http://localhost:8787"
+    :placeholder="defaultServerUrl"
   />
 </div>
 <div v-if="store.isServerAvailable" class="mt-1 text-sm text-green-600 dark:text-green-400">
@@ -247,6 +247,8 @@ import BaseButton from "./base/BaseButton.vue";
 
 const { locale, t: $t } = useI18n();
 const store = useGameStore();
+const defaultServerUrl =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:8787"; // Use correct env var
 const languages = [
   { code: "zh-TW", label: "繁體中文" },
   { code: "en", label: "English" },
