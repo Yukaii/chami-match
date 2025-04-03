@@ -25,12 +25,6 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Install Dependencies
-        run: cd server && bun install --frozen-lockfile
-
-      - name: Build Project
-        run: cd server && bun run build # This runs vite build and outputs to server/dist
-
       - name: Deploy with Wrangler
         uses: cloudflare/wrangler-action@v3
         with:
