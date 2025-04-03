@@ -1,9 +1,12 @@
+import type { ExecutionContext, KVNamespace } from "@cloudflare/workers-types"; // Import ExecutionContext and KVNamespace
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { cors } from "hono/cors"; // Import cors
 import { HTTPException } from "hono/http-exception";
 import { v4 as uuidv4 } from "uuid"; // Import uuid
-import { store } from "./store";
+import { getStore, initializeStore } from "./store"; // Import getStore and initializeStore
+import type { Environment } from "./store"; // Import Environment type
+import type { IChallengeStore } from "./store/base"; // Import base interface if needed elsewhere
 import {
   type Attempt, // Import Attempt type
   type Challenge,
@@ -74,7 +77,12 @@ app.post(
     let accessCode = generateAccessCode();
     // Basic check for access code collision (improve if needed)
     let attempts = 0;
-    while (store.getChallengeByAccessCode(accessCode) && attempts < 10) {
+    // Use await as getChallengeByAccessCode might be async
+    while (
+      (await getStore().getChallengeByAccessCode(accessCode)) &&
+      attempts < 10
+    ) {
+      // Use getStore()
       console.warn(`Access code collision for ${accessCode}, regenerating...`);
       accessCode = generateAccessCode();
       attempts++;
@@ -112,7 +120,7 @@ app.post(
     };
 
     try {
-      store.addChallenge(newChallenge);
+      await getStore().addChallenge(newChallenge); // Use getStore()
       // Return the essential info needed, including the creator's participant ID
       return c.json(
         {
@@ -151,7 +159,9 @@ app.post(
     const payload = c.req.valid("json");
     const now = Date.now();
 
-    const challenge = store.getChallengeByAccessCode(payload.accessCode);
+    const challenge = await getStore().getChallengeByAccessCode(
+      payload.accessCode,
+    ); // Use getStore()
 
     if (!challenge) {
       throw new HTTPException(404, { message: "Challenge not found" });
@@ -183,7 +193,7 @@ app.post(
       challenge.participants.push(participant);
 
       try {
-        store.updateChallenge(challenge); // Save the updated challenge with the new participant
+        await getStore().updateChallenge(challenge); // Use getStore() // Save the updated challenge with the new participant
       } catch (error) {
         console.error("Error updating challenge store:", error);
         throw new HTTPException(500, {
@@ -214,7 +224,7 @@ app.post(
     // Save changes if needed (new participant added or existing one updated)
     if (needsUpdate) {
       try {
-        store.updateChallenge(challenge); // Single update call
+        await getStore().updateChallenge(challenge); // Use getStore() // Single update call
       } catch (error) {
         console.error("Error updating challenge store on join:", error);
         // Decide if this error should prevent the response. For now, let's log and continue.
@@ -268,7 +278,7 @@ app.post(
     const payload = c.req.valid("json");
     const now = Date.now();
 
-    const challenge = store.getChallengeById(challengeId);
+    const challenge = await getStore().getChallengeById(challengeId); // Use getStore()
 
     if (!challenge) {
       throw new HTTPException(404, { message: "Challenge not found" });
@@ -328,7 +338,7 @@ app.post(
     challenge.attempts.push(newAttempt);
 
     try {
-      store.updateChallenge(challenge); // Save the updated challenge with the new attempt
+      await getStore().updateChallenge(challenge); // Use getStore() // Save the updated challenge with the new attempt
       return c.json(newAttempt, 201); // Return the created attempt
     } catch (error) {
       console.error("Error updating challenge store with new attempt:", error);
@@ -340,9 +350,10 @@ app.post(
 );
 
 // GET /api/challenges/:id/leaderboard (view scores)
-app.get("/api/challenges/:id/leaderboard", (c) => {
+app.get("/api/challenges/:id/leaderboard", async (c) => {
+  // Make handler async
   const challengeId = c.req.param("id");
-  const challenge = store.getChallengeById(challengeId);
+  const challenge = await getStore().getChallengeById(challengeId); // Use getStore() // Await the result
 
   if (!challenge) {
     throw new HTTPException(404, { message: "Challenge not found" });
@@ -403,9 +414,10 @@ app.get("/api/challenges/:id/leaderboard", (c) => {
 });
 
 // GET /api/challenges/:id (get specific challenge details)
-app.get("/api/challenges/:id", (c) => {
+app.get("/api/challenges/:id", async (c) => {
+  // Make handler async
   const challengeId = c.req.param("id");
-  const challenge = store.getChallengeById(challengeId);
+  const challenge = await getStore().getChallengeById(challengeId); // Use getStore() // Await the result
 
   if (!challenge) {
     throw new HTTPException(404, { message: "Challenge not found" });
@@ -427,8 +439,19 @@ export const appInstance = app;
 
 const PORT = process.env.PORT ? Number.parseInt(process.env.PORT, 10) : 8787;
 
-// Export for both development and production
+// Export for Cloudflare Workers environment
 export default {
-  port: PORT,
-  fetch: app.fetch.bind(app),
+  port: PORT, // Port is mainly for local dev using `wrangler dev` or similar
+  async fetch(
+    request: Request,
+    env: Environment,
+    ctx: ExecutionContext,
+  ): Promise<Response> {
+    // Use Environment and ExecutionContext types
+    // Initialize the store with environment bindings (like KV namespace)
+    // The `env` object is provided by the Cloudflare runtime
+    initializeStore(env);
+    // Pass the request to the Hono app instance
+    return app.fetch(request, env, ctx);
+  },
 };

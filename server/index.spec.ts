@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "bun:test";
 import { v4 as uuidv4 } from "uuid"; // Import uuid for generating test IDs
 import { appInstance as app } from "./index"; // Import named export for testing
-import { store } from "./store";
+import { getStore } from "./store"; // Import getStore instead of store
 import type {
   Attempt,
   Challenge,
@@ -53,9 +53,10 @@ describe("Challenge API", () => {
   // Reset store before each test if needed (depends on test isolation strategy)
   // For now, let's assume tests might interact, so we clear.
   // A better approach might be mocking the store or using a fresh instance per test.
-  beforeEach(() => {
+  beforeEach(async () => {
+    // Make beforeEach async if resetStore becomes async
     // Reset the store before each test using the exported function
-    store.resetStore();
+    await getStore().resetStore(); // Use getStore() and await if needed
   });
 
   describe("POST /api/challenges", () => {
@@ -77,7 +78,7 @@ describe("Challenge API", () => {
       expect(body.accessCode).toMatch(/^[A-Z0-9]{6}$/); // Check format
 
       // Verify in store (optional, depends on testing strategy)
-      const storedChallenge = store.getChallengeById(body.id);
+      const storedChallenge = await getStore().getChallengeById(body.id); // Use getStore()
       expect(storedChallenge).toBeDefined();
       if (storedChallenge) {
         // Type guard for challenge
@@ -169,7 +170,8 @@ describe("Challenge API", () => {
 
     // Helper to create a challenge before join tests
     beforeEach(async () => {
-      store.resetStore(); // Ensure clean state
+      // Already async, good
+      await getStore().resetStore(); // Use getStore() and await if needed
       const createPayload = createValidPayload();
       const createReq = new Request("http://localhost/api/challenges", {
         method: "POST",
@@ -200,7 +202,7 @@ describe("Challenge API", () => {
       expect(body.id).toBe(createdChallenge.id);
       expect(body.participants.length).toBe(2); // Creator + Joiner
       const joiner = body.participants.find(
-        (p) => p.deviceId === "new-device-2",
+        (p: Participant) => p.deviceId === "new-device-2", // Add Participant type
       );
       expect(joiner).toBeDefined();
       if (joiner) {
@@ -297,7 +299,8 @@ describe("Challenge API", () => {
 
     // Setup: Create a challenge and have two participants join
     beforeEach(async () => {
-      store.resetStore();
+      // Already async, good
+      await getStore().resetStore(); // Use getStore() and await if needed
       // 1. Create challenge
       const createPayload = createValidPayload();
       const createReq = new Request("http://localhost/api/challenges", {
@@ -310,7 +313,9 @@ describe("Challenge API", () => {
       expect(createRes.status).toBe(201);
 
       // Need to get the full challenge state to find participant IDs
-      const initialChallengeState = store.getChallengeById(createdChallenge.id);
+      const initialChallengeState = await getStore().getChallengeById(
+        createdChallenge.id,
+      ); // Use getStore()
       expect(initialChallengeState).toBeDefined();
       if (
         !initialChallengeState ||
@@ -351,7 +356,9 @@ describe("Challenge API", () => {
         );
       }
       // Fetch the updated state directly from the store to get the joiner's ID
-      const finalChallengeState = store.getChallengeById(createdChallenge.id);
+      const finalChallengeState = await getStore().getChallengeById(
+        createdChallenge.id,
+      ); // Use getStore()
       expect(finalChallengeState).toBeDefined();
       if (!finalChallengeState)
         throw new Error(
@@ -388,7 +395,9 @@ describe("Challenge API", () => {
       expect(body.metadata.rounds).toBe(10);
 
       // Verify in store
-      const storedChallenge = store.getChallengeById(createdChallenge.id);
+      const storedChallenge = await getStore().getChallengeById(
+        createdChallenge.id,
+      ); // Use getStore()
       expect(storedChallenge).toBeDefined();
       if (storedChallenge && storedChallenge.attempts.length > 0) {
         expect(storedChallenge.attempts.length).toBe(1);
@@ -425,7 +434,9 @@ describe("Challenge API", () => {
       expect(body.winningStreak).toBe(150); // Changed from score
 
       // Verify in store
-      const storedChallenge = store.getChallengeById(createdChallenge.id);
+      const storedChallenge = await getStore().getChallengeById(
+        createdChallenge.id,
+      ); // Use getStore()
       expect(storedChallenge).toBeDefined();
       if (storedChallenge && storedChallenge.attempts.length > 0) {
         expect(storedChallenge.attempts.length).toBe(1); // Only this attempt
@@ -591,8 +602,9 @@ describe("Challenge API", () => {
 
     // Setup: Create challenge, join participants, submit attempts
     beforeEach(async () => {
+      // Already async, good
       // Mark as async
-      store.resetStore();
+      await getStore().resetStore(); // Use getStore() and await if needed
       // 1. Create challenge
       const createPayload = createValidPayload({ name: "Leaderboard Test" });
       const createReq = new Request("http://localhost/api/challenges", {
@@ -604,7 +616,9 @@ describe("Challenge API", () => {
       createdChallenge = (await createRes.json()) as CreateSuccessResponse;
       expect(createRes.status).toBe(201);
 
-      const initialChallengeState = store.getChallengeById(createdChallenge.id);
+      const initialChallengeState = await getStore().getChallengeById(
+        createdChallenge.id,
+      ); // Use getStore()
       if (
         !initialChallengeState ||
         initialChallengeState.participants.length === 0
@@ -647,17 +661,17 @@ describe("Challenge API", () => {
       // Don't rely on the sanitized response for joiner2's details yet
 
       // 4. Fetch the final state from the store AFTER both joins are complete
-      const finalState = store.getChallengeById(createdChallenge.id);
+      const finalState = await getStore().getChallengeById(createdChallenge.id); // Use getStore()
       if (!finalState)
         throw new Error("Setup failed: Challenge disappeared from store");
       const finalCreator = finalState.participants.find(
-        (p) => p.deviceId === creator.deviceId,
+        (p: Participant) => p.deviceId === creator.deviceId, // Add Participant type
       );
       const finalJoiner1 = finalState.participants.find(
-        (p) => p.deviceId === "joiner1-dev", // Use the known deviceId
+        (p: Participant) => p.deviceId === "joiner1-dev", // Add Participant type // Use the known deviceId
       );
       const finalJoiner2 = finalState.participants.find(
-        (p) => p.deviceId === "joiner2-dev", // Use the known deviceId
+        (p: Participant) => p.deviceId === "joiner2-dev", // Add Participant type // Use the known deviceId
       );
       if (!finalCreator || !finalJoiner1 || !finalJoiner2)
         throw new Error(
@@ -718,7 +732,7 @@ describe("Challenge API", () => {
 
     it("should return an empty leaderboard if no attempts submitted", async () => {
       // Create a new challenge with no attempts
-      store.resetStore();
+      await getStore().resetStore(); // Use getStore() and await if needed
       const createPayload = createValidPayload({ name: "Empty Test" });
       const createReq = new Request("http://localhost/api/challenges", {
         method: "POST",
@@ -769,7 +783,8 @@ describe("Challenge API", () => {
     let creator: Participant;
 
     beforeEach(async () => {
-      store.resetStore();
+      // Already async, good
+      await getStore().resetStore(); // Use getStore() and await if needed
       // Create a challenge
       const createPayload = createValidPayload({ name: "Get Details Test" });
       const createReq = new Request("http://localhost/api/challenges", {
@@ -781,7 +796,9 @@ describe("Challenge API", () => {
       createdChallenge = (await createRes.json()) as CreateSuccessResponse;
       expect(createRes.status).toBe(201);
 
-      const initialChallengeState = store.getChallengeById(createdChallenge.id);
+      const initialChallengeState = await getStore().getChallengeById(
+        createdChallenge.id,
+      ); // Use getStore()
       if (
         !initialChallengeState ||
         initialChallengeState.participants.length === 0
