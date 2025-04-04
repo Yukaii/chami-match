@@ -24,12 +24,19 @@
             <div class="text-gray-800 dark:text-white">
               {{ $t('sessionDate') }}:
             </div>
-            <select v-model="sessionFilter" class="rounded-lg bg-gray-200 px-3 py-1 text-gray-800 dark:bg-gray-700 dark:text-white">
+            <BaseSelect 
+              v-model="sessionFilter" 
+              size="sm"
+              variant="flat"
+              :fullWidth="false"
+              is3d
+              className="min-w-[150px]"
+            >
               <option value="all">{{ $t('allSessions') }}</option>
               <option v-for="session in availableSessions" :key="session.id" :value="session.id">
                 {{ session.isCurrent ? `${$t('currentSession')} - ` : '' }}{{ session.name }}
               </option>
-            </select>
+            </BaseSelect>
           </div>
 
           <!-- Game type filter -->
@@ -37,12 +44,19 @@
             <div class="text-gray-800 dark:text-white">
               {{ $t('totalRounds') }}: {{ recordCount }}
             </div>
-            <select v-model="filterType" class="rounded-lg bg-gray-200 px-3 py-1 text-gray-800 dark:bg-gray-700 dark:text-white">
+            <BaseSelect 
+              v-model="filterType" 
+              size="sm"
+              variant="flat"
+              :fullWidth="false"
+              is3d
+              className="min-w-[150px]"
+            >
               <option value="all">{{ $t('allGameTypes') }}</option>
               <option value="standard">{{ $t('gameModes.standard.name') }}</option>
               <option value="contextual">{{ $t('gameModes.contextual.name') }}</option>
               <option value="relative">{{ $t('gameModes.relative.name') }}</option>
-            </select>
+            </BaseSelect>
           </div>
         </div>
       </div>
@@ -277,6 +291,7 @@
 <script setup>
 import { computed, onMounted, ref, watch } from "vue";
 import { useGameStore } from "../stores/game";
+import { useI18n } from "vue-i18n";
 import {
   hsvToOklab,
   hsvToRgb,
@@ -284,6 +299,9 @@ import {
   rgbToHsv,
 } from "../utils/colorSpaceUtils";
 import Modal from "./Modal.vue";
+import BaseSelect from "./base/BaseSelect.vue";
+
+const { t: $t } = useI18n();
 
 const store = useGameStore();
 const filterType = ref("all");

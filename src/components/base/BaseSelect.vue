@@ -3,7 +3,7 @@
     <label v-if="label" :for="id" class="mb-2 block font-medium text-gray-900 dark:text-white">
       {{ label }}
     </label>
-    <div class="relative group">
+    <div class="relative group w-fit" :class="{ 'w-full': fullWidth }">
       <select
         :id="id"
         :value="modelValue"
@@ -16,7 +16,13 @@
         <option v-if="placeholder" value="" disabled>{{ placeholder }}</option>
         <slot></slot>
       </select>
-      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 transition-transform duration-200 group-hover:-translate-y-0.5 group-focus-within:-translate-y-1 group-active:translate-y-0.5">
+      <div 
+        class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3 transition-transform duration-200"
+        :class="{
+          'group-hover:-translate-y-0.5 group-focus-within:-translate-y-1 group-active:translate-y-0.5': is3d,
+          'transform-none': !is3d
+        }"
+      >
         <svg class="h-5 w-5 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
           <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
         </svg>
@@ -55,12 +61,12 @@ const props = defineProps({
   variant: {
     type: String,
     default: "default",
-    validator: (value) => ["default", "success", "error"].includes(value),
+    validator: (value) => ["default", "success", "error", "flat"].includes(value),
   },
   size: {
     type: String,
     default: "md",
-    validator: (value) => ["sm", "md", "lg"].includes(value),
+    validator: (value) => ["xs", "sm", "md", "lg"].includes(value),
   },
   helper: {
     type: String,
@@ -89,6 +95,7 @@ const props = defineProps({
 });
 
 const sizeClasses = computed(() => ({
+  xs: "px-1.5 py-0.5 text-xs",
   sm: "px-2 py-1 text-sm",
   md: "px-3 py-2",
   lg: "px-4 py-3 text-lg",
@@ -98,6 +105,7 @@ const variantClasses = computed(() => ({
   default: "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:focus:border-pink-500 dark:focus:ring-pink-500",
   success: "border-green-300 focus:border-green-500 focus:ring-green-500 dark:border-green-600 dark:focus:border-green-400 dark:focus:ring-green-400",
   error: "border-red-300 focus:border-red-500 focus:ring-red-500 dark:border-red-600 dark:focus:border-red-400 dark:focus:ring-red-400",
+  flat: "bg-gray-200 border-transparent text-gray-800 hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600",
 }));
 
 const selectClasses = computed(() => {
