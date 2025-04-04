@@ -79,6 +79,7 @@
       "unavailable": "サーバーが利用できません",
       "checking": "サーバー状態を確認中..."
     },
+    "resetToDefault": "デフォルトに戻す",
     "UIOptions": "UI設定",
     "displayName": "表示名",
     "gameOptions": "ゲーム設定",

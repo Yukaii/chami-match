@@ -78,6 +78,7 @@
       "unavailable": "Server is not available",
       "checking": "Checking server status..."
     },
+    "resetToDefault": "Reset to Default",
     "UIOptions": "UI Options",
     "displayName": "Display Name",
     "gameOptions": "Game Options",

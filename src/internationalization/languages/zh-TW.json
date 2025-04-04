@@ -79,6 +79,7 @@
       "unavailable": "伺服器無法使用",
       "checking": "檢查伺服器狀態中..."
     },
+    "resetToDefault": "重設為預設值",
     "UIOptions": "介面設定",
     "displayName": "顯示名稱",
     "gameOptions": "遊戲設定",

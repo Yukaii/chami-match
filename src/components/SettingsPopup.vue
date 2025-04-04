@@ -18,6 +18,16 @@
     class="flex-grow mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-orange-500 dark:focus:border-orange-500"
     :placeholder="defaultServerUrl"
   />
+  <BaseButton
+    variant="secondary"
+    size="sm"
+    is3d
+    class="flex items-center gap-1"
+    @click="resetServerUrl"
+  >
+    <ph-arrow-counter-clockwise size="18" />
+    {{ $t('settings.resetToDefault') }}
+  </BaseButton>
 </div>
 <div v-if="store.isServerAvailable" class="mt-1 text-sm text-green-600 dark:text-green-400">
   {{ $t('settings.serverStatus.available') }}
@@ -239,7 +249,7 @@
 </template>
 
 <script setup>
-import { PhDeviceMobile, PhMoon, PhSun } from "@phosphor-icons/vue";
+import { PhArrowCounterClockwise, PhDeviceMobile, PhMoon, PhSun } from "@phosphor-icons/vue";
 import { computed, onMounted, reactive, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useGameStore } from "../stores/game";
@@ -277,6 +287,10 @@ const settings = reactive({
   displayName: store.preferences.displayName || "Player",
   serverUrl: store.challengeServerUrl, // Add server URL
 });
+
+const resetServerUrl = () => {
+  settings.serverUrl = defaultServerUrl;
+};
 
 // Theme handling
 const currentTheme = ref(localStorage.getItem("theme") || "system");
