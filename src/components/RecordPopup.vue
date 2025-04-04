@@ -20,7 +20,7 @@
       <div class="sticky top-0 z-10 mb-4 bg-white px-2 pb-2 pt-1 shadow-md dark:bg-gray-800">
         <div class="flex flex-col space-y-2">
           <!-- Session filter -->
-          <div class="flex items-center justify-between gap-1">
+          <div class="flex items-center justify-between gap-2">
             <div class="text-gray-800 dark:text-white">
               {{ $t('sessionDate') }}:
             </div>
@@ -28,7 +28,7 @@
               v-model="sessionFilter" 
               size="sm"
               variant="flat"
-              :fullWidth="false"
+              :fullWidth="true"
               is3d
               className="min-w-[150px]"
             >
@@ -40,7 +40,7 @@
           </div>
 
           <!-- Game type filter -->
-          <div class="flex items-center justify-between gap-1">
+          <div class="flex items-center justify-between gap-2">
             <div class="text-gray-800 dark:text-white">
               {{ $t('totalRounds') }}: {{ recordCount }}
             </div>
@@ -48,7 +48,7 @@
               v-model="filterType" 
               size="sm"
               variant="flat"
-              :fullWidth="false"
+              :fullWidth="true"
               is3d
               className="min-w-[150px]"
             >
