@@ -9,32 +9,32 @@
 
 <!-- Challenge Server URL -->
 <div class="mb-4">
-<label for="serverUrl" class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.serverUrl') }}</label>
-<div class="flex gap-2">
-  <input
-    type="text"
+  <BaseInput
     id="serverUrl"
     v-model="settings.serverUrl"
-    class="flex-grow mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-orange-500 dark:focus:border-orange-500"
+    :label="$t('settings.serverUrl')"
     :placeholder="defaultServerUrl"
-  />
-  <BaseButton
-    variant="secondary"
-    size="sm"
     is3d
-    class="flex items-center gap-1"
-    @click="resetServerUrl"
   >
-    <ph-arrow-counter-clockwise size="18" />
-    {{ $t('settings.resetToDefault') }}
-  </BaseButton>
-</div>
-<div v-if="store.isServerAvailable" class="mt-1 text-sm text-green-600 dark:text-green-400">
-  {{ $t('settings.serverStatus.available') }}
-</div>
-<div v-else class="mt-1 text-sm text-red-600 dark:text-red-400">
-  {{ $t('settings.serverStatus.unavailable') }}
-</div>
+    <template #suffix>
+      <BaseButton
+        variant="secondary"
+        size="sm"
+        is3d
+        class="flex items-center gap-1"
+        @click="resetServerUrl"
+      >
+        <ph-arrow-counter-clockwise size="18" />
+        {{ $t('settings.resetToDefault') }}
+      </BaseButton>
+    </template>
+  </BaseInput>
+  <div v-if="store.isServerAvailable" class="mt-1 text-sm text-green-600 dark:text-green-400">
+    {{ $t('settings.serverStatus.available') }}
+  </div>
+  <div v-else class="mt-1 text-sm text-red-600 dark:text-red-400">
+    {{ $t('settings.serverStatus.unavailable') }}
+  </div>
 </div>
 </div>
 
@@ -100,13 +100,12 @@
 
       <!-- Display Name -->
       <div class="mb-4">
-        <label for="displayName" class="mb-2 block font-bold text-gray-900 dark:text-white">{{ $t('settings.displayName') }}</label>
-        <input
-          type="text"
+        <BaseInput
           id="displayName"
           v-model="settings.displayName"
-          maxlength="50"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-orange-500 dark:focus:border-orange-500"
+          :label="$t('settings.displayName')"
+          :maxLength="50"
+          is3d
         />
       </div>
 
@@ -254,6 +253,7 @@ import { computed, onMounted, reactive, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useGameStore } from "../stores/game";
 import BaseButton from "./base/BaseButton.vue";
+import BaseInput from "./base/BaseInput.vue";
 
 const { locale, t: $t } = useI18n();
 const store = useGameStore();
