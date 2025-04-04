@@ -290,8 +290,8 @@
 
 <script setup>
 import { computed, onMounted, ref, watch } from "vue";
-import { useGameStore } from "../stores/game";
 import { useI18n } from "vue-i18n";
+import { useGameStore } from "../stores/game";
 import {
   hsvToOklab,
   hsvToRgb,
