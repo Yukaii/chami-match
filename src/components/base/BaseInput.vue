@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full">
+  <div class="w-auto">
     <label v-if="label" :for="id" class="mb-2 block font-medium text-gray-900 dark:text-white">
       {{ label }}
     </label>

@@ -8,15 +8,17 @@
       <div class="border-t pt-4 dark:border-gray-700">
         <h3 class="text-lg font-semibold mb-2 text-center text-gray-700 dark:text-gray-300">{{ $t('joinChallenge') }}</h3>
         <div class="flex gap-2">
-          <BaseInput
-            v-model="accessCode"
-            type="text"
-            maxLength="6"
-            :placeholder="$t('accessCode')"
-            is3d
-            className="flex-grow uppercase text-center tracking-widest font-mono"
-            @blur="accessCode = accessCode.toUpperCase()"
-          />
+          <div class="flex-1">
+            <BaseInput
+              v-model="accessCode"
+              type="text"
+              maxLength="6"
+              :placeholder="$t('accessCode')"
+              is3d
+              className="flex-grow uppercase text-center tracking-widest font-mono"
+              @blur="accessCode = accessCode.toUpperCase()"
+            />
+          </div>
           <BaseButton
             variant="primary"
             is3d
