@@ -104,9 +104,12 @@ const sizeClasses = computed(() => ({
 }));
 
 const variantClasses = computed(() => ({
-  default: "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:focus:border-pink-500 dark:focus:ring-pink-500",
-  success: "border-green-300 focus:border-green-500 focus:ring-green-500 dark:border-green-600 dark:focus:border-green-400 dark:focus:ring-green-400",
-  error: "border-red-300 focus:border-red-500 focus:ring-red-500 dark:border-red-600 dark:focus:border-red-400 dark:focus:ring-red-400",
+  default:
+    "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 dark:border-gray-600 dark:focus:border-pink-500 dark:focus:ring-pink-500",
+  success:
+    "border-green-300 focus:border-green-500 focus:ring-green-500 dark:border-green-600 dark:focus:border-green-400 dark:focus:ring-green-400",
+  error:
+    "border-red-300 focus:border-red-500 focus:ring-red-500 dark:border-red-600 dark:focus:border-red-400 dark:focus:ring-red-400",
 }));
 
 const inputClasses = computed(() => {
@@ -115,10 +118,12 @@ const inputClasses = computed(() => {
     "block rounded-lg border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2",
     sizeClasses.value[props.size],
     props.fullWidth ? "w-full" : "",
-    props.$slots && props.$slots.prefix ? "pl-10" : "",
-    props.$slots && props.$slots.suffix ? "pr-10" : "",
-    props.disabled ? "cursor-not-allowed opacity-50 bg-gray-100 dark:bg-gray-700" : "",
-    props.is3d 
+    props.$slots?.prefix ? "pl-10" : "",
+    props.$slots?.suffix ? "pr-10" : "",
+    props.disabled
+      ? "cursor-not-allowed opacity-50 bg-gray-100 dark:bg-gray-700"
+      : "",
+    props.is3d
       ? "shadow-[0_4px_0_rgba(0,0,0,0.1),0_5px_5px_rgba(0,0,0,0.05)] hover:shadow-[0_3px_0_rgba(0,0,0,0.1),0_4px_4px_rgba(0,0,0,0.05)] focus:shadow-[0_1px_0_rgba(0,0,0,0.1),0_2px_2px_rgba(0,0,0,0.05)] hover:-translate-y-0.5 focus:-translate-y-1 active:translate-y-0.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:shadow-[0_4px_0_rgba(0,0,0,0.15),0_5px_5px_rgba(0,0,0,0.05)]"
       : "",
   ];

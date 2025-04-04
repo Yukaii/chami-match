@@ -248,7 +248,12 @@
 </template>
 
 <script setup>
-import { PhArrowCounterClockwise, PhDeviceMobile, PhMoon, PhSun } from "@phosphor-icons/vue";
+import {
+  PhArrowCounterClockwise,
+  PhDeviceMobile,
+  PhMoon,
+  PhSun,
+} from "@phosphor-icons/vue";
 import { computed, onMounted, reactive, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { useGameStore } from "../stores/game";
