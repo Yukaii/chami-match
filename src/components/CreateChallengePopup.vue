@@ -7,6 +7,7 @@ import { useGameStore } from "../stores/game";
 import Modal from "./Modal.vue";
 import BaseButton from "./base/BaseButton.vue";
 import BaseInput from "./base/BaseInput.vue";
+import BaseSelect from "./base/BaseSelect.vue";
 
 const { t: $t } = useI18n();
 const store = useGameStore();
@@ -136,16 +137,16 @@ const getChallengeUrl = () => {
           </div>
 
           <div class="mb-4">
-            <label for="expiration" class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('challenge.expiresIn') }}</label>
-            <select
+            <BaseSelect
               id="expiration"
               v-model="expiration"
-              class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-orange-500 dark:focus:border-orange-500"
+              :label="$t('challenge.expiresIn')"
+              is3d
             >
               <option v-for="option in expirationOptions" :key="option.value ?? 'null'" :value="option.value">
                 {{ option.label }}
               </option>
-            </select>
+            </BaseSelect>
           </div>
 
           <p v-if="error" class="text-sm text-red-500 mb-3">{{ error }}</p>
